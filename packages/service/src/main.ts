@@ -10,6 +10,7 @@ async function bootstrap() {
         .setTitle('Library Management System')
         .setDescription('A backend API utilized MongoDB to manage the library')
         .setVersion('1.0')
+        .addBearerAuth()
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
