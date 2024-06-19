@@ -1,9 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+    HttpException,
+    HttpStatus,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { MongodbService } from 'src/common/mongodb/mongodb.service';
 import { UserRegisterDto } from './dtos/user-register.dto';
 import { Roles } from 'src/shared/enums/roles.enum';
 import { Document } from 'mongoose';
+import { UserEditDto } from './dtos/user-edit.dto';
 
 @Injectable()
 export class UsersService {
@@ -31,5 +37,14 @@ export class UsersService {
         };
 
         return await this.mongodbService.usersDb.saveNewUser(payload);
+    }
+
+    async editProfile(email: string, userEditDto: UserEditDto) {
+        const user = await this.mongodbService.usersDb.findByEmail(email);
+        if (!user) {
+            throw new NotFoundException();
+        }
+
+        // I'll do it tmr, cause I'm so sleepy
     }
 }
