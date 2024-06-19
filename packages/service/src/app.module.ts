@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { SwaggerModule } from '@nestjs/swagger';
+import { MongodbModule } from './common/mongodb/mongodb.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './modules/auth/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
     imports: [
@@ -14,13 +12,11 @@ import { AuthGuard } from './modules/auth/auth.guard';
             isGlobal: true,
             envFilePath: '.env',
         }),
-        MongooseModule.forRoot(process.env.MONGODB_URI),
+        SwaggerModule,
+        MongodbModule,
         AuthModule,
-        UsersModule,
     ],
-    controllers: [AppController],
     providers: [
-        AppService,
         {
             provide: APP_GUARD,
             useClass: AuthGuard,

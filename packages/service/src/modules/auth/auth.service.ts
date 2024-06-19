@@ -1,22 +1,38 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import {
+    HttpException,
+    HttpStatus,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { MongodbService } from 'src/common/mongodb/mongodb.service';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private userService: UsersService,
+        private mongodbService: MongodbService,
         private jwtService: JwtService,
     ) {}
 
-    async signIn(email: string, password: string): Promise<any> {
-        const user = await this.userService.findByEmail(email);
+    async login(email: string, password: string): Promise<any> {
+        const user = await this.mongodbService.usersDb.findByEmail(email);
 
-        if (user?.password !== password) {
-            throw new UnauthorizedException();
+        if (!user) {
+            throw new HttpException(
+                'The email or password is incorrect',
+                HttpStatus.UNAUTHORIZED,
+            );
         }
 
-        const payload = { sub: user.userId, email: user.email };
+        if (await bcrypt.compare(password, user.password)) {
+            throw new HttpException(
+                'The email or password is incorrect',
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
+
+        const payload = { sub: user._id, email: user.email };
         return {
             access_token: await this.jwtService.signAsync(payload),
         };
