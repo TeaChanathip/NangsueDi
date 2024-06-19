@@ -3,8 +3,7 @@ import { MongodbService } from './mongodb.service';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Connection } from 'mongoose';
-import { UsersService } from './users/users.service';
-import { UsersModule } from './users/users.module';
+import { UsersCollectionModule } from './users-collection/users-collection.module';
 
 @Module({
     imports: [
@@ -29,7 +28,7 @@ import { UsersModule } from './users/users.module';
                 };
             },
         }),
-        UsersModule,
+        UsersCollectionModule,
     ],
     providers: [MongodbService],
     exports: [MongodbService],

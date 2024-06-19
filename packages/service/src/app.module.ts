@@ -5,6 +5,7 @@ import { MongodbModule } from './common/mongodb/mongodb.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './modules/auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { APP_GUARD } from '@nestjs/core';
         SwaggerModule,
         MongodbModule,
         AuthModule,
+        UsersModule,
     ],
     providers: [
         {

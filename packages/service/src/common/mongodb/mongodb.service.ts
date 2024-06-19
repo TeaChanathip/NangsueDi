@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from './users/users.service';
+import { UsersCollectionService } from './users-collection/users-collection.service';
 
 @Injectable()
 export class MongodbService {
-    public usersDb: UsersService;
-    constructor(usersDb: UsersService) {
+    public usersDb: UsersCollectionService;
+    constructor(usersDb: UsersCollectionService) {
         this.usersDb = usersDb;
     }
 }
