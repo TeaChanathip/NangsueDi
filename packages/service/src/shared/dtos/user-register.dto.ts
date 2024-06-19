@@ -10,7 +10,7 @@ import {
 
 export class UserRegisterDto {
     @ApiProperty({
-        default: 'user1@gmail.com',
+        default: 'test1@test.com',
     })
     @IsNotEmpty()
     @IsEmail()

@@ -1,9 +1,4 @@
-import {
-    HttpException,
-    HttpStatus,
-    Injectable,
-    UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { MongodbService } from 'src/common/mongodb/mongodb.service';
@@ -25,7 +20,8 @@ export class AuthService {
             );
         }
 
-        if (await bcrypt.compare(password, user.password)) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             throw new HttpException(
                 'The email or password is incorrect',
                 HttpStatus.UNAUTHORIZED,
