@@ -60,4 +60,21 @@ export class UsersService {
 
         return await this.usersCollectionService.editUser(userId, payload);
     }
+
+    async deleteProfile(userId: Types.ObjectId, password: string) {
+        const user = await this.usersCollectionService.findById(userId);
+        if (!user) {
+            throw new NotFoundException();
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            throw new HttpException(
+                'The password is incorrect',
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
+
+        return this.usersCollectionService.deleteUser(userId);
+    }
 }

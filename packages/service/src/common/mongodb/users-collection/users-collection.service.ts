@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersModel } from './schemas/users.schema';
 import { Model, Types } from 'mongoose';
@@ -33,5 +33,9 @@ export class UsersCollectionService {
         return this.usersModel.findByIdAndUpdate(userId, payload, {
             new: true,
         });
+    }
+
+    deleteUser(userId: Types.ObjectId): Promise<User> {
+        return this.usersModel.findByIdAndDelete(userId);
     }
 }
