@@ -1,17 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { MongodbService } from 'src/common/mongodb/mongodb.service';
+import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private mongodbService: MongodbService,
+        private usersCollectionService: UsersCollectionService,
         private jwtService: JwtService,
     ) {}
 
     async login(email: string, password: string): Promise<any> {
-        const user = await this.mongodbService.usersDb.findByEmail(email);
+        const user = await this.usersCollectionService.findByEmail(email);
 
         if (!user) {
             throw new HttpException(

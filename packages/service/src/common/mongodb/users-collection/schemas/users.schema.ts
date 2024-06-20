@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Roles } from 'src/shared/enums/roles.enum';
 import { UserPermissionsModel } from './user-permissions.schema';
-import { IsNumber } from 'class-validator';
 
 @Schema({
     collection: 'Users',

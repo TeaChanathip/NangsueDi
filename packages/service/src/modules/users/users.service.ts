@@ -5,18 +5,22 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { MongodbService } from 'src/common/mongodb/mongodb.service';
+import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
 import { UserRegisterDto } from './dtos/user-register.dto';
 import { Roles } from 'src/shared/enums/roles.enum';
-import { Document } from 'mongoose';
 import { UserEditDto } from './dtos/user-edit.dto';
+import { User } from 'src/shared/interfaces/user.interface';
+import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly mongodbService: MongodbService) {}
+    constructor(
+        private readonly usersCollectionService: UsersCollectionService,
+    ) {}
 
-    async register(userRegisterDto: UserRegisterDto): Promise<Document> {
-        const user = await this.mongodbService.usersDb.findByEmail(
+    async register(userRegisterDto: UserRegisterDto): Promise<User> {
+        const user = await this.usersCollectionService.findByEmail(
             userRegisterDto.email,
         );
         if (user) {
@@ -33,18 +37,27 @@ export class UsersService {
             ...userRegisterDto,
             password: hash,
             role: Roles.USER,
-            registeredAt: Math.floor(new Date().getTime() / 1000),
+            registeredAt: getCurrentUnix(),
         };
 
-        return await this.mongodbService.usersDb.saveNewUser(payload);
+        return await this.usersCollectionService.saveNewUser(payload);
     }
 
-    async editProfile(email: string, userEditDto: UserEditDto) {
-        const user = await this.mongodbService.usersDb.findByEmail(email);
+    async editProfile(userId: Types.ObjectId, userEditDto: UserEditDto) {
+        if (!userId) {
+            throw new NotFoundException();
+        }
+
+        const user = await this.usersCollectionService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
 
-        // I'll do it tmr, cause I'm so sleepy
+        const payload = {
+            ...userEditDto,
+            updatedAt: getCurrentUnix(),
+        };
+
+        return await this.usersCollectionService.editUser(userId, payload);
     }
 }

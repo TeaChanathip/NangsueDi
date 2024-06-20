@@ -2,11 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
     IsAlpha,
     IsEmail,
+    IsEnum,
+    IsHash,
     IsNotEmpty,
+    IsNumber,
     IsOptional,
     IsPhoneNumber,
     IsString,
 } from 'class-validator';
+import { Roles } from 'src/shared/enums/roles.enum';
 
 export class UserRegisterDto {
     @ApiProperty({
@@ -43,4 +47,14 @@ export class UserRegisterDto {
     @IsOptional()
     @IsAlpha()
     lastName?: string;
+}
+
+export class UserRegisterPayload extends UserRegisterDto {
+    @IsNotEmpty()
+    @IsEnum(Roles)
+    role: Roles;
+
+    @IsNotEmpty()
+    @IsNumber()
+    registeredAt: number;
 }

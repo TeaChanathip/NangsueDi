@@ -2,14 +2,10 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { UserLoginDto } from './dtos/user-login.dto';
 import { AuthService } from './auth.service';
 import { PublicRoute } from 'src/common/decorators/public-route.decorator';
-import { MongodbService } from 'src/common/mongodb/mongodb.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private authService: AuthService,
-        private mongodbService: MongodbService,
-    ) {}
+    constructor(private authService: AuthService) {}
 
     @PublicRoute()
     @Post('login')
