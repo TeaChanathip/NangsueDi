@@ -6,6 +6,7 @@ import { UserPermissionsModel } from './schemas/user-permissions.schema';
 import { User } from 'src/shared/interfaces/user.interface';
 import { AuthRegisterPayload } from 'src/modules/auth/dtos/auth.register.dto';
 import { UserEditPayload } from 'src/modules/users/dtos/user.edit.dto';
+import { UserChangePasswordPayload } from 'src/modules/users/dtos/user.change-password.dto';
 
 @Injectable()
 export class UsersCollectionService {
@@ -37,5 +38,14 @@ export class UsersCollectionService {
 
     deleteUser(userId: Types.ObjectId): Promise<User> {
         return this.usersModel.findByIdAndDelete(userId);
+    }
+
+    changePassword(
+        userId: Types.ObjectId,
+        payload: UserChangePasswordPayload,
+    ): Promise<User> {
+        return this.usersModel.findByIdAndUpdate(userId, payload, {
+            new: true,
+        });
     }
 }

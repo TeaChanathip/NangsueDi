@@ -7,6 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
+import { UsersCollectionModule } from './common/mongodb/users-collection/users-collection.module';
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import { Connection } from 'mongoose';
         SwaggerModule,
         AuthModule,
         UsersModule,
+        UsersCollectionModule,
     ],
     providers: [
         {

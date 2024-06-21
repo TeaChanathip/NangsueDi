@@ -9,7 +9,7 @@ import { UserPermissionsModel } from './user-permissions.schema';
     versionKey: false,
 })
 export class UsersModel {
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true, unique: true, immutable: true })
     email: string;
 
     @Prop({ required: true })
@@ -24,7 +24,7 @@ export class UsersModel {
     @Prop({ required: false })
     lastName?: string;
 
-    @Prop({ required: false })
+    @Prop({ required: false, trim: true })
     avartarUrl?: string;
 
     @Prop({ required: true, enum: Roles })
@@ -37,11 +37,14 @@ export class UsersModel {
     })
     permissions?: UserPermissionsModel;
 
-    @Prop({ required: true })
+    @Prop({ required: true, immutable: true })
     registeredAt: number;
 
     @Prop({ required: false })
     updatedAt: number;
+
+    @Prop({ required: true })
+    tokenVersion: number;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(UsersModel);

@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { UserEditDto } from './dtos/user.edit.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserDeleteDto } from './dtos/user.delete.dto';
+import { UserChangePasswordDto } from './dtos/user.change-password.dto';
 
 @Controller('users')
 @ApiTags('User')
@@ -15,7 +16,7 @@ export class UsersController {
         return await this.usersService.editProfile(req?.user?.sub, userEditDto);
     }
 
-    @Delete()
+    @Delete('delete-profile')
     async deleteProfile(
         @Request() req: any,
         @Body() userDeleteDto: UserDeleteDto,
@@ -23,6 +24,17 @@ export class UsersController {
         return await this.usersService.deleteProfile(
             req?.user?.sub,
             userDeleteDto.password,
+        );
+    }
+
+    @Patch('change-password')
+    async changePassword(
+        @Request() req: any,
+        @Body() userChangePasswordDto: UserChangePasswordDto,
+    ) {
+        return await this.usersService.changePassword(
+            req?.user?.sub,
+            userChangePasswordDto,
         );
     }
 }

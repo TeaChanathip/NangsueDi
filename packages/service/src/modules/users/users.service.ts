@@ -6,9 +6,13 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
-import { UserEditDto } from './dtos/user.edit.dto';
+import { UserEditDto, UserEditPayload } from './dtos/user.edit.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Types } from 'mongoose';
+import {
+    UserChangePasswordDto,
+    UserChangePasswordPayload,
+} from './dtos/user.change-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,7 +30,7 @@ export class UsersService {
             throw new NotFoundException();
         }
 
-        const payload = {
+        const payload: UserEditPayload = {
             ...userEditDto,
             updatedAt: getCurrentUnix(),
         };
@@ -46,14 +50,23 @@ export class UsersService {
 
     async changePassword(
         userId: Types.ObjectId,
-        password: string,
-        newPassword: string,
+        userChangePasswordDto: UserChangePasswordDto,
     ) {
         const user = await this.findByIdAndComparePassword(
             userId,
-            password,
+            userChangePasswordDto.password,
             'The old password is incorrect',
         );
+
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(userChangePasswordDto.newPassword, salt);
+
+        const payload: UserChangePasswordPayload = {
+            password: hash,
+            tokenVersion: getCurrentUnix(),
+        };
+
+        return this.usersCollectionService.changePassword(userId, payload);
     }
 
     private async findByIdAndComparePassword(

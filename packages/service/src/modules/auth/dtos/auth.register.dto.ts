@@ -56,4 +56,8 @@ export class AuthRegisterPayload extends AuthRegisterDto {
     @IsNotEmpty()
     @IsNumber()
     registeredAt: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    tokenVersion: number;
 }

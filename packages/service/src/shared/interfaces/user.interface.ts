@@ -12,4 +12,5 @@ export interface User {
     avartarUrl?: string;
     role: Roles;
     permissions?: UserPermissionsModel;
+    tokenVersion: number;
 }

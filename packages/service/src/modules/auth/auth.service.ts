@@ -2,10 +2,11 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
-import { AuthRegisterDto } from './dtos/auth.register.dto';
+import { AuthRegisterDto, AuthRegisterPayload } from './dtos/auth.register.dto';
 import { User } from 'src/shared/interfaces/user.interface';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Roles } from 'src/shared/enums/roles.enum';
+import { JwtPayload } from 'src/shared/interfaces/jwt.payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -28,11 +29,12 @@ export class AuthService {
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(authRegisterDto.password, salt);
 
-        const payload = {
+        const payload: AuthRegisterPayload = {
             ...authRegisterDto,
             password: hash,
             role: Roles.USER,
             registeredAt: getCurrentUnix(),
+            tokenVersion: getCurrentUnix(),
         };
 
         return await this.usersCollectionService.saveNewUser(payload);
@@ -55,7 +57,12 @@ export class AuthService {
             );
         }
 
-        const payload = { sub: user._id, email: user.email };
+        const payload: JwtPayload = {
+            sub: user._id,
+            email: user.email,
+            role: user.role,
+            tokenVersion: user.tokenVersion,
+        };
         return {
             access_token: await this.jwtService.signAsync(payload),
         };
