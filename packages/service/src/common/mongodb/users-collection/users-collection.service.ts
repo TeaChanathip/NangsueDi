@@ -29,45 +29,42 @@ export class UsersCollectionService {
 
     async saveNewUser(payload: AuthRegisterPayload): Promise<UserResponse> {
         const newUser = new this.usersModel(payload);
-        return await newUser.save();
+        const user: User = await newUser.save();
+        return this.cvt2Response(user);
     }
 
     async editUser(
         userId: Types.ObjectId,
         payload: UserEditPayload,
     ): Promise<UserResponse> {
-        return await this.usersModel.findByIdAndUpdate(userId, payload, {
-            new: true,
-        });
+        const user: User = await this.usersModel.findByIdAndUpdate(
+            userId,
+            payload,
+            {
+                new: true,
+            },
+        );
+        return this.cvt2Response(user);
     }
 
     async deleteUser(userId: Types.ObjectId): Promise<UserResponse> {
-        return await this.usersModel.findByIdAndDelete(userId);
+        const user: User = await this.usersModel.findByIdAndDelete(userId);
+        return this.cvt2Response(user);
     }
 
     async changePassword(
         userId: Types.ObjectId,
         payload: UserChangePasswordPayload,
     ): Promise<UserResponse> {
-        return await this.usersModel.findByIdAndUpdate(userId, payload, {
-            new: true,
-        });
+        const user: User = await this.usersModel.findByIdAndUpdate(
+            userId,
+            payload,
+            {
+                new: true,
+            },
+        );
+        return this.cvt2Response(user);
     }
-
-    // private cvt2Response(user: User): UserResponse | null {
-    //     if (!user) {
-    //         return null;
-    //     }
-
-    //     return {
-    //         email: user.email,
-    //         phone: user.phone,
-    //         firstName: user.firstName,
-    //         lastName: user.lastName,
-    //         avartarUrl: user.avartarUrl,
-    //         role: user.role,
-    //     };
-    // }
 
     async saveNewPermissions(
         userPermissionsDto: UserPermissionsDto,
@@ -82,12 +79,28 @@ export class UsersCollectionService {
         userId: Types.ObjectId,
         permissions: Types.ObjectId,
     ): Promise<UserResponse> {
-        return await this.usersModel.findByIdAndUpdate(
+        const user: User = await this.usersModel.findByIdAndUpdate(
             userId,
             {
                 permissions: permissions,
             },
             { new: true },
         );
+        return this.cvt2Response(user);
+    }
+
+    private cvt2Response(user: User): UserResponse | null {
+        if (!user) {
+            return null;
+        }
+
+        return {
+            email: user.email,
+            phone: user.phone,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            avartarUrl: user.avartarUrl,
+            role: user.role,
+        };
     }
 }
