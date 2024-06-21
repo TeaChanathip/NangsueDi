@@ -5,7 +5,7 @@ import { UsersCollectionService } from 'src/common/mongodb/users-collection/user
 import { AuthRegisterDto, AuthRegisterPayload } from './dtos/auth.register.dto';
 import { User, UserResponse } from 'src/shared/interfaces/user.interface';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
-import { Roles } from 'src/shared/enums/roles.enum';
+import { Role } from 'src/shared/enums/role.enum';
 import { JwtPayload } from 'src/shared/interfaces/jwt.payload.interface';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class AuthService {
         const payload: AuthRegisterPayload = {
             ...authRegisterDto,
             password: hash,
-            role: Roles.USER,
+            role: Role.USER,
             registeredAt: getCurrentUnix(),
             tokenVersion: getCurrentUnix(),
         };

@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Roles } from '../enums/roles.enum';
+import { Role } from '../enums/role.enum';
 import { UserPermissionsModel } from 'src/common/mongodb/users-collection/schemas/user-permissions.schema';
 
 export interface User {
@@ -10,7 +10,7 @@ export interface User {
     firstName: string;
     lastName?: string;
     avartarUrl?: string;
-    role: Roles;
+    role: Role;
     permissions?: UserPermissionsModel;
     tokenVersion: number;
 }
@@ -21,5 +21,5 @@ export interface UserResponse {
     firstName: string;
     lastName: string;
     avartarUrl: string;
-    role: Roles;
+    role: Role;
 }

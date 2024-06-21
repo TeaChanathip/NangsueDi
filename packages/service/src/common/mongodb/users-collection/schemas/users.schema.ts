@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Roles } from 'src/shared/enums/roles.enum';
+import { Role } from 'src/shared/enums/role.enum';
 import { UserPermissionsModel } from './user-permissions.schema';
 
 @Schema({
@@ -27,8 +27,8 @@ export class UsersModel {
     @Prop({ required: false, trim: true })
     avartarUrl?: string;
 
-    @Prop({ required: true, enum: Roles })
-    role: Roles;
+    @Prop({ required: true, enum: Role })
+    role: Role;
 
     @Prop({
         type: mongoose.Schema.Types.ObjectId,

@@ -2,13 +2,14 @@ import { Logger, Module, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AuthModule } from './modules/auth/auth.module';
-import { AuthGuard } from './modules/auth/auth.guard';
+import { AuthGuard } from './common/guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { UsersCollectionModule } from './common/mongodb/users-collection/users-collection.module';
 import { AdminsModule } from './modules/admins/admins.module';
+import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
     imports: [
@@ -47,6 +48,10 @@ import { AdminsModule } from './modules/admins/admins.module';
         {
             provide: APP_GUARD,
             useClass: AuthGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard,
         },
     ],
 })

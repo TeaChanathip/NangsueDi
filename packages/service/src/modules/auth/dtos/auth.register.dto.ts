@@ -9,7 +9,7 @@ import {
     IsPhoneNumber,
     IsString,
 } from 'class-validator';
-import { Roles } from 'src/shared/enums/roles.enum';
+import { Role } from 'src/shared/enums/role.enum';
 
 export class AuthRegisterDto {
     @ApiProperty({
@@ -50,8 +50,8 @@ export class AuthRegisterDto {
 
 export class AuthRegisterPayload extends AuthRegisterDto {
     @IsNotEmpty()
-    @IsEnum(Roles)
-    role: Roles;
+    @IsEnum(Role)
+    role: Role;
 
     @IsNotEmpty()
     @IsNumber()

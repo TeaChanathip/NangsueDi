@@ -10,7 +10,7 @@ import {
     IsUrl,
 } from 'class-validator';
 import { ObjectId } from 'mongoose';
-import { Roles } from '../enums/roles.enum';
+import { Role } from '../enums/role.enum';
 
 export class UserDto {
     @IsNotEmpty()
@@ -41,8 +41,8 @@ export class UserDto {
     avartarUrl?: string;
 
     @IsNotEmpty()
-    @IsEnum(Roles)
-    role: Roles;
+    @IsEnum(Role)
+    role: Role;
 
     @IsOptional()
     permissions?: ObjectId;
@@ -82,6 +82,6 @@ export class UserResponseDto {
     avartarUrl?: string;
 
     @IsNotEmpty()
-    @IsEnum(Roles)
-    role: Roles;
+    @IsEnum(Role)
+    role: Role;
 }

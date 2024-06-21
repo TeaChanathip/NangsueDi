@@ -4,6 +4,8 @@ import { UserEditDto } from './dtos/user.edit.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserDeleteDto } from './dtos/user.delete.dto';
 import { UserChangePasswordDto } from './dtos/user.change-password.dto';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/shared/enums/role.enum';
 
 @Controller('users')
 @ApiTags('User')
@@ -16,6 +18,7 @@ export class UsersController {
         return await this.usersService.editProfile(req?.user?.sub, userEditDto);
     }
 
+    @Roles(Role.USER)
     @Delete('delete-profile')
     async deleteProfile(
         @Request() req: any,

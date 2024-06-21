@@ -1,9 +1,9 @@
 import { Types } from 'mongoose';
-import { Roles } from '../enums/roles.enum';
+import { Role } from '../enums/role.enum';
 
 export interface JwtPayload {
     sub: Types.ObjectId;
     email: string;
-    role: Roles;
+    role: Role;
     tokenVersion: number;
 }
