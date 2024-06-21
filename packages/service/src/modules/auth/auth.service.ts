@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
 import { AuthRegisterDto, AuthRegisterPayload } from './dtos/auth.register.dto';
-import { User } from 'src/shared/interfaces/user.interface';
+import { User, UserResponse } from 'src/shared/interfaces/user.interface';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Roles } from 'src/shared/enums/roles.enum';
 import { JwtPayload } from 'src/shared/interfaces/jwt.payload.interface';
@@ -15,8 +15,8 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
-    async register(authRegisterDto: AuthRegisterDto): Promise<User> {
-        const user = await this.usersCollectionService.findByEmail(
+    async register(authRegisterDto: AuthRegisterDto): Promise<UserResponse> {
+        const user: User = await this.usersCollectionService.findByEmail(
             authRegisterDto.email,
         );
         if (user) {
@@ -40,8 +40,11 @@ export class AuthService {
         return await this.usersCollectionService.saveNewUser(payload);
     }
 
-    async login(email: string, password: string): Promise<any> {
-        const user = await this.usersCollectionService.findByEmail(email);
+    async login(
+        email: string,
+        password: string,
+    ): Promise<{ access_token: string }> {
+        const user: User = await this.usersCollectionService.findByEmail(email);
         if (!user) {
             throw new HttpException(
                 'The email or password is incorrect',

@@ -14,3 +14,12 @@ export interface User {
     permissions?: UserPermissionsModel;
     tokenVersion: number;
 }
+
+export interface UserResponse {
+    email: string;
+    phone: string;
+    firstName: string;
+    lastName: string;
+    avartarUrl: string;
+    role: Roles;
+}

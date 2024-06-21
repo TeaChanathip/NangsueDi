@@ -8,6 +8,7 @@ import { UsersModule } from './modules/users/users.module';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { UsersCollectionModule } from './common/mongodb/users-collection/users-collection.module';
+import { AdminsModule } from './modules/admins/admins.module';
 
 @Module({
     imports: [
@@ -40,6 +41,7 @@ import { UsersCollectionModule } from './common/mongodb/users-collection/users-c
         AuthModule,
         UsersModule,
         UsersCollectionModule,
+        AdminsModule,
     ],
     providers: [
         {

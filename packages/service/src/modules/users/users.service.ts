@@ -13,6 +13,7 @@ import {
     UserChangePasswordDto,
     UserChangePasswordPayload,
 } from './dtos/user.change-password.dto';
+import { User, UserResponse } from 'src/shared/interfaces/user.interface';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +21,10 @@ export class UsersService {
         private readonly usersCollectionService: UsersCollectionService,
     ) {}
 
-    async editProfile(userId: Types.ObjectId, userEditDto: UserEditDto) {
+    async editProfile(
+        userId: Types.ObjectId,
+        userEditDto: UserEditDto,
+    ): Promise<UserResponse> {
         if (!userId) {
             throw new NotFoundException();
         }
@@ -38,8 +42,11 @@ export class UsersService {
         return await this.usersCollectionService.editUser(userId, payload);
     }
 
-    async deleteProfile(userId: Types.ObjectId, password: string) {
-        const user = await this.findByIdAndComparePassword(
+    async deleteProfile(
+        userId: Types.ObjectId,
+        password: string,
+    ): Promise<UserResponse> {
+        const user: User = await this.findByIdAndComparePassword(
             userId,
             password,
             'The password is incorrect',
@@ -51,8 +58,8 @@ export class UsersService {
     async changePassword(
         userId: Types.ObjectId,
         userChangePasswordDto: UserChangePasswordDto,
-    ) {
-        const user = await this.findByIdAndComparePassword(
+    ): Promise<UserResponse> {
+        const user: User = await this.findByIdAndComparePassword(
             userId,
             userChangePasswordDto.password,
             'The old password is incorrect',
@@ -73,7 +80,7 @@ export class UsersService {
         userId: Types.ObjectId,
         password: string,
         errMsg: string,
-    ) {
+    ): Promise<User> {
         const user = await this.usersCollectionService.findById(userId);
         if (!user) {
             throw new NotFoundException();
