@@ -5,8 +5,8 @@ import { PublicRoute } from 'src/common/decorators/public-route.decorator';
 import { AuthRegisterDto } from './dtos/auth.register.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller('auth')
 @ApiTags('Auth')
+@Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 

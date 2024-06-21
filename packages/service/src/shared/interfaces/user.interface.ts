@@ -19,7 +19,7 @@ export interface UserResponse {
     email: string;
     phone: string;
     firstName: string;
-    lastName: string;
-    avartarUrl: string;
+    lastName?: string;
+    avartarUrl?: string;
     role: Role;
 }

@@ -9,12 +9,12 @@ import {
     IsString,
     IsUrl,
 } from 'class-validator';
-import { ObjectId } from 'mongoose';
 import { Role } from '../enums/role.enum';
+import { Types } from 'mongoose';
 
 export class UserDto {
     @IsNotEmpty()
-    _id: ObjectId;
+    _id: Types.ObjectId;
 
     @IsNotEmpty()
     @IsEmail()
@@ -45,7 +45,7 @@ export class UserDto {
     role: Role;
 
     @IsOptional()
-    permissions?: ObjectId;
+    permissions?: Types.ObjectId;
 
     @IsNotEmpty()
     @IsNumber()

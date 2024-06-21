@@ -1,4 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+import { UsersModel } from './users.schema';
 
 @Schema({
     collection: 'UserPermissions',
@@ -6,11 +8,18 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
     versionKey: false,
 })
 export class UserPermissionsModel {
-    @Prop({ required: false })
-    canBorrow?: boolean;
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+        required: true,
+    })
+    userId: UsersModel;
 
-    @Prop({ required: false })
-    canReview?: boolean;
+    @Prop({ required: true })
+    canBorrow: boolean;
+
+    @Prop({ required: true })
+    canReview: boolean;
 }
 
 export const UserPermissionsSchema =
