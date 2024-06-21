@@ -3,7 +3,6 @@ import {
     IsAlpha,
     IsEmail,
     IsEnum,
-    IsHash,
     IsNotEmpty,
     IsNumber,
     IsOptional,
@@ -12,7 +11,7 @@ import {
 } from 'class-validator';
 import { Roles } from 'src/shared/enums/roles.enum';
 
-export class UserRegisterDto {
+export class AuthRegisterDto {
     @ApiProperty({
         default: 'test1@test.com',
     })
@@ -49,7 +48,7 @@ export class UserRegisterDto {
     lastName?: string;
 }
 
-export class UserRegisterPayload extends UserRegisterDto {
+export class AuthRegisterPayload extends AuthRegisterDto {
     @IsNotEmpty()
     @IsEnum(Roles)
     role: Roles;

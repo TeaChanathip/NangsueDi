@@ -6,10 +6,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
-import { UserRegisterDto } from './dtos/user-register.dto';
-import { Roles } from 'src/shared/enums/roles.enum';
-import { UserEditDto } from './dtos/user-edit.dto';
-import { User } from 'src/shared/interfaces/user.interface';
+import { UserEditDto } from './dtos/user.edit.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Types } from 'mongoose';
 
@@ -18,30 +15,6 @@ export class UsersService {
     constructor(
         private readonly usersCollectionService: UsersCollectionService,
     ) {}
-
-    async register(userRegisterDto: UserRegisterDto): Promise<User> {
-        const user = await this.usersCollectionService.findByEmail(
-            userRegisterDto.email,
-        );
-        if (user) {
-            throw new HttpException(
-                'The email is already taken',
-                HttpStatus.BAD_REQUEST,
-            );
-        }
-
-        const salt = await bcrypt.genSalt();
-        const hash = await bcrypt.hash(userRegisterDto.password, salt);
-
-        const payload = {
-            ...userRegisterDto,
-            password: hash,
-            role: Roles.USER,
-            registeredAt: getCurrentUnix(),
-        };
-
-        return await this.usersCollectionService.saveNewUser(payload);
-    }
 
     async editProfile(userId: Types.ObjectId, userEditDto: UserEditDto) {
         if (!userId) {
@@ -62,6 +35,32 @@ export class UsersService {
     }
 
     async deleteProfile(userId: Types.ObjectId, password: string) {
+        const user = await this.findByIdAndComparePassword(
+            userId,
+            password,
+            'The password is incorrect',
+        );
+
+        return this.usersCollectionService.deleteUser(userId);
+    }
+
+    async changePassword(
+        userId: Types.ObjectId,
+        password: string,
+        newPassword: string,
+    ) {
+        const user = await this.findByIdAndComparePassword(
+            userId,
+            password,
+            'The old password is incorrect',
+        );
+    }
+
+    private async findByIdAndComparePassword(
+        userId: Types.ObjectId,
+        password: string,
+        errMsg: string,
+    ) {
         const user = await this.usersCollectionService.findById(userId);
         if (!user) {
             throw new NotFoundException();
@@ -69,12 +68,9 @@ export class UsersService {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw new HttpException(
-                'The password is incorrect',
-                HttpStatus.UNAUTHORIZED,
-            );
+            throw new HttpException(errMsg, HttpStatus.UNAUTHORIZED);
         }
 
-        return this.usersCollectionService.deleteUser(userId);
+        return user;
     }
 }

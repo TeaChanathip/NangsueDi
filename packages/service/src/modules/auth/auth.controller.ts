@@ -1,19 +1,27 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { UserLoginDto } from './dtos/user-login.dto';
+import { AuthLoginDto } from './dtos/auth.login.dto';
 import { AuthService } from './auth.service';
 import { PublicRoute } from 'src/common/decorators/public-route.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthRegisterDto } from './dtos/auth.register.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 
     @PublicRoute()
+    @Post('register')
+    async register(@Body() authRegisterDto: AuthRegisterDto) {
+        return await this.authService.register(authRegisterDto);
+    }
+
+    @PublicRoute()
     @Post('login')
-    async login(@Body() userLoginDto: UserLoginDto) {
+    async login(@Body() authLoginDto: AuthLoginDto) {
         return await this.authService.login(
-            userLoginDto.email,
-            userLoginDto.password,
+            authLoginDto.email,
+            authLoginDto.password,
         );
     }
 }
