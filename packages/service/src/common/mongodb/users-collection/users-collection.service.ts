@@ -28,6 +28,11 @@ export class UsersCollectionService {
         return await this.usersModel.findOne({ email });
     }
 
+    async getUser(userId: Types.ObjectId): Promise<UserFiltered> {
+        const user = await this.usersModel.findById(userId);
+        return await this.filterUser(user);
+    }
+
     async saveNewUser(userSaveDto: UserSaveDto): Promise<UserFiltered> {
         const newUser = new this.usersModel(userSaveDto);
         const user = await newUser.save();
