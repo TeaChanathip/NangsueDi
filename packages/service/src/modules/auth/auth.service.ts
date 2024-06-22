@@ -2,11 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
-import { AuthRegisterDto, AuthRegisterPayload } from './dtos/auth.register.dto';
-import { User, UserResponse } from 'src/shared/interfaces/user.interface';
+import { AuthRegisterReqDto } from './dtos/auth.register.req.dto';
+import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Role } from 'src/shared/enums/role.enum';
-import { JwtPayload } from 'src/shared/interfaces/jwt.payload.interface';
+import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface';
+import { UserSaveDto } from 'src/common/mongodb/users-collection/dtos/user.save.dto';
+import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,9 +17,11 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
-    async register(authRegisterDto: AuthRegisterDto): Promise<UserResponse> {
-        const user: User = await this.usersCollectionService.findByEmail(
-            authRegisterDto.email,
+    async register(
+        authRegisterReqDto: AuthRegisterReqDto,
+    ): Promise<UserFiltered> {
+        const user = await this.usersCollectionService.findByEmail(
+            authRegisterReqDto.email,
         );
         if (user) {
             throw new HttpException(
@@ -27,24 +31,24 @@ export class AuthService {
         }
 
         const salt = await bcrypt.genSalt();
-        const hash = await bcrypt.hash(authRegisterDto.password, salt);
+        const hash = await bcrypt.hash(authRegisterReqDto.password, salt);
 
-        const payload: AuthRegisterPayload = {
-            ...authRegisterDto,
+        const userSaveDto: UserSaveDto = {
+            ...authRegisterReqDto,
             password: hash,
             role: Role.USER,
             registeredAt: getCurrentUnix(),
             tokenVersion: getCurrentUnix(),
         };
 
-        return await this.usersCollectionService.saveNewUser(payload);
+        return await this.usersCollectionService.saveNewUser(userSaveDto);
     }
 
     async login(
-        email: string,
-        password: string,
+        authLoginReqDto: AuthLoginReqDto,
     ): Promise<{ access_token: string }> {
-        const user: User = await this.usersCollectionService.findByEmail(email);
+        const { email, password } = authLoginReqDto;
+        const user = await this.usersCollectionService.findByEmail(email);
         if (!user) {
             throw new HttpException(
                 'The email or password is incorrect',
@@ -60,14 +64,14 @@ export class AuthService {
             );
         }
 
-        const payload: JwtPayload = {
+        const userPayload: JwtUserPayload = {
             sub: user._id,
             email: user.email,
             role: user.role,
             tokenVersion: user.tokenVersion,
         };
         return {
-            access_token: await this.jwtService.signAsync(payload),
+            access_token: await this.jwtService.signAsync(userPayload),
         };
     }
 }

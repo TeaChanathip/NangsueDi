@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 import { UsersModel } from './users.schema';
 
 @Schema({
-    collection: 'UserPermissions',
+    collection: 'UsersPermissions',
     autoCreate: true,
     versionKey: false,
 })
-export class UserPermissionsModel {
+export class UsersPermissionsModel {
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
@@ -22,5 +22,6 @@ export class UserPermissionsModel {
     canReview: boolean;
 }
 
-export const UserPermissionsSchema =
-    SchemaFactory.createForClass(UserPermissionsModel);
+export const UsersPermissionsSchema = SchemaFactory.createForClass(
+    UsersPermissionsModel,
+);

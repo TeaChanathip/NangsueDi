@@ -12,7 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from 'src/common/decorators/public-route.decorator';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
-import { JwtPayload } from 'src/shared/interfaces/jwt.payload.interface';
+import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -38,21 +38,21 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        let payload: JwtPayload;
+        let userPayload: JwtUserPayload;
         try {
-            payload = await this.jwtService.verifyAsync(token, {
+            userPayload = await this.jwtService.verifyAsync(token, {
                 secret: process.env.JWT_SECRET,
             });
         } catch {
             throw new UnauthorizedException();
         }
 
-        const user = await this.userCollectionService.findById(payload.sub);
+        const user = await this.userCollectionService.findById(userPayload.sub);
         if (!user) {
             throw new NotFoundException();
         }
 
-        if (payload.tokenVersion !== user.tokenVersion) {
+        if (userPayload.tokenVersion !== user.tokenVersion) {
             throw new HttpException(
                 'The token version does not match',
                 HttpStatus.UNAUTHORIZED,
@@ -61,7 +61,7 @@ export class AuthGuard implements CanActivate {
 
         // Put the payload into the "request", so that we can access it later
         // Note: "request" was passed by reference
-        request['user'] = payload;
+        request['user'] = userPayload;
 
         return true;
     }

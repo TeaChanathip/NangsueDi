@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Role } from 'src/shared/enums/role.enum';
-import { UserPermissionsModel } from './user-permissions.schema';
+import { UsersPermissionsModel } from './users-permissions.schema';
 
 @Schema({
     collection: 'Users',
@@ -32,10 +32,10 @@ export class UsersModel {
 
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserPermission',
+        ref: 'UsersPermissions',
         required: false,
     })
-    permissions?: UserPermissionsModel;
+    permissions?: UsersPermissionsModel;
 
     @Prop({ required: true, immutable: true })
     registeredAt: number;

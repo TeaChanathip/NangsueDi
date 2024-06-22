@@ -6,14 +6,13 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
-import { UserEditDto, UserEditPayload } from './dtos/user.edit.dto';
+import { UserUpdateReqDto } from './dtos/user.update.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Types } from 'mongoose';
-import {
-    UserChangePasswordDto,
-    UserChangePasswordPayload,
-} from './dtos/user.change-password.dto';
-import { User, UserResponse } from 'src/shared/interfaces/user.interface';
+import { UsersChangePasswordReqDto } from './dtos/users.change-password.req.dto';
+import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
+import { PasswordUpdateDto } from 'src/common/mongodb/users-collection/dtos/password.update.dto';
+import { UserUpdateDto } from 'src/common/mongodb/users-collection/dtos/user.update.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,10 +20,10 @@ export class UsersService {
         private readonly usersCollectionService: UsersCollectionService,
     ) {}
 
-    async editProfile(
+    async updateProfile(
         userId: Types.ObjectId,
-        userEditDto: UserEditDto,
-    ): Promise<UserResponse> {
+        userUpdateReqDto: UserUpdateReqDto,
+    ): Promise<UserFiltered> {
         if (!userId) {
             throw new NotFoundException();
         }
@@ -34,19 +33,22 @@ export class UsersService {
             throw new NotFoundException();
         }
 
-        const payload: UserEditPayload = {
-            ...userEditDto,
+        const userUpdateDto: UserUpdateDto = {
+            ...userUpdateReqDto,
             updatedAt: getCurrentUnix(),
         };
 
-        return await this.usersCollectionService.editUser(userId, payload);
+        return await this.usersCollectionService.editUser(
+            userId,
+            userUpdateDto,
+        );
     }
 
     async deleteProfile(
         userId: Types.ObjectId,
         password: string,
-    ): Promise<UserResponse> {
-        const user: User = await this.findByIdAndComparePassword(
+    ): Promise<UserFiltered> {
+        await this.comparePassword(
             userId,
             password,
             'The password is incorrect',
@@ -57,30 +59,36 @@ export class UsersService {
 
     async changePassword(
         userId: Types.ObjectId,
-        userChangePasswordDto: UserChangePasswordDto,
-    ): Promise<UserResponse> {
-        const user: User = await this.findByIdAndComparePassword(
+        usersChangePasswordReqDto: UsersChangePasswordReqDto,
+    ): Promise<UserFiltered> {
+        await this.comparePassword(
             userId,
-            userChangePasswordDto.password,
+            usersChangePasswordReqDto.password,
             'The old password is incorrect',
         );
 
         const salt = await bcrypt.genSalt();
-        const hash = await bcrypt.hash(userChangePasswordDto.newPassword, salt);
+        const hash = await bcrypt.hash(
+            usersChangePasswordReqDto.newPassword,
+            salt,
+        );
 
-        const payload: UserChangePasswordPayload = {
+        const passwordUpdateDto: PasswordUpdateDto = {
             password: hash,
             tokenVersion: getCurrentUnix(),
         };
 
-        return this.usersCollectionService.changePassword(userId, payload);
+        return this.usersCollectionService.changePassword(
+            userId,
+            passwordUpdateDto,
+        );
     }
 
-    private async findByIdAndComparePassword(
+    private async comparePassword(
         userId: Types.ObjectId,
         password: string,
         errMsg: string,
-    ): Promise<User> {
+    ): Promise<void> {
         const user = await this.usersCollectionService.findById(userId);
         if (!user) {
             throw new NotFoundException();
@@ -90,7 +98,5 @@ export class UsersService {
         if (!isMatch) {
             throw new HttpException(errMsg, HttpStatus.UNAUTHORIZED);
         }
-
-        return user;
     }
 }

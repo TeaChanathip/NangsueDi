@@ -1,14 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-    IsAlpha,
-    IsNotEmpty,
-    IsNumber,
-    IsOptional,
-    IsPhoneNumber,
-    IsUrl,
-} from 'class-validator';
+import { IsAlpha, IsOptional, IsPhoneNumber, IsUrl } from 'class-validator';
 
-export class UserEditDto {
+export class UserUpdateReqDto {
     @ApiProperty({
         default: '+66 991111111',
     })
@@ -37,10 +30,4 @@ export class UserEditDto {
     @IsOptional()
     @IsUrl()
     avartarUrl?: string;
-}
-
-export class UserEditPayload extends UserEditDto {
-    @IsNotEmpty()
-    @IsNumber()
-    updatedAt: number;
 }

@@ -1,106 +1,131 @@
-import { Injectable, Type } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersModel } from './schemas/users.schema';
 import { Model, Types } from 'mongoose';
-import { UserPermissionsModel } from './schemas/user-permissions.schema';
-import { User, UserResponse } from 'src/shared/interfaces/user.interface';
-import { AuthRegisterPayload } from 'src/modules/auth/dtos/auth.register.dto';
-import { UserEditPayload } from 'src/modules/users/dtos/user.edit.dto';
-import { UserChangePasswordPayload } from 'src/modules/users/dtos/user.change-password.dto';
-import { UserPermissionsDto } from 'src/modules/admins/dtos/user.permissions.dto';
-import { UserPermissions } from 'src/modules/admins/interfaces/user.permissions.interface';
+import { UsersPermissionsModel } from './schemas/users-permissions.schema';
+import { UserRes } from './interfaces/user.res.interface';
+import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
+import { UserSaveDto } from './dtos/user.save.dto';
+import { UserUpdateDto } from './dtos/user.update.dto';
+import { PasswordUpdateDto } from './dtos/password.update.dto';
+import { UserPermissionsSaveDto } from './dtos/user-permissions.save.dto';
+import { UserPermissionsRes } from './interfaces/user-permissions.res.interface';
 
 @Injectable()
 export class UsersCollectionService {
     constructor(
         @InjectModel(UsersModel.name)
         private readonly usersModel: Model<UsersModel>,
-        @InjectModel(UserPermissionsModel.name)
-        private readonly userPermissionsModel: Model<UserPermissionsModel>,
+        @InjectModel(UsersPermissionsModel.name)
+        private readonly userPermissionsModel: Model<UsersPermissionsModel>,
     ) {}
 
-    async findById(userId: Types.ObjectId): Promise<User> {
+    async findById(userId: Types.ObjectId): Promise<UserRes> {
         return await this.usersModel.findById(userId);
     }
 
-    async findByEmail(email: string): Promise<User> {
+    async findByEmail(email: string): Promise<UserRes> {
         return await this.usersModel.findOne({ email });
     }
 
-    async saveNewUser(payload: AuthRegisterPayload): Promise<UserResponse> {
-        const newUser = new this.usersModel(payload);
-        const user: User = await newUser.save();
-        return this.cvt2Response(user);
+    async saveNewUser(userSaveDto: UserSaveDto): Promise<UserFiltered> {
+        const newUser = new this.usersModel(userSaveDto);
+        const user = await newUser.save();
+
+        return await this.filterUser(user);
     }
 
     async editUser(
         userId: Types.ObjectId,
-        payload: UserEditPayload,
-    ): Promise<UserResponse> {
-        const user: User = await this.usersModel.findByIdAndUpdate(
+        userUpdateDto: UserUpdateDto,
+    ): Promise<UserFiltered> {
+        const user = await this.usersModel.findByIdAndUpdate(
             userId,
-            payload,
+            userUpdateDto,
             {
                 new: true,
             },
         );
-        return this.cvt2Response(user);
+
+        return await this.filterUser(user);
     }
 
-    async deleteUser(userId: Types.ObjectId): Promise<UserResponse> {
-        const user: User = await this.usersModel.findByIdAndDelete(userId);
-        return this.cvt2Response(user);
+    async deleteUser(userId: Types.ObjectId): Promise<UserFiltered> {
+        const user = await this.usersModel.findByIdAndDelete(userId);
+
+        return await this.filterUser(user);
     }
 
     async changePassword(
         userId: Types.ObjectId,
-        payload: UserChangePasswordPayload,
-    ): Promise<UserResponse> {
-        const user: User = await this.usersModel.findByIdAndUpdate(
+        passwordUpdateDto: PasswordUpdateDto,
+    ): Promise<UserFiltered> {
+        const user = await this.usersModel.findByIdAndUpdate(
             userId,
-            payload,
+            passwordUpdateDto,
             {
                 new: true,
             },
         );
-        return this.cvt2Response(user);
+
+        return await this.filterUser(user);
     }
 
     async saveNewPermissions(
-        userPermissionsDto: UserPermissionsDto,
-    ): Promise<UserPermissions> {
+        userPermissionsSaveDto: UserPermissionsSaveDto,
+    ): Promise<UserPermissionsRes> {
         const userPermissions = new this.userPermissionsModel(
-            userPermissionsDto,
+            userPermissionsSaveDto,
         );
+
         return await userPermissions.save();
     }
 
     async addPermissionsToUser(
         userId: Types.ObjectId,
         permissions: Types.ObjectId,
-    ): Promise<UserResponse> {
-        const user: User = await this.usersModel.findByIdAndUpdate(
+    ): Promise<UserFiltered> {
+        const user = await this.usersModel.findByIdAndUpdate(
             userId,
             {
                 permissions: permissions,
             },
             { new: true },
         );
-        return this.cvt2Response(user);
+
+        return await this.filterUser(user);
     }
 
-    private cvt2Response(user: User): UserResponse | null {
+    private async filterUser(user: UserRes | null): Promise<UserFiltered> {
         if (!user) {
             return null;
         }
 
-        return {
+        const res: UserFiltered = {
+            _id: user._id,
             email: user.email,
             phone: user.phone,
             firstName: user.firstName,
             lastName: user.lastName,
             avartarUrl: user.avartarUrl,
             role: user.role,
+        };
+
+        const permissions = await this.userPermissionsModel.findById(
+            user.permissions,
+        );
+
+        // If user has no permissions or permissions not found
+        if (!user.permissions || !permissions) {
+            return res;
+        }
+
+        return {
+            ...res,
+            permissions: {
+                canBorrow: permissions.canBorrow,
+                canReview: permissions.canReview,
+            },
         };
     }
 }

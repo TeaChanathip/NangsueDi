@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { AuthLoginDto } from './dtos/auth.login.dto';
+import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
 import { AuthService } from './auth.service';
 import { PublicRoute } from 'src/common/decorators/public-route.decorator';
-import { AuthRegisterDto } from './dtos/auth.register.dto';
+import { AuthRegisterReqDto } from './dtos/auth.register.req.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
@@ -12,16 +12,13 @@ export class AuthController {
 
     @PublicRoute()
     @Post('register')
-    async register(@Body() authRegisterDto: AuthRegisterDto) {
-        return await this.authService.register(authRegisterDto);
+    async register(@Body() authRegisterReqDto: AuthRegisterReqDto) {
+        return await this.authService.register(authRegisterReqDto);
     }
 
     @PublicRoute()
     @Post('login')
-    async login(@Body() authLoginDto: AuthLoginDto) {
-        return await this.authService.login(
-            authLoginDto.email,
-            authLoginDto.password,
-        );
+    async login(@Body() authLoginReqDto: AuthLoginReqDto) {
+        return await this.authService.login(authLoginReqDto);
     }
 }

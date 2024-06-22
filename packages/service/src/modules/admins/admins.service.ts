@@ -7,16 +7,26 @@ import {
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
-import { UserPermissionsDto } from './dtos/user.permissions.dto';
-import { UserResponse } from 'src/shared/interfaces/user.interface';
+import { UserPermissionsSaveDto } from '../../common/mongodb/users-collection/dtos/user-permissions.save.dto';
+import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { Role } from 'src/shared/enums/role.enum';
 
 @Injectable()
 export class AdminsService {
     constructor(private usersCollectionService: UsersCollectionService) {}
 
-    async verifyUser(userId: Types.ObjectId): Promise<UserResponse> {
-        const user = await this.usersCollectionService.findById(userId);
+    async verifyUser(userId: string): Promise<UserFiltered> {
+        let userObjectId: Types.ObjectId;
+        try {
+            userObjectId = new Types.ObjectId(userId);
+        } catch {
+            throw new HttpException(
+                'The userId format is invalid',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        const user = await this.usersCollectionService.findById(userObjectId);
         if (!user) {
             throw new NotFoundException();
         }
@@ -33,23 +43,29 @@ export class AdminsService {
             );
         }
 
-        const userPermissionsDto: UserPermissionsDto = {
-            userId: userId,
+        const userPermissionsSaveDto: UserPermissionsSaveDto = {
+            userId: userObjectId,
             canBorrow: true,
             canReview: true,
         };
 
         const permissions =
             await this.usersCollectionService.saveNewPermissions(
-                userPermissionsDto,
+                userPermissionsSaveDto,
             );
         if (!permissions) {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollectionService.addPermissionsToUser(
-            userId,
-            permissions._id,
-        );
+        const filteredUser =
+            await this.usersCollectionService.addPermissionsToUser(
+                userObjectId,
+                permissions._id,
+            );
+        if (!filteredUser) {
+            throw new InternalServerErrorException();
+        }
+
+        return filteredUser;
     }
 }

@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Patch, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserEditDto } from './dtos/user.edit.dto';
+import { UserUpdateReqDto } from './dtos/user.update.req.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { UserDeleteDto } from './dtos/user.delete.dto';
-import { UserChangePasswordDto } from './dtos/user.change-password.dto';
+import { UserDeleteReqDto } from './dtos/user.delete.req.dto';
+import { UsersChangePasswordReqDto } from './dtos/users.change-password.req.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 
@@ -13,31 +13,37 @@ import { Role } from 'src/shared/enums/role.enum';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Patch('edit-profile')
-    async editProfile(@Request() req: any, @Body() userEditDto: UserEditDto) {
-        return await this.usersService.editProfile(req?.user?.sub, userEditDto);
+    @Patch('update-profile')
+    async updateProfile(
+        @Request() req: any,
+        @Body() userUpdateReqDto: UserUpdateReqDto,
+    ) {
+        return await this.usersService.updateProfile(
+            req?.user?.sub,
+            userUpdateReqDto,
+        );
     }
 
     @Roles(Role.USER)
     @Delete('delete-profile')
     async deleteProfile(
         @Request() req: any,
-        @Body() userDeleteDto: UserDeleteDto,
+        @Body() userDeleteReqDto: UserDeleteReqDto,
     ) {
         return await this.usersService.deleteProfile(
             req?.user?.sub,
-            userDeleteDto.password,
+            userDeleteReqDto.password,
         );
     }
 
     @Patch('change-password')
     async changePassword(
         @Request() req: any,
-        @Body() userChangePasswordDto: UserChangePasswordDto,
+        @Body() usersChangePasswordReqDto: UsersChangePasswordReqDto,
     ) {
         return await this.usersService.changePassword(
             req?.user?.sub,
-            userChangePasswordDto,
+            usersChangePasswordReqDto,
         );
     }
 }
