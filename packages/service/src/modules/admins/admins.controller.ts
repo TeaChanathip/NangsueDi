@@ -4,6 +4,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { AdminsService } from './admins.service';
 import { AdminsVerifyUserReqDto } from './dtos/admins.verify-user.req.dto';
+import { AdminsEditUserPermissionsDto } from './dtos/admins.edit-user-permissions.req.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -15,5 +16,14 @@ export class AdminsController {
     @Patch('verify-user')
     verifyUser(@Body() adminsVerifyUserReqDto: AdminsVerifyUserReqDto) {
         return this.adminsService.verifyUser(adminsVerifyUserReqDto.userId);
+    }
+
+    @Patch('edit-user-permissions')
+    editUserPermissions(
+        @Body() adminsEditUserPermissionsDto: AdminsEditUserPermissionsDto,
+    ) {
+        return this.adminsService.editUserPermissions(
+            adminsEditUserPermissionsDto,
+        );
     }
 }

@@ -101,6 +101,18 @@ export class UsersCollectionService {
         return await this.filterUser(user);
     }
 
+    async editUserPermissions(
+        userId: Types.ObjectId,
+        canBorrow: boolean,
+        canReview: boolean,
+    ): Promise<UserPermissionsRes> {
+        return await this.userPermissionsModel.findOneAndUpdate(
+            { userId },
+            { canBorrow, canReview },
+            { new: true },
+        );
+    }
+
     private async filterUser(user: UserRes | null): Promise<UserFiltered> {
         if (!user) {
             return null;

@@ -10,21 +10,14 @@ import { UsersCollectionService } from 'src/common/mongodb/users-collection/user
 import { UserPermissionsSaveDto } from '../../common/mongodb/users-collection/dtos/user-permissions.save.dto';
 import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { Role } from 'src/shared/enums/role.enum';
+import { AdminsEditUserPermissionsDto } from './dtos/admins.edit-user-permissions.req.dto';
 
 @Injectable()
 export class AdminsService {
     constructor(private usersCollectionService: UsersCollectionService) {}
 
     async verifyUser(userId: string): Promise<UserFiltered> {
-        let userObjectId: Types.ObjectId;
-        try {
-            userObjectId = new Types.ObjectId(userId);
-        } catch {
-            throw new HttpException(
-                'The userId format is invalid',
-                HttpStatus.BAD_REQUEST,
-            );
-        }
+        const userObjectId = this.cvtString2ObjectId(userId);
 
         const user = await this.usersCollectionService.findById(userObjectId);
         if (!user) {
@@ -49,6 +42,7 @@ export class AdminsService {
             canReview: true,
         };
 
+        // Save a Permissions document
         const permissions =
             await this.usersCollectionService.saveNewPermissions(
                 userPermissionsSaveDto,
@@ -57,6 +51,7 @@ export class AdminsService {
             throw new InternalServerErrorException();
         }
 
+        // Update a permissions to User document
         const filteredUser =
             await this.usersCollectionService.addPermissionsToUser(
                 userObjectId,
@@ -67,5 +62,38 @@ export class AdminsService {
         }
 
         return filteredUser;
+    }
+
+    async editUserPermissions(
+        adminsEditUserPermissionsDto: AdminsEditUserPermissionsDto,
+    ): Promise<UserFiltered> {
+        const { userId, canBorrow, canReview } = adminsEditUserPermissionsDto;
+        const userObjectId = this.cvtString2ObjectId(userId);
+
+        const userPermissionsRes =
+            await this.usersCollectionService.editUserPermissions(
+                userObjectId,
+                canBorrow,
+                canReview,
+            );
+        if (!userPermissionsRes) {
+            throw new InternalServerErrorException();
+        }
+
+        return await this.usersCollectionService.getUser(userObjectId);
+    }
+
+    private cvtString2ObjectId(id: string) {
+        let objectId: Types.ObjectId;
+        try {
+            objectId = new Types.ObjectId(id);
+        } catch {
+            throw new HttpException(
+                'The userId format is invalid',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        return objectId;
     }
 }
