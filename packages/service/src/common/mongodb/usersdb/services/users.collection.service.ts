@@ -7,7 +7,6 @@ import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface'
 import { UserSaveDto } from '../dtos/user.save.dto';
 import { UserUpdateDto } from '../dtos/user.update.dto';
 import { PasswordUpdateDto } from '../dtos/password.update.dto';
-import { ObjectId } from 'mongoose';
 
 @Injectable()
 export class UsersCollService {
@@ -96,10 +95,34 @@ export class UsersCollService {
                         canBorrow: 1,
                         canReview: 1,
                     },
+                    registeredAt: 1,
+                    updatedAt: 1,
+                    suspendedAt: 1,
                 },
             },
         ]);
 
         return results.length > 0 ? results[0] : null;
+    }
+
+    async suspend(
+        userId: Types.ObjectId,
+        suspendedAt: number,
+    ): Promise<UserRes> {
+        return await this.usersModel.findByIdAndUpdate(
+            userId,
+            { suspendedAt },
+            { new: true },
+        );
+    }
+
+    async unsuspend(userId: Types.ObjectId): Promise<UserRes> {
+        return await this.usersModel.findByIdAndUpdate(
+            userId,
+            {
+                $unset: { suspendedAt: '' },
+            },
+            { new: true },
+        );
     }
 }

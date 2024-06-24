@@ -12,5 +12,8 @@ export interface UserRes {
     avartarUrl?: string;
     role: Role;
     permissions?: UsersPermissionsModel;
+    registeredAt: number;
+    updatedAt?: number;
+    suspendedAt?: number;
     tokenVersion: number;
 }

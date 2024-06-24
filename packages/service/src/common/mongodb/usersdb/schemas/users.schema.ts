@@ -43,6 +43,9 @@ export class UsersModel {
     @Prop({ required: false })
     updatedAt: number;
 
+    @Prop({ required: false })
+    suspendedAt: number;
+
     @Prop({ required: true })
     tokenVersion: number;
 }

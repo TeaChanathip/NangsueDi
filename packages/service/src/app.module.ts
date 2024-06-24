@@ -10,6 +10,7 @@ import { Connection } from 'mongoose';
 import { UsersDBModule } from './common/mongodb/usersdb/users.db.module';
 import { AdminsModule } from './modules/admins/admins.module';
 import { RolesGuard } from './common/guards/roles.guard';
+import { BooksdbModule } from './common/mongodb/booksdb/booksdb.module';
 
 @Module({
     imports: [
@@ -43,6 +44,7 @@ import { RolesGuard } from './common/guards/roles.guard';
         AuthModule,
         UsersModule,
         AdminsModule,
+        BooksdbModule,
     ],
     providers: [
         {

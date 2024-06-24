@@ -13,4 +13,7 @@ export interface UserFiltered {
         canBorrow: boolean;
         canReview: boolean;
     };
+    registeredAt: number;
+    updatedAt?: number;
+    suspendedAt?: number;
 }

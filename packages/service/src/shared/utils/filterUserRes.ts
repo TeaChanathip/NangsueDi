@@ -19,6 +19,9 @@ export function filterUserRes(
         lastName: user.lastName,
         avartarUrl: user.avartarUrl,
         role: user.role,
+        registeredAt: user.registeredAt,
+        ...(user.updatedAt && { updatedAt: user.updatedAt }),
+        ...(user.suspendedAt && { suspendedAt: user.suspendedAt }),
     };
 
     // user permissions not passed into the function
