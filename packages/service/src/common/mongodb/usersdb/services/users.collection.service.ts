@@ -7,6 +7,7 @@ import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface'
 import { UserSaveDto } from '../dtos/user.save.dto';
 import { UserUpdateDto } from '../dtos/user.update.dto';
 import { PasswordUpdateDto } from '../dtos/password.update.dto';
+import { AdminGetUsersReqDto } from 'src/modules/admins/dtos/admins.get-users.req.dto';
 
 @Injectable()
 export class UsersCollService {
@@ -70,7 +71,7 @@ export class UsersCollService {
             { $match: { _id: new Types.ObjectId(userId) } },
             {
                 $lookup: {
-                    from: 'UsersPermissions', // The name of the UserPermissions collection in MongoDB
+                    from: 'UsersPermissions',
                     localField: '_id',
                     foreignField: 'userId',
                     as: 'permissions',
@@ -124,5 +125,86 @@ export class UsersCollService {
             },
             { new: true },
         );
+    }
+
+    async query(
+        adminGetUsersReqDto: AdminGetUsersReqDto,
+    ): Promise<UserFiltered[]> {
+        const {
+            email,
+            phone,
+            firstName,
+            lastName,
+            roles,
+            permissions,
+            registeredBegin,
+            registeredEnd,
+            updatedBegin,
+            updatedEnd,
+            suspendedBegin,
+            suspendedEnd,
+        } = adminGetUsersReqDto;
+        return await this.usersModel.aggregate([
+            {
+                $match: {
+                    ...(email && { email: { $regex: email } }),
+                    ...(phone && { phone: { $regex: phone } }),
+                    ...(firstName && { firstName: { $regex: firstName } }),
+                    ...(lastName && { lastName: { $regex: lastName } }),
+                    ...(roles && { role: { $in: roles } }),
+                    ...(registeredBegin && {
+                        registeredAt: { $gte: registeredBegin },
+                    }),
+                    ...(registeredEnd && {
+                        registeredAt: { $lte: registeredEnd },
+                    }),
+                    ...(updatedBegin && {
+                        updatedAt: { $gte: updatedBegin },
+                    }),
+                    ...(updatedEnd && {
+                        updatedAt: { $lte: updatedEnd },
+                    }),
+                    ...(suspendedBegin && {
+                        suspendedAt: { $gte: suspendedBegin },
+                    }),
+                    ...(suspendedEnd && {
+                        suspendedAt: { $lte: suspendedEnd },
+                    }),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'UsersPermissions',
+                    localField: '_id',
+                    foreignField: 'userId',
+                    as: 'permissions',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$permissions',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    email: 1,
+                    phone: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    avartarUrl: 1,
+                    role: 1,
+                    permissions: {
+                        canBorrow: 1,
+                        canReview: 1,
+                    },
+                    registeredAt: 1,
+                    updatedAt: 1,
+                    suspendedAt: 1,
+                },
+            },
+            // { $match: {} },
+        ]);
     }
 }

@@ -16,6 +16,7 @@ import { filterUserRes } from 'src/shared/utils/filterUserRes';
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
+import { AdminGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 
 @Injectable()
 export class AdminsService {
@@ -151,5 +152,10 @@ export class AdminsService {
         }
 
         return await this.usersCollService.delete(userId);
+    }
+
+    async getUsers(adminGetUsersReqDto: AdminGetUsersReqDto) {
+        console.log(adminGetUsersReqDto);
+        return await this.usersCollService.query(adminGetUsersReqDto);
     }
 }

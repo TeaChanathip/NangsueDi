@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Patch } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Patch, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { AdminsService } from './admins.service';
@@ -51,7 +51,10 @@ export class AdminsController {
     }
 
     @Get('get-users')
-    async getUsers(@Body() adminGetUsersReqDto: AdminGetUsersReqDto) {
-        return 'hello world!';
+    async getUsers(@Query() adminGetUsersReqDto: AdminGetUsersReqDto) {
+        if (typeof adminGetUsersReqDto.roles === 'string') {
+            adminGetUsersReqDto.roles = [adminGetUsersReqDto.roles];
+        }
+        return await this.adminsService.getUsers(adminGetUsersReqDto);
     }
 }
