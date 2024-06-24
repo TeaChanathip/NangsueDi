@@ -2,23 +2,32 @@ import {
     HttpException,
     HttpStatus,
     Injectable,
+    InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
+import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { UserUpdateReqDto } from './dtos/user.update.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Types } from 'mongoose';
 import { UsersChangePasswordReqDto } from './dtos/users.change-password.req.dto';
 import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
-import { PasswordUpdateDto } from 'src/common/mongodb/users-collection/dtos/password.update.dto';
-import { UserUpdateDto } from 'src/common/mongodb/users-collection/dtos/user.update.dto';
+import { PasswordUpdateDto } from 'src/common/mongodb/usersdb/dtos/password.update.dto';
+import { UserUpdateDto } from 'src/common/mongodb/usersdb/dtos/user.update.dto';
+import { UsersPermsCollService } from 'src/common/mongodb/usersdb/services/users-permissions.collection.service';
+import { filterUserRes } from 'src/shared/utils/filterUserRes';
+import { UserPermsRes } from 'src/common/mongodb/usersdb/interfaces/user-permissions.res.interface';
 
 @Injectable()
 export class UsersService {
     constructor(
-        private readonly usersCollectionService: UsersCollectionService,
+        private readonly usersCollService: UsersCollService,
+        private readonly usersPermsCollService: UsersPermsCollService,
     ) {}
+
+    async getProfile(userId: Types.ObjectId): Promise<UserFiltered> {
+        return await this.usersCollService.getWithPerms(userId);
+    }
 
     async updateProfile(
         userId: Types.ObjectId,
@@ -28,7 +37,7 @@ export class UsersService {
             throw new NotFoundException();
         }
 
-        const user = await this.usersCollectionService.findById(userId);
+        const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
@@ -38,10 +47,15 @@ export class UsersService {
             updatedAt: getCurrentUnix(),
         };
 
-        return await this.usersCollectionService.editUser(
+        const updatedUser = await this.usersCollService.updateProfile(
             userId,
             userUpdateDto,
         );
+        if (!updatedUser) {
+            throw new InternalServerErrorException();
+        }
+
+        return this.usersCollService.getWithPerms(userId);
     }
 
     async deleteProfile(
@@ -54,7 +68,18 @@ export class UsersService {
             'The password is incorrect',
         );
 
-        return this.usersCollectionService.deleteUser(userId);
+        const deletedUser = await this.usersCollService.delete(userId);
+        if (!deletedUser) {
+            throw new InternalServerErrorException();
+        }
+
+        let deletedPermission: UserPermsRes;
+        if (deletedUser.permissions) {
+            deletedPermission =
+                await this.usersPermsCollService.deleteByUserId(userId);
+        }
+
+        return filterUserRes(deletedUser, deletedPermission);
     }
 
     async changePassword(
@@ -78,10 +103,15 @@ export class UsersService {
             tokenVersion: getCurrentUnix(),
         };
 
-        return this.usersCollectionService.changePassword(
+        const updatedUser = await this.usersCollService.updatePassword(
             userId,
             passwordUpdateDto,
         );
+        if (!updatedUser) {
+            throw new InternalServerErrorException();
+        }
+
+        return await this.usersCollService.getWithPerms(userId);
     }
 
     private async comparePassword(
@@ -89,7 +119,7 @@ export class UsersService {
         password: string,
         errMsg: string,
     ): Promise<void> {
-        const user = await this.usersCollectionService.findById(userId);
+        const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }

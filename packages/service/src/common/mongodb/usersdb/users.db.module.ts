@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersCollectionService } from './users-collection.service';
+import { UsersCollService } from './services/users.collection.service';
+import { UsersPermsCollService } from './services/users-permissions.collection.service';
 import { UsersModel, UsersSchema } from './schemas/users.schema';
 import {
     UsersPermissionsModel,
@@ -17,7 +18,7 @@ import {
             },
         ]),
     ],
-    providers: [UsersCollectionService],
-    exports: [UsersCollectionService],
+    providers: [UsersCollService, UsersPermsCollService],
+    exports: [UsersCollService, UsersPermsCollService],
 })
-export class UsersCollectionModule {}
+export class UsersDBModule {}

@@ -7,7 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
 import { InjectConnection, MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
-import { UsersCollectionModule } from './common/mongodb/users-collection/users-collection.module';
+import { UsersDBModule } from './common/mongodb/usersdb/users.db.module';
 import { AdminsModule } from './modules/admins/admins.module';
 import { RolesGuard } from './common/guards/roles.guard';
 
@@ -38,10 +38,10 @@ import { RolesGuard } from './common/guards/roles.guard';
                 };
             },
         }),
+        UsersDBModule,
         SwaggerModule,
         AuthModule,
         UsersModule,
-        UsersCollectionModule,
         AdminsModule,
     ],
     providers: [

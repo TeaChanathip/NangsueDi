@@ -1,0 +1,105 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { UsersModel } from '../schemas/users.schema';
+import { Model, Types } from 'mongoose';
+import { UserRes } from '../interfaces/user.res.interface';
+import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
+import { UserSaveDto } from '../dtos/user.save.dto';
+import { UserUpdateDto } from '../dtos/user.update.dto';
+import { PasswordUpdateDto } from '../dtos/password.update.dto';
+import { ObjectId } from 'mongoose';
+
+@Injectable()
+export class UsersCollService {
+    constructor(
+        @InjectModel(UsersModel.name)
+        private readonly usersModel: Model<UsersModel>,
+    ) {}
+
+    async findById(userId: Types.ObjectId): Promise<UserRes> {
+        return await this.usersModel.findById(userId);
+    }
+
+    async findByEmail(email: string): Promise<UserRes> {
+        return await this.usersModel.findOne({ email });
+    }
+
+    async saveNew(userSaveDto: UserSaveDto): Promise<UserRes> {
+        const newUser = new this.usersModel(userSaveDto);
+        return await newUser.save();
+    }
+
+    async updateProfile(
+        userId: Types.ObjectId,
+        userUpdateDto: UserUpdateDto,
+    ): Promise<UserRes> {
+        return await this.usersModel.findByIdAndUpdate(userId, userUpdateDto, {
+            new: true,
+        });
+    }
+
+    async updatePassword(
+        userId: Types.ObjectId,
+        passwordUpdateDto: PasswordUpdateDto,
+    ): Promise<UserRes> {
+        return await this.usersModel.findByIdAndUpdate(
+            userId,
+            passwordUpdateDto,
+            {
+                new: true,
+            },
+        );
+    }
+
+    async addPermissions(
+        userId: Types.ObjectId,
+        permissionsId: Types.ObjectId,
+    ): Promise<UserRes> {
+        return await this.usersModel.findByIdAndUpdate(
+            userId,
+            { permissions: permissionsId },
+            { new: true },
+        );
+    }
+
+    async delete(userId: Types.ObjectId): Promise<UserRes> {
+        return await this.usersModel.findByIdAndDelete(userId);
+    }
+
+    async getWithPerms(userId: Types.ObjectId): Promise<UserFiltered> {
+        const results = await this.usersModel.aggregate([
+            { $match: { _id: new Types.ObjectId(userId) } },
+            {
+                $lookup: {
+                    from: 'UsersPermissions', // The name of the UserPermissions collection in MongoDB
+                    localField: '_id',
+                    foreignField: 'userId',
+                    as: 'permissions',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$permissions',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    email: 1,
+                    phone: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    avartarUrl: 1,
+                    role: 1,
+                    permissions: {
+                        canBorrow: 1,
+                        canReview: 1,
+                    },
+                },
+            },
+        ]);
+
+        return results.length > 0 ? results[0] : null;
+    }
+}

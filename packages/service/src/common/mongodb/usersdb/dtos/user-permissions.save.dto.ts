@@ -1,7 +1,7 @@
 import { IsBoolean, IsNotEmpty } from 'class-validator';
 import { Types } from 'mongoose';
 
-export class UserPermissionsSaveDto {
+export class UserPermsSaveDto {
     @IsNotEmpty()
     userId: Types.ObjectId;
 

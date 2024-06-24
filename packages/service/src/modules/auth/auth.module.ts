@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersCollectionModule } from 'src/common/mongodb/users-collection/users-collection.module';
+import { UsersDBModule } from 'src/common/mongodb/usersdb/users.db.module';
 
 @Module({
     imports: [
@@ -16,7 +16,7 @@ import { UsersCollectionModule } from 'src/common/mongodb/users-collection/users
                 signOptions: { expiresIn: '30d' },
             }),
         }),
-        UsersCollectionModule,
+        UsersDBModule,
     ],
     providers: [AuthService],
     controllers: [AuthController],

@@ -6,21 +6,18 @@ import { UserDeleteReqDto } from './dtos/user.delete.req.dto';
 import { UsersChangePasswordReqDto } from './dtos/users.change-password.req.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
-import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
+import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
 
 @ApiTags('User')
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-    constructor(
-        private usersService: UsersService,
-        private usersCollectionService: UsersCollectionService,
-    ) {}
+    constructor(private usersService: UsersService) {}
 
     @Get('profile')
     async getProfile(@Request() req: RequestHeader) {
-        return await this.usersCollectionService.getUser(req.user.sub);
+        return await this.usersService.getProfile(req.user.sub);
     }
 
     @Patch('profile')

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { UsersCollectionModule } from 'src/common/mongodb/users-collection/users-collection.module';
+import { UsersDBModule } from 'src/common/mongodb/usersdb/users.db.module';
 
 @Module({
-    imports: [UsersCollectionModule],
+    imports: [UsersDBModule],
     providers: [UsersService],
     controllers: [UsersController],
 })

@@ -1,26 +1,27 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
+import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { AuthRegisterReqDto } from './dtos/auth.register.req.dto';
 import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { Role } from 'src/shared/enums/role.enum';
 import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface';
-import { UserSaveDto } from 'src/common/mongodb/users-collection/dtos/user.save.dto';
+import { UserSaveDto } from 'src/common/mongodb/usersdb/dtos/user.save.dto';
 import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
+import { filterUserRes } from 'src/shared/utils/filterUserRes';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private usersCollectionService: UsersCollectionService,
-        private jwtService: JwtService,
+        private readonly usersCollService: UsersCollService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async register(
         authRegisterReqDto: AuthRegisterReqDto,
     ): Promise<UserFiltered> {
-        const user = await this.usersCollectionService.findByEmail(
+        const user = await this.usersCollService.findByEmail(
             authRegisterReqDto.email,
         );
         if (user) {
@@ -41,14 +42,12 @@ export class AuthService {
             tokenVersion: getCurrentUnix(),
         };
 
-        return await this.usersCollectionService.saveNewUser(userSaveDto);
+        return filterUserRes(await this.usersCollService.saveNew(userSaveDto));
     }
 
-    async login(
-        authLoginReqDto: AuthLoginReqDto,
-    ): Promise<{ access_token: string }> {
+    async login(authLoginReqDto: AuthLoginReqDto): Promise<string> {
         const { email, password } = authLoginReqDto;
-        const user = await this.usersCollectionService.findByEmail(email);
+        const user = await this.usersCollService.findByEmail(email);
         if (!user) {
             throw new HttpException(
                 'The email or password is incorrect',
@@ -70,8 +69,6 @@ export class AuthService {
             role: user.role,
             tokenVersion: user.tokenVersion,
         };
-        return {
-            access_token: await this.jwtService.signAsync(userPayload),
-        };
+        return await this.jwtService.signAsync(userPayload);
     }
 }

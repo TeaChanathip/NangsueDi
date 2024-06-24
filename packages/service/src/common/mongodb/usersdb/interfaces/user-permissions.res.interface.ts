@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
-import { UsersModel } from 'src/common/mongodb/users-collection/schemas/users.schema';
+import { UsersModel } from '../schemas/users.schema';
 
-export interface UserPermissionsRes {
+export interface UserPermsRes {
     _id: Types.ObjectId;
     userId: UsersModel;
     canBorrow: boolean;

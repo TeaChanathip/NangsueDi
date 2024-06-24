@@ -11,7 +11,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from 'src/common/decorators/public-route.decorator';
-import { UsersCollectionService } from 'src/common/mongodb/users-collection/users-collection.service';
+import { UsersCollService } from '../mongodb/usersdb/services/users.collection.service';
 import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     constructor(
         private jwtService: JwtService,
         private reflector: Reflector,
-        private userCollectionService: UsersCollectionService,
+        private userCollService: UsersCollService,
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -47,7 +47,7 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const user = await this.userCollectionService.findById(userPayload.sub);
+        const user = await this.userCollService.findById(userPayload.sub);
         if (!user) {
             throw new NotFoundException();
         }
