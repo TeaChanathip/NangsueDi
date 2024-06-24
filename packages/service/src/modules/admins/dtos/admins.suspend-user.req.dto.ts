@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class AdminsSusUserReqDto {
     @ApiProperty({ default: 'userId' })
     @IsNotEmpty()
-    @IsString()
-    userId: string;
+    @IsMongoId()
+    userId: Types.ObjectId;
 
     @ApiProperty({ default: 'test test test', maxLength: 200 })
     @IsNotEmpty()

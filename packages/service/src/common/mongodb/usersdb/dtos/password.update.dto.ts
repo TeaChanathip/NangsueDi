@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Validate } from 'class-validator';
+import { IsUnix } from 'src/common/validators/isUnix.validator';
 
 export class PasswordUpdateDto {
     @IsNotEmpty()
@@ -6,6 +7,6 @@ export class PasswordUpdateDto {
     password: string;
 
     @IsNotEmpty()
-    @IsNumber()
+    @Validate(IsUnix)
     tokenVersion: number;
 }

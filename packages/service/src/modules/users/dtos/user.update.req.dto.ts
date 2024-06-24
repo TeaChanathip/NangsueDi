@@ -3,10 +3,10 @@ import { IsAlpha, IsOptional, IsPhoneNumber, IsUrl } from 'class-validator';
 
 export class UserUpdateReqDto {
     @ApiProperty({
-        default: '+66 991111111',
+        default: '0991111111',
     })
     @IsOptional()
-    @IsPhoneNumber()
+    @IsPhoneNumber('TH')
     phone?: string;
 
     @ApiProperty({

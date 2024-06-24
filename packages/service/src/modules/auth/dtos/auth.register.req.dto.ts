@@ -17,10 +17,10 @@ export class AuthRegisterReqDto {
     email: string;
 
     @ApiProperty({
-        default: '+66 621111111',
+        default: '0621111111',
     })
     @IsNotEmpty()
-    @IsPhoneNumber()
+    @IsPhoneNumber('TH')
     phone: string;
 
     @ApiProperty({

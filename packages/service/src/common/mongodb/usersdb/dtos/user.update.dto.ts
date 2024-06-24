@@ -1,15 +1,16 @@
 import {
     IsAlpha,
     IsNotEmpty,
-    IsNumber,
     IsOptional,
     IsPhoneNumber,
     IsUrl,
+    Validate,
 } from 'class-validator';
+import { IsUnix } from 'src/common/validators/isUnix.validator';
 
 export class UserUpdateDto {
     @IsOptional()
-    @IsPhoneNumber()
+    @IsPhoneNumber('TH')
     phone?: string;
 
     @IsOptional()
@@ -25,6 +26,6 @@ export class UserUpdateDto {
     avartarUrl?: string;
 
     @IsNotEmpty()
-    @IsNumber()
+    @Validate(IsUnix)
     updatedAt: number;
 }

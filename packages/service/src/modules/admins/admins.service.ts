@@ -15,7 +15,6 @@ import { AdminsEditUserPermsReqDto } from './dtos/admins.edit-user-permissions.r
 import { filterUserRes } from 'src/shared/utils/filterUserRes';
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
-import { AdminsUnsusUserReqDto } from './dtos/admins.unsuspend-user.req.dto';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
 
 @Injectable()
@@ -25,10 +24,8 @@ export class AdminsService {
         private readonly usersPermsCollService: UsersPermsCollService,
     ) {}
 
-    async verifyUser(userId: string): Promise<UserFiltered> {
-        const userObjectId = this.cvt2ObjectId(userId);
-
-        const user = await this.usersCollService.findById(userObjectId);
+    async verifyUser(userId: Types.ObjectId): Promise<UserFiltered> {
+        const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
@@ -46,7 +43,7 @@ export class AdminsService {
         }
 
         const userPermsSaveDto: UserPermsSaveDto = {
-            userId: userObjectId,
+            userId,
             canBorrow: true,
             canReview: true,
         };
@@ -60,7 +57,7 @@ export class AdminsService {
 
         // Update a permissions to User document
         const updatedUser = await this.usersCollService.addPermissions(
-            userObjectId,
+            userId,
             userPerms._id,
         );
         if (!updatedUser) {
@@ -73,15 +70,13 @@ export class AdminsService {
     async editUserPermissions(
         adminsEditUserPermsReqDto: AdminsEditUserPermsReqDto,
     ): Promise<UserFiltered> {
-        const userObjectId = this.cvt2ObjectId(
-            adminsEditUserPermsReqDto.userId,
-        );
+        const { userId } = adminsEditUserPermsReqDto;
 
         const editUserPermsDto = { ...adminsEditUserPermsReqDto };
         delete editUserPermsDto.userId;
 
         const userPerms = await this.usersPermsCollService.updateByUserId(
-            userObjectId,
+            userId,
             editUserPermsDto,
         );
         if (!userPerms) {
@@ -89,7 +84,7 @@ export class AdminsService {
         }
 
         return filterUserRes(
-            await this.usersCollService.findById(userObjectId),
+            await this.usersCollService.findById(userId),
             userPerms,
         );
     }
@@ -97,9 +92,9 @@ export class AdminsService {
     async suspendUser(
         adminsSusUserReqDto: AdminsSusUserReqDto,
     ): Promise<UserFiltered> {
-        const userObjectId = this.cvt2ObjectId(adminsSusUserReqDto.userId);
+        const { userId } = adminsSusUserReqDto;
 
-        const user = await this.usersCollService.findById(userObjectId);
+        const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
@@ -111,20 +106,18 @@ export class AdminsService {
         }
 
         const suspendedUser = await this.usersCollService.suspend(
-            userObjectId,
+            userId,
             getCurrentUnix(),
         );
         if (!suspendedUser) {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getWithPerms(userObjectId);
+        return await this.usersCollService.getWithPerms(userId);
     }
 
-    async unsuspendUser(userId: string): Promise<UserFiltered> {
-        const userObjectId = this.cvt2ObjectId(userId);
-
-        const user = await this.usersCollService.findById(userObjectId);
+    async unsuspendUser(userId: Types.ObjectId): Promise<UserFiltered> {
+        const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
@@ -135,19 +128,18 @@ export class AdminsService {
             );
         }
 
-        const unsuspendedUser =
-            await this.usersCollService.unsuspend(userObjectId);
+        const unsuspendedUser = await this.usersCollService.unsuspend(userId);
         if (!unsuspendedUser) {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getWithPerms(userObjectId);
+        return await this.usersCollService.getWithPerms(userId);
     }
 
     async deleteUser(adminsDeleteUserReqDto: AdminsDeleteUserReqDto) {
-        const userObjectId = this.cvt2ObjectId(adminsDeleteUserReqDto.userId);
+        const { userId } = adminsDeleteUserReqDto;
 
-        const user = await this.usersCollService.findById(userObjectId);
+        const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
@@ -158,20 +150,6 @@ export class AdminsService {
             );
         }
 
-        return await this.usersCollService.delete(userObjectId);
-    }
-
-    private cvt2ObjectId(id: string): Types.ObjectId {
-        let userObjectId: Types.ObjectId;
-        try {
-            userObjectId = new Types.ObjectId(id);
-        } catch {
-            throw new HttpException(
-                'The userId format is invalid',
-                HttpStatus.BAD_REQUEST,
-            );
-        }
-
-        return userObjectId;
+        return await this.usersCollService.delete(userId);
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
@@ -8,6 +8,7 @@ import { AdminsEditUserPermsReqDto } from './dtos/admins.edit-user-permissions.r
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
 import { AdminsUnsusUserReqDto } from './dtos/admins.unsuspend-user.req.dto';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
+import { AdminGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -47,5 +48,10 @@ export class AdminsController {
     @Delete('delete-user')
     async deleteUser(@Body() adminsDeleteUserReqDto: AdminsDeleteUserReqDto) {
         return await this.adminsService.deleteUser(adminsDeleteUserReqDto);
+    }
+
+    @Get('get-users')
+    async getUsers(@Body() adminGetUsersReqDto: AdminGetUsersReqDto) {
+        return 'hello world!';
     }
 }

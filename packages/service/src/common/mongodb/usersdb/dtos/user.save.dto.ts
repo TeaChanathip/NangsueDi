@@ -7,7 +7,9 @@ import {
     IsOptional,
     IsPhoneNumber,
     IsString,
+    Validate,
 } from 'class-validator';
+import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { Role } from 'src/shared/enums/role.enum';
 
 export class UserSaveDto {
@@ -36,10 +38,10 @@ export class UserSaveDto {
     role: Role;
 
     @IsNotEmpty()
-    @IsNumber()
+    @Validate(IsUnix)
     registeredAt: number;
 
     @IsNotEmpty()
-    @IsNumber()
+    @Validate(IsUnix)
     tokenVersion: number;
 }
