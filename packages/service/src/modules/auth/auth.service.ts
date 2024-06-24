@@ -10,6 +10,7 @@ import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface
 import { UserSaveDto } from 'src/common/mongodb/usersdb/dtos/user.save.dto';
 import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
 import { filterUserRes } from 'src/shared/utils/filterUserRes';
+import { UserLoginRes } from './interfaces/user-login.res.interface';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +46,7 @@ export class AuthService {
         return filterUserRes(await this.usersCollService.saveNew(userSaveDto));
     }
 
-    async login(authLoginReqDto: AuthLoginReqDto): Promise<string> {
+    async login(authLoginReqDto: AuthLoginReqDto): Promise<UserLoginRes> {
         const { email, password } = authLoginReqDto;
         const user = await this.usersCollService.findByEmail(email);
         if (!user) {
@@ -69,6 +70,9 @@ export class AuthService {
             role: user.role,
             tokenVersion: user.tokenVersion,
         };
-        return await this.jwtService.signAsync(userPayload);
+        return {
+            accessToken: await this.jwtService.signAsync(userPayload),
+            user: await this.usersCollService.getWithPerms(user._id),
+        };
     }
 }
