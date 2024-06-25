@@ -12,6 +12,7 @@ import {
     MinLength,
 } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
+import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MIN_GENRE, MAX_GENRE } from 'src/shared/consts/genre.map';
 import { MAX_NAME, MAX_TEXT, MAX_TITLE } from 'src/shared/consts/length.const';
 
@@ -64,5 +65,14 @@ export class BooksRegisterReqDto {
     @Transform(({ value }) =>
         Array.isArray(value) ? value.sort((a, b) => a - b) : value,
     )
-    genres: number[];
+    genres?: number[];
+
+    @ApiProperty({
+        type: Number,
+        required: false,
+        default: 1,
+    })
+    @IsOptional()
+    @IsUnix()
+    publishedAt?: number;
 }

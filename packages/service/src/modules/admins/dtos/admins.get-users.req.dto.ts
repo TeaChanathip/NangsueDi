@@ -18,7 +18,6 @@ export class AdminsGetUsersReqDto {
         type: String,
         required: false,
         maxLength: MAX_EMAIL,
-        default: 'test',
     })
     @IsOptional()
     @IsString()
@@ -31,7 +30,6 @@ export class AdminsGetUsersReqDto {
         type: String,
         required: false,
         maxLength: MAX_PHONE,
-        default: '09',
     })
     @IsOptional()
     @IsString()
@@ -44,7 +42,6 @@ export class AdminsGetUsersReqDto {
         type: String,
         required: false,
         maxLength: MAX_NAME,
-        default: 'test',
     })
     @IsOptional()
     @IsString()
@@ -57,7 +54,6 @@ export class AdminsGetUsersReqDto {
         type: String,
         required: false,
         maxLength: MAX_NAME,
-        default: 'test',
     })
     @IsOptional()
     @IsString()
@@ -69,8 +65,8 @@ export class AdminsGetUsersReqDto {
     @ApiProperty({
         enum: Role,
         isArray: true,
+        uniqueItems: true,
         required: false,
-        default: [Role.USER],
     })
     @IsOptional()
     @IsEnum(Role, { each: true })
@@ -80,7 +76,6 @@ export class AdminsGetUsersReqDto {
     @ApiProperty({
         type: Boolean,
         required: false,
-        default: true,
     })
     @IsOptional()
     @IsBoolean()
@@ -89,38 +84,37 @@ export class AdminsGetUsersReqDto {
     @ApiProperty({
         type: Boolean,
         required: false,
-        default: true,
     })
     @IsOptional()
     @IsBoolean()
     canReview?: boolean;
 
-    @ApiProperty({ type: Number, required: false, default: 0 })
+    @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @Validate(IsUnix)
     registeredBegin?: number;
 
-    @ApiProperty({ type: Number, required: false, default: 2147483647 })
+    @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @Validate(IsUnix)
     registeredEnd?: number;
 
-    @ApiProperty({ type: Number, required: false, default: 0 })
+    @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @Validate(IsUnix)
     updatedBegin?: number;
 
-    @ApiProperty({ type: Number, required: false, default: 2147483647 })
+    @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @Validate(IsUnix)
     updatedEnd?: number;
 
-    @ApiProperty({ type: Number, required: false, default: 0 })
+    @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @Validate(IsUnix)
     suspendedBegin?: number;
 
-    @ApiProperty({ type: Number, required: false, default: 2147483647 })
+    @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @Validate(IsUnix)
     suspendedEnd?: number;

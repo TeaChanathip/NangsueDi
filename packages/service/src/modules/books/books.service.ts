@@ -3,6 +3,7 @@ import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.se
 import { BooksRegisterReqDto } from './dtos/books.register.req.dto';
 import { BookSaveDto } from 'src/common/mongodb/booksdb/dtos/book.save.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { BooksSearchReqDto } from './dtos/books.search.req.dto';
 
 @Injectable()
 export class BooksService {
@@ -26,5 +27,9 @@ export class BooksService {
         };
 
         return await this.booksCollService.saveNew(bookSaveDto);
+    }
+
+    async search(booksSearchReqDto: BooksSearchReqDto) {
+        return await this.booksCollService.query(booksSearchReqDto);
     }
 }

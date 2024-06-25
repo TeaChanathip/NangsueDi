@@ -6,7 +6,8 @@ export class BookSaveDto {
     author?: string;
     description?: string;
     totalNumber: number;
-    genres: number[];
+    genres?: number[];
+    publishedAt?: number;
 
     @IsNotEmpty()
     @IsUnix()

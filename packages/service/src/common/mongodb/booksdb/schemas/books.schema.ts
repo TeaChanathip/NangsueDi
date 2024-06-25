@@ -16,6 +16,9 @@ export class BooksModel {
     @Prop({ required: false })
     description?: string;
 
+    @Prop({ required: false })
+    publishedAt: number;
+
     @Prop({ required: true })
     registeredAt: number;
 
