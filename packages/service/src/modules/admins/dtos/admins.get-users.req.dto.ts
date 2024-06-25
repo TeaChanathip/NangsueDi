@@ -9,33 +9,23 @@ import {
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { Role } from 'src/shared/enums/role.enum';
 
-class PermsOptions {
-    @IsOptional()
-    @IsBoolean()
-    canBorrow?: boolean;
-
-    @IsOptional()
-    @IsBoolean()
-    canReview?: boolean;
-}
-
-export class AdminGetUsersReqDto {
-    @ApiProperty({ default: 'test', required: false })
+export class AdminsGetUsersReqDto {
+    @ApiProperty({ type: String, default: 'test', required: false })
     @IsOptional()
     @IsString()
     email?: string;
 
-    @ApiProperty({ default: '09', required: false })
+    @ApiProperty({ type: String, default: '09', required: false })
     @IsOptional()
     @IsString()
     phone?: string;
 
-    @ApiProperty({ default: 'test', required: false })
+    @ApiProperty({ type: String, default: 'test', required: false })
     @IsOptional()
     @IsString()
     firstName?: string;
 
-    @ApiProperty({ default: 'test', required: false })
+    @ApiProperty({ type: String, default: 'test', required: false })
     @IsOptional()
     @IsString()
     lastName?: string;
@@ -50,43 +40,55 @@ export class AdminGetUsersReqDto {
     @IsEnum(Role, { each: true })
     roles?: Role | Role[];
 
+    // Permissions
     @ApiProperty({
-        default: { canBorrow: true, canReview: true } as PermsOptions,
+        type: Boolean,
+        default: true,
         required: false,
     })
     @IsOptional()
-    permissions?: PermsOptions;
+    @IsBoolean()
+    canBorrow?: boolean;
 
-    @ApiProperty({ default: 0, required: false })
+    @ApiProperty({
+        type: Boolean,
+        default: true,
+        required: false,
+    })
+    @IsOptional()
+    @IsBoolean()
+    canReview?: boolean;
+
+    @ApiProperty({ type: Number, default: 0, required: false })
     @IsOptional()
     @Validate(IsUnix)
     registeredBegin?: number;
 
-    @ApiProperty({ default: 2147483647, required: false })
+    @ApiProperty({ type: Number, default: 2147483647, required: false })
     @ApiProperty()
     @IsOptional()
     @Validate(IsUnix)
     registeredEnd?: number;
 
-    @ApiProperty({ default: 0, required: false })
+    @ApiProperty({ type: Number, default: 0, required: false })
     @ApiProperty()
     @IsOptional()
     @Validate(IsUnix)
     updatedBegin?: number;
 
-    @ApiProperty({ default: 2147483647, required: false })
+    @ApiProperty({ type: Number, default: 2147483647, required: false })
     @ApiProperty()
     @IsOptional()
     @Validate(IsUnix)
     updatedEnd?: number;
 
-    @ApiProperty({ default: 0, required: false })
+    @ApiProperty({ type: Number, default: 0, required: false })
     @ApiProperty()
     @IsOptional()
     @Validate(IsUnix)
     suspendedBegin?: number;
 
-    @ApiProperty({ default: 2147483647, required: false })
+    @ApiProperty({ type: Number, default: 2147483647, required: false })
     @ApiProperty()
     @IsOptional()
     @Validate(IsUnix)

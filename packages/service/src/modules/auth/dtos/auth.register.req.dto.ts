@@ -2,10 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
     IsAlpha,
     IsEmail,
+    IsMobilePhone,
     IsNotEmpty,
     IsOptional,
-    IsPhoneNumber,
     IsString,
+    Matches,
 } from 'class-validator';
 
 export class AuthRegisterReqDto {
@@ -17,10 +18,13 @@ export class AuthRegisterReqDto {
     email: string;
 
     @ApiProperty({
-        default: '0621111111',
+        default: '0611111111',
     })
     @IsNotEmpty()
-    @IsPhoneNumber('TH')
+    @IsMobilePhone('th-TH', null, {
+        message: 'Phone number format is incorrect',
+    })
+    @Matches(/^0[0-9]*$/, { message: 'Phone number must start with 0' })
     phone: string;
 
     @ApiProperty({

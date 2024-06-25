@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Patch, Query } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
@@ -8,7 +16,7 @@ import { AdminsEditUserPermsReqDto } from './dtos/admins.edit-user-permissions.r
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
 import { AdminsUnsusUserReqDto } from './dtos/admins.unsuspend-user.req.dto';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
-import { AdminGetUsersReqDto } from './dtos/admins.get-users.req.dto';
+import { AdminsGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 
 @ApiTags('Admin')
 @ApiBearerAuth()
@@ -51,10 +59,15 @@ export class AdminsController {
     }
 
     @Get('get-users')
-    async getUsers(@Query() adminGetUsersReqDto: AdminGetUsersReqDto) {
-        if (typeof adminGetUsersReqDto.roles === 'string') {
-            adminGetUsersReqDto.roles = [adminGetUsersReqDto.roles];
+    async getUsers(@Query() adminsGetUsersReqDto: AdminsGetUsersReqDto) {
+        if (typeof adminsGetUsersReqDto.roles === 'string') {
+            adminsGetUsersReqDto.roles = [adminsGetUsersReqDto.roles];
         }
-        return await this.adminsService.getUsers(adminGetUsersReqDto);
+        return await this.adminsService.getUsers(adminsGetUsersReqDto);
+    }
+
+    @Get('get-user/:userId')
+    async getUser(@Param('userId') userId: string) {
+        return await this.adminsService.getUser(userId);
     }
 }

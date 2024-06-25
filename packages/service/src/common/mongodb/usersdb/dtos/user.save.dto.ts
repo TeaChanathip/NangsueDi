@@ -2,11 +2,11 @@ import {
     IsAlpha,
     IsEmail,
     IsEnum,
+    IsMobilePhone,
     IsNotEmpty,
-    IsNumber,
     IsOptional,
-    IsPhoneNumber,
     IsString,
+    Matches,
     Validate,
 } from 'class-validator';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
@@ -17,8 +17,10 @@ export class UserSaveDto {
     @IsEmail()
     email: string;
 
-    @IsNotEmpty()
-    @IsPhoneNumber()
+    @IsMobilePhone('th-TH', null, {
+        message: 'Phone number format is incorrect',
+    })
+    @Matches(/^0[0-9]*$/, { message: 'Phone number must start with 0' })
     phone: string;
 
     @IsNotEmpty()

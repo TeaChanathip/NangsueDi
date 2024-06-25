@@ -7,7 +7,7 @@ import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface'
 import { UserSaveDto } from '../dtos/user.save.dto';
 import { UserUpdateDto } from '../dtos/user.update.dto';
 import { PasswordUpdateDto } from '../dtos/password.update.dto';
-import { AdminGetUsersReqDto } from 'src/modules/admins/dtos/admins.get-users.req.dto';
+import { AdminsGetUsersReqDto } from 'src/modules/admins/dtos/admins.get-users.req.dto';
 
 @Injectable()
 export class UsersCollService {
@@ -128,7 +128,7 @@ export class UsersCollService {
     }
 
     async query(
-        adminGetUsersReqDto: AdminGetUsersReqDto,
+        adminsGetUsersReqDto: AdminsGetUsersReqDto,
     ): Promise<UserFiltered[]> {
         const {
             email,
@@ -136,14 +136,16 @@ export class UsersCollService {
             firstName,
             lastName,
             roles,
-            permissions,
+            canBorrow,
+            canReview,
             registeredBegin,
             registeredEnd,
             updatedBegin,
             updatedEnd,
             suspendedBegin,
             suspendedEnd,
-        } = adminGetUsersReqDto;
+        } = adminsGetUsersReqDto;
+
         return await this.usersModel.aggregate([
             {
                 $match: {
@@ -204,7 +206,12 @@ export class UsersCollService {
                     suspendedAt: 1,
                 },
             },
-            // { $match: {} },
+            {
+                $match: {
+                    ...(canBorrow && { 'permissions.canBorrow': canBorrow }),
+                    ...(canReview && { 'permissions.canReview': canReview }),
+                },
+            },
         ]);
     }
 }

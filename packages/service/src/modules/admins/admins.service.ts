@@ -16,7 +16,7 @@ import { filterUserRes } from 'src/shared/utils/filterUserRes';
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
-import { AdminGetUsersReqDto } from './dtos/admins.get-users.req.dto';
+import { AdminsGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 
 @Injectable()
 export class AdminsService {
@@ -26,10 +26,7 @@ export class AdminsService {
     ) {}
 
     async verifyUser(userId: Types.ObjectId): Promise<UserFiltered> {
-        const user = await this.usersCollService.findById(userId);
-        if (!user) {
-            throw new NotFoundException();
-        }
+        const user = await this.getUserAndCheckAdmin(userId);
         if (user.role !== Role.USER) {
             throw new HttpException(
                 'Cannot verify non-user role',
@@ -72,6 +69,7 @@ export class AdminsService {
         adminsEditUserPermsReqDto: AdminsEditUserPermsReqDto,
     ): Promise<UserFiltered> {
         const { userId } = adminsEditUserPermsReqDto;
+        await this.getUserAndCheckAdmin(userId);
 
         const editUserPermsDto = { ...adminsEditUserPermsReqDto };
         delete editUserPermsDto.userId;
@@ -94,11 +92,7 @@ export class AdminsService {
         adminsSusUserReqDto: AdminsSusUserReqDto,
     ): Promise<UserFiltered> {
         const { userId } = adminsSusUserReqDto;
-
-        const user = await this.usersCollService.findById(userId);
-        if (!user) {
-            throw new NotFoundException();
-        }
+        const user = await this.getUserAndCheckAdmin(userId);
         if (user.suspendedAt) {
             throw new HttpException(
                 'The user was already suspended',
@@ -118,10 +112,7 @@ export class AdminsService {
     }
 
     async unsuspendUser(userId: Types.ObjectId): Promise<UserFiltered> {
-        const user = await this.usersCollService.findById(userId);
-        if (!user) {
-            throw new NotFoundException();
-        }
+        const user = await this.getUserAndCheckAdmin(userId);
         if (!user.suspendedAt) {
             throw new HttpException(
                 'The user was not suspended',
@@ -139,11 +130,7 @@ export class AdminsService {
 
     async deleteUser(adminsDeleteUserReqDto: AdminsDeleteUserReqDto) {
         const { userId } = adminsDeleteUserReqDto;
-
-        const user = await this.usersCollService.findById(userId);
-        if (!user) {
-            throw new NotFoundException();
-        }
+        const user = await this.getUserAndCheckAdmin(userId);
         if (user.permissions) {
             throw new HttpException(
                 'Cannot delete verified user',
@@ -154,8 +141,36 @@ export class AdminsService {
         return await this.usersCollService.delete(userId);
     }
 
-    async getUsers(adminGetUsersReqDto: AdminGetUsersReqDto) {
-        console.log(adminGetUsersReqDto);
-        return await this.usersCollService.query(adminGetUsersReqDto);
+    async getUsers(adminsGetUsersReqDto: AdminsGetUsersReqDto) {
+        return await this.usersCollService.query(adminsGetUsersReqDto);
+    }
+
+    async getUser(userId: string) {
+        let userObjectId: Types.ObjectId;
+        try {
+            userObjectId = new Types.ObjectId(userId);
+        } catch {
+            throw new HttpException(
+                'userId must be a mongodb id',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        return await this.usersCollService.findById(userObjectId);
+    }
+
+    private async getUserAndCheckAdmin(userId: Types.ObjectId) {
+        const user = await this.usersCollService.findById(userId);
+        if (!user) {
+            throw new NotFoundException();
+        }
+        if (user.role === Role.ADMIN) {
+            throw new HttpException(
+                'Cannot perform this action on an Admin user',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        return user;
     }
 }

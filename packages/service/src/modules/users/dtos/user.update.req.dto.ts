@@ -1,12 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, IsOptional, IsPhoneNumber, IsUrl } from 'class-validator';
+import {
+    IsAlpha,
+    IsMobilePhone,
+    IsOptional,
+    IsUrl,
+    Matches,
+} from 'class-validator';
 
 export class UserUpdateReqDto {
     @ApiProperty({
-        default: '0991111111',
+        default: '0911111111',
     })
     @IsOptional()
-    @IsPhoneNumber('TH')
+    @IsMobilePhone('th-TH', null, {
+        message: 'Phone number format is incorrect',
+    })
+    @Matches(/^0[0-9]*$/, { message: 'Phone number must start with 0' })
     phone?: string;
 
     @ApiProperty({
