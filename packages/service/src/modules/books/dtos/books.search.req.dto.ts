@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-    IsArray,
+    ArrayUnique,
     IsInt,
     IsOptional,
     Max,
     MaxLength,
     Min,
 } from 'class-validator';
+import { ToArray } from 'src/common/transformers/to-array.transformer';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MAX_GENRE, MIN_GENRE } from 'src/shared/consts/genre.map';
@@ -54,13 +55,25 @@ export class BooksSearchReqDto {
         type: Number,
         isArray: true,
         uniqueItems: true,
-        required: true,
+        required: false,
     })
+    @IsOptional()
     @IsInt({ each: true })
+    @ArrayUnique()
+    @ToArray({ type: 'number' })
     @Min(MIN_GENRE, { each: true })
     @Max(MAX_GENRE, { each: true })
     genres?: number[];
 
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
     limit?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
     page?: number;
 }

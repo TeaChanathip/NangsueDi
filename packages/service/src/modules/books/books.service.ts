@@ -4,12 +4,13 @@ import { BooksRegisterReqDto } from './dtos/books.register.req.dto';
 import { BookSaveDto } from 'src/common/mongodb/booksdb/dtos/book.save.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { BooksSearchReqDto } from './dtos/books.search.req.dto';
+import { BookRes } from 'src/common/mongodb/booksdb/interfaces/book.res.interface';
 
 @Injectable()
 export class BooksService {
     constructor(private readonly booksCollService: BooksCollService) {}
 
-    async register(booksRegisterReqDto: BooksRegisterReqDto) {
+    async register(booksRegisterReqDto: BooksRegisterReqDto): Promise<BookRes> {
         const book = await this.booksCollService.findByTitle(
             booksRegisterReqDto.title,
         );
@@ -29,7 +30,13 @@ export class BooksService {
         return await this.booksCollService.saveNew(bookSaveDto);
     }
 
-    async search(booksSearchReqDto: BooksSearchReqDto) {
+    async search(booksSearchReqDto: BooksSearchReqDto): Promise<BookRes[]> {
+        if (booksSearchReqDto.page && !booksSearchReqDto.limit) {
+            throw new HttpException(
+                'The page parameter requires the limit parameter',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
         return await this.booksCollService.query(booksSearchReqDto);
     }
 }

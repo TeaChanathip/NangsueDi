@@ -7,7 +7,7 @@ import {
     Patch,
     Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { AdminsService } from './admins.service';
@@ -60,9 +60,6 @@ export class AdminsController {
 
     @Get('get-users')
     async getUsers(@Query() adminsGetUsersReqDto: AdminsGetUsersReqDto) {
-        if (typeof adminsGetUsersReqDto.roles === 'string') {
-            adminsGetUsersReqDto.roles = [adminsGetUsersReqDto.roles];
-        }
         return await this.adminsService.getUsers(adminsGetUsersReqDto);
     }
 

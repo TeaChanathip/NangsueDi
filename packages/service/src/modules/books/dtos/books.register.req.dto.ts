@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
 import {
     IsArray,
     IsInt,
@@ -11,6 +10,7 @@ import {
     Min,
     MinLength,
 } from 'class-validator';
+import { SortArray } from 'src/common/transformers/sort-array.transformer';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MIN_GENRE, MAX_GENRE } from 'src/shared/consts/genre.map';
@@ -62,9 +62,7 @@ export class BooksRegisterReqDto {
     @IsInt({ each: true })
     @Min(MIN_GENRE, { each: true })
     @Max(MAX_GENRE, { each: true })
-    @Transform(({ value }) =>
-        Array.isArray(value) ? value.sort((a, b) => a - b) : value,
-    )
+    @SortArray({ order: 'asce', type: 'number' })
     genres?: number[];
 
     @ApiProperty({

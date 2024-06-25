@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+    ArrayUnique,
     IsBoolean,
     IsEnum,
     IsOptional,
@@ -8,6 +9,7 @@ import {
     MinLength,
     Validate,
 } from 'class-validator';
+import { ToArray } from 'src/common/transformers/to-array.transformer';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MAX_EMAIL, MAX_NAME, MAX_PHONE } from 'src/shared/consts/length.const';
@@ -70,7 +72,9 @@ export class AdminsGetUsersReqDto {
     })
     @IsOptional()
     @IsEnum(Role, { each: true })
-    roles?: Role | Role[];
+    @ArrayUnique()
+    @ToArray({ type: 'string' })
+    roles?: Role[];
 
     // Permissions
     @ApiProperty({

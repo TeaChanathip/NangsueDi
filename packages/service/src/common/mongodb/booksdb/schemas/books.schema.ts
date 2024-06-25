@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { MAX_NAME, MAX_TEXT, MAX_TITLE } from 'src/shared/consts/length.const';
 
 @Schema({
     collection: 'Books',
@@ -17,7 +16,7 @@ export class BooksModel {
     description?: string;
 
     @Prop({ required: false })
-    publishedAt: number;
+    publishedAt?: number;
 
     @Prop({ required: true })
     registeredAt: number;
