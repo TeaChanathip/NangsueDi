@@ -2,8 +2,6 @@ import { IsBoolean, IsMongoId, IsNotEmpty } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class UserPermsSaveDto {
-    @IsNotEmpty()
-    @IsMongoId()
     userId: Types.ObjectId;
 
     @IsNotEmpty()

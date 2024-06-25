@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { MAX_PWD, MIN_PWD } from 'src/shared/consts/length.const';
 
 export class UserDeleteReqDto {
     @ApiProperty({
@@ -7,5 +8,7 @@ export class UserDeleteReqDto {
     })
     @IsNotEmpty()
     @IsString()
+    @MinLength(MIN_PWD)
+    @MaxLength(MAX_PWD)
     password: string;
 }

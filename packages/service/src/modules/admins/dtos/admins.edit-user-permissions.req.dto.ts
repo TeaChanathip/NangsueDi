@@ -4,6 +4,8 @@ import { Types } from 'mongoose';
 
 export class AdminsEditUserPermsReqDto {
     @ApiProperty({
+        type: Types.ObjectId,
+        required: true,
         default: 'userId',
     })
     @IsNotEmpty()
@@ -11,6 +13,8 @@ export class AdminsEditUserPermsReqDto {
     userId: Types.ObjectId;
 
     @ApiProperty({
+        type: Boolean,
+        required: false,
         default: false,
     })
     @IsOptional()
@@ -18,6 +22,8 @@ export class AdminsEditUserPermsReqDto {
     canBorrow: boolean;
 
     @ApiProperty({
+        type: Boolean,
+        required: false,
         default: false,
     })
     @IsOptional()

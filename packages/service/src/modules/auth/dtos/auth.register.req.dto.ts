@@ -7,7 +7,11 @@ import {
     IsOptional,
     IsString,
     Matches,
+    MaxLength,
+    MinLength,
 } from 'class-validator';
+import { Trim } from 'src/common/transformers/trim.transformer';
+import { MAX_NAME, MAX_PWD, MIN_PWD } from 'src/shared/consts/length.const';
 
 export class AuthRegisterReqDto {
     @ApiProperty({
@@ -32,13 +36,17 @@ export class AuthRegisterReqDto {
     })
     @IsNotEmpty()
     @IsString()
+    @MinLength(MIN_PWD)
+    @MaxLength(MAX_PWD)
     password: string;
 
     @ApiProperty({
         default: 'firstone',
     })
-    @IsNotEmpty()
     @IsAlpha()
+    @Trim()
+    @IsNotEmpty()
+    @MaxLength(MAX_NAME)
     firstName: string;
 
     @ApiProperty({
@@ -46,5 +54,8 @@ export class AuthRegisterReqDto {
     })
     @IsOptional()
     @IsAlpha()
+    @Trim()
+    @MinLength(1)
+    @MaxLength(MAX_NAME)
     lastName?: string;
 }

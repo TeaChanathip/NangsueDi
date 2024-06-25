@@ -12,6 +12,8 @@ export class UsersPermissionsModel {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
         required: true,
+        unique: true,
+        immutable: true,
     })
     userId: UsersModel;
 

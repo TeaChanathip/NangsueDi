@@ -10,7 +10,8 @@ import { Connection } from 'mongoose';
 import { UsersDBModule } from './common/mongodb/usersdb/users.db.module';
 import { AdminsModule } from './modules/admins/admins.module';
 import { RolesGuard } from './common/guards/roles.guard';
-import { BooksdbModule } from './common/mongodb/booksdb/booksdb.module';
+import { BooksDBModule } from './common/mongodb/booksdb/booksdb.module';
+import { BooksModule } from './modules/books/books.module';
 
 @Module({
     imports: [
@@ -39,12 +40,13 @@ import { BooksdbModule } from './common/mongodb/booksdb/booksdb.module';
                 };
             },
         }),
-        UsersDBModule,
         SwaggerModule,
+        UsersDBModule,
+        BooksDBModule,
         AuthModule,
         UsersModule,
         AdminsModule,
-        BooksdbModule,
+        BooksModule,
     ],
     providers: [
         {

@@ -3,7 +3,7 @@ import { IsMongoId, IsNotEmpty } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class AdminsUnsusUserReqDto {
-    @ApiProperty({ default: 'userId' })
+    @ApiProperty({ type: Types.ObjectId, required: true, default: 'userId' })
     @IsNotEmpty()
     @IsMongoId()
     userId: Types.ObjectId;

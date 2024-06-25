@@ -5,7 +5,11 @@ import {
     IsOptional,
     IsUrl,
     Matches,
+    MaxLength,
+    MinLength,
 } from 'class-validator';
+import { Trim } from 'src/common/transformers/trim.transformer';
+import { MAX_NAME } from 'src/shared/consts/length.const';
 
 export class UserUpdateReqDto {
     @ApiProperty({
@@ -23,6 +27,9 @@ export class UserUpdateReqDto {
     })
     @IsOptional()
     @IsAlpha()
+    @Trim()
+    @MinLength(1)
+    @MaxLength(MAX_NAME)
     firstName?: string;
 
     @ApiProperty({
@@ -30,6 +37,9 @@ export class UserUpdateReqDto {
     })
     @IsOptional()
     @IsAlpha()
+    @Trim()
+    @MinLength(1)
+    @MaxLength(MAX_NAME)
     lastName?: string;
 
     @ApiProperty({
@@ -37,6 +47,7 @@ export class UserUpdateReqDto {
             'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Advanced_Info_Service_logo.svg/1280px-Advanced_Info_Service_logo.svg.png',
     })
     @IsOptional()
+    @Trim()
     @IsUrl()
     avartarUrl?: string;
 }

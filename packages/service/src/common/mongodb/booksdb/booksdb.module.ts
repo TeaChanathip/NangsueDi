@@ -1,7 +1,15 @@
 import { Module } from '@nestjs/common';
-import { BooksdbService } from './booksdb.service';
+import { BooksCollService } from './books.collection.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { BooksModel, BooksSchema } from './schemas/books.schema';
 
 @Module({
-  providers: [BooksdbService]
+    imports: [
+        MongooseModule.forFeature([
+            { name: BooksModel.name, schema: BooksSchema },
+        ]),
+    ],
+    providers: [BooksCollService],
+    exports: [BooksCollService],
 })
-export class BooksdbModule {}
+export class BooksDBModule {}

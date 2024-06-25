@@ -24,7 +24,7 @@ export class UsersModel {
     @Prop({ required: false })
     lastName?: string;
 
-    @Prop({ required: false, trim: true })
+    @Prop({ required: false })
     avartarUrl?: string;
 
     @Prop({ required: true, enum: Role })
