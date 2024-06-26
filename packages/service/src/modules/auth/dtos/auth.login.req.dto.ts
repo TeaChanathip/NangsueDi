@@ -6,7 +6,7 @@ import {
     MaxLength,
     MinLength,
 } from 'class-validator';
-import { MAX_PWD, MIN_PWD } from 'src/shared/consts/length.const';
+import { MAX_PWD, MIN_PWD } from 'src/shared/consts/min-max.const';
 
 export class AuthLoginReqDto {
     @ApiProperty({

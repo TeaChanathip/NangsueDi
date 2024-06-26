@@ -12,7 +12,11 @@ import {
 import { ToArray } from 'src/common/transformers/to-array.transformer';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MAX_EMAIL, MAX_NAME, MAX_PHONE } from 'src/shared/consts/length.const';
+import {
+    MAX_EMAIL,
+    MAX_NAME,
+    MAX_PHONE,
+} from 'src/shared/consts/min-max.const';
 import { Role } from 'src/shared/enums/role.enum';
 
 export class AdminsGetUsersReqDto {

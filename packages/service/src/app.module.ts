@@ -13,6 +13,7 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { BooksDBModule } from './common/mongodb/booksdb/booksdb.module';
 import { BooksModule } from './modules/books/books.module';
 import { BorrowsDBModule } from './common/mongodb/borrowsdb/borrowsdb.module';
+import { BorrowsModule } from './modules/borrows/borrows.module';
 
 @Module({
     imports: [
@@ -49,6 +50,7 @@ import { BorrowsDBModule } from './common/mongodb/borrowsdb/borrowsdb.module';
         UsersModule,
         AdminsModule,
         BooksModule,
+        BorrowsModule,
     ],
     providers: [
         {

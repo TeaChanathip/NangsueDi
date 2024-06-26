@@ -9,7 +9,7 @@ import {
     MinLength,
 } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
-import { MAX_NAME } from 'src/shared/consts/length.const';
+import { MAX_NAME } from 'src/shared/consts/min-max.const';
 
 export class UserUpdateReqDto {
     @ApiProperty({

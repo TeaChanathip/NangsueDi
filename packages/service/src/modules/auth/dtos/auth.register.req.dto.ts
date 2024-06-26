@@ -11,7 +11,7 @@ import {
     MinLength,
 } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
-import { MAX_NAME, MAX_PWD, MIN_PWD } from 'src/shared/consts/length.const';
+import { MAX_NAME, MAX_PWD, MIN_PWD } from 'src/shared/consts/min-max.const';
 
 export class AuthRegisterReqDto {
     @ApiProperty({

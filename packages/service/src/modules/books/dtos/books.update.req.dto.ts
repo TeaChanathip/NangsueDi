@@ -13,7 +13,7 @@ import { SortArray } from 'src/common/transformers/sort-array.transformer';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MAX_GENRE, MIN_GENRE } from 'src/shared/consts/genre.map';
-import { MAX_NAME, MAX_TEXT, MAX_TITLE } from 'src/shared/consts/length.const';
+import { MAX_NAME, MAX_TEXT, MAX_TITLE } from 'src/shared/consts/min-max.const';
 
 export class BooksUpdateReqDto {
     @ApiProperty({ type: String, required: true, default: 'Harry Potter 1st' })
