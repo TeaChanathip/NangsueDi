@@ -12,6 +12,7 @@ import { AdminsModule } from './modules/admins/admins.module';
 import { RolesGuard } from './common/guards/roles.guard';
 import { BooksDBModule } from './common/mongodb/booksdb/booksdb.module';
 import { BooksModule } from './modules/books/books.module';
+import { BorrowsDBModule } from './common/mongodb/borrowsdb/borrowsdb.module';
 
 @Module({
     imports: [
@@ -43,6 +44,7 @@ import { BooksModule } from './modules/books/books.module';
         SwaggerModule,
         UsersDBModule,
         BooksDBModule,
+        BorrowsDBModule,
         AuthModule,
         UsersModule,
         AdminsModule,

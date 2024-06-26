@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersPermsCollService } from './users-permissions.collection.service';
 
-describe('UsersPermissionsCollectionService', () => {
+describe('UsersPermsCollService', () => {
     let service: UsersPermsCollService;
 
     beforeEach(async () => {
