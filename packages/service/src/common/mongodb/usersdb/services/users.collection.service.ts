@@ -149,10 +149,14 @@ export class UsersCollService {
         return await this.usersModel.aggregate([
             {
                 $match: {
-                    ...(email && { email: { $regex: email } }),
+                    ...(email && { email: { $regex: email, $options: 'i' } }),
                     ...(phone && { phone: { $regex: phone } }),
-                    ...(firstName && { firstName: { $regex: firstName } }),
-                    ...(lastName && { lastName: { $regex: lastName } }),
+                    ...(firstName && {
+                        firstName: { $regex: firstName, $options: 'i' },
+                    }),
+                    ...(lastName && {
+                        lastName: { $regex: lastName, $options: 'i' },
+                    }),
                     ...(roles && { role: { $in: roles } }),
                     ...(registeredBegin && {
                         registeredAt: { $gte: registeredBegin },

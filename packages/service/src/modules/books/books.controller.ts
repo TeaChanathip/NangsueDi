@@ -15,7 +15,7 @@ import { BooksRegisterReqDto } from './dtos/books.register.req.dto';
 import { BooksService } from './books.service';
 import { BooksSearchReqDto } from './dtos/books.search.req.dto';
 import { PublicRoute } from 'src/common/decorators/public-route.decorator';
-import { Types } from 'mongoose';
+import { BooksUpdateReqDto } from './dtos/books.update.req.dto';
 
 @ApiTags('Book')
 @Controller('books')
@@ -29,25 +29,27 @@ export class BooksController {
         return await this.booksService.register(booksRegisterReqDto);
     }
 
-    @ApiBearerAuth()
-    @Roles(Role.MANAGER, Role.ADMIN)
-    @Patch(':bookId')
-    async update(@Param('bookId') bookId: Types.ObjectId) {
-        // logic
+    @PublicRoute()
+    @Get(':bookId')
+    async get(@Param('bookId') bookId: string) {
+        return await this.booksService.get(bookId);
     }
 
     @ApiBearerAuth()
     @Roles(Role.MANAGER, Role.ADMIN)
-    @Get(':bookId')
-    async get(@Param('bookId') bookId: Types.ObjectId) {
-        // logic
+    @Patch(':bookId')
+    async update(
+        @Param('bookId') bookId: string,
+        @Body() booksUpdateReqDto: BooksUpdateReqDto,
+    ) {
+        return await this.booksService.update(bookId, booksUpdateReqDto);
     }
 
     @ApiBearerAuth()
     @Roles(Role.MANAGER, Role.ADMIN)
     @Delete(':bookId')
-    async delete(@Param('bookId') bookId: Types.ObjectId) {
-        // logic
+    async delete(@Param('bookId') bookId: string) {
+        return await this.booksService.delete(bookId);
     }
 
     @PublicRoute()

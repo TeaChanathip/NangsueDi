@@ -21,11 +21,14 @@ export class BooksModel {
     @Prop({ required: true })
     registeredAt: number;
 
-    @Prop({ required: true })
-    totalNumber: number;
+    @Prop({ required: false })
+    updatedAt: number;
 
     @Prop({ required: true })
-    remainNumber: number;
+    total: number;
+
+    @Prop({ required: true })
+    borrowed: number;
 
     // sorted array of genre numbers
     @Prop({ required: false })

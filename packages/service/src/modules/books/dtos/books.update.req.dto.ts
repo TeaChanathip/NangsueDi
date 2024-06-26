@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
     IsArray,
     IsInt,
-    IsNotEmpty,
     IsOptional,
     IsString,
     Max,
@@ -13,16 +12,17 @@ import {
 import { SortArray } from 'src/common/transformers/sort-array.transformer';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MIN_GENRE, MAX_GENRE } from 'src/shared/consts/genre.map';
+import { MAX_GENRE, MIN_GENRE } from 'src/shared/consts/genre.map';
 import { MAX_NAME, MAX_TEXT, MAX_TITLE } from 'src/shared/consts/length.const';
 
-export class BooksRegisterReqDto {
+export class BooksUpdateReqDto {
     @ApiProperty({ type: String, required: true, default: 'Harry Potter 1st' })
+    @IsOptional()
     @IsString()
     @Trim()
-    @IsNotEmpty()
+    @MinLength(1, { message: 'The title cannot be whitespace' })
     @MaxLength(MAX_TITLE)
-    title: string;
+    title?: string;
 
     @ApiProperty({ type: String, required: false, default: 'JK Rowling' })
     @IsOptional()
@@ -55,7 +55,7 @@ export class BooksRegisterReqDto {
     publishedAt?: number;
 
     @ApiProperty({ type: Number, required: true, default: '10' })
-    @IsNotEmpty()
+    @IsOptional()
     @IsInt()
     @Min(1)
     total: number;

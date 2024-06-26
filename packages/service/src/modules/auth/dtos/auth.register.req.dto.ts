@@ -55,7 +55,7 @@ export class AuthRegisterReqDto {
     @IsOptional()
     @IsAlpha()
     @Trim()
-    @MinLength(1)
+    @MinLength(1, { message: 'The lastName cannot be whitespace' })
     @MaxLength(MAX_NAME)
     lastName?: string;
 }

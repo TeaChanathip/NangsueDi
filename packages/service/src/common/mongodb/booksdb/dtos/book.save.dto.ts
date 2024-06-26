@@ -5,7 +5,7 @@ export class BookSaveDto {
     title: string;
     author?: string;
     description?: string;
-    totalNumber: number;
+    total: number;
     genres?: number[];
     publishedAt?: number;
 
@@ -15,5 +15,5 @@ export class BookSaveDto {
 
     @IsNotEmpty()
     @IsNumber()
-    remainNumber: number;
+    borrowed: number;
 }

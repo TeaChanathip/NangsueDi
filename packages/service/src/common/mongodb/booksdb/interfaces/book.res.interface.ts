@@ -7,7 +7,8 @@ export interface BookRes {
     description?: string;
     publishedAt?: number;
     registeredAt: number;
-    totalNumber: number;
-    remainNumber: number;
+    updatedAt?: number;
+    total: number;
+    borrowed: number;
     genres?: number[];
 }

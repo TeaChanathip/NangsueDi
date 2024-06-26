@@ -24,7 +24,6 @@ export class AdminsGetUsersReqDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @MinLength(1)
     @MaxLength(MAX_EMAIL)
     email?: string;
 
@@ -36,7 +35,6 @@ export class AdminsGetUsersReqDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @MinLength(1)
     @MaxLength(MAX_PHONE)
     phone?: string;
 
@@ -48,7 +46,6 @@ export class AdminsGetUsersReqDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @MinLength(1)
     @MaxLength(MAX_NAME)
     firstName?: string;
 
@@ -60,7 +57,6 @@ export class AdminsGetUsersReqDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @MinLength(1)
     @MaxLength(MAX_NAME)
     lastName?: string;
 

@@ -47,9 +47,43 @@ export class BooksSearchReqDto {
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
+    @IsUnix()
+    updatedBegin?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsUnix()
+    updatedEnd?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
     @IsInt()
     @Min(1)
-    remainNumberLB?: number;
+    totalLB: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    totalUB: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(0)
+    borrowedLB: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(0)
+    borrowedUB: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    remainLB?: number;
 
     @ApiProperty({
         type: Number,

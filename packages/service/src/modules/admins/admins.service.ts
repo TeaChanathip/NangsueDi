@@ -17,6 +17,7 @@ import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
 import { AdminsGetUsersReqDto } from './dtos/admins.get-users.req.dto';
+import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
 
 @Injectable()
 export class AdminsService {
@@ -146,17 +147,9 @@ export class AdminsService {
     }
 
     async getUser(userId: string) {
-        let userObjectId: Types.ObjectId;
-        try {
-            userObjectId = new Types.ObjectId(userId);
-        } catch {
-            throw new HttpException(
-                'userId must be a mongodb id',
-                HttpStatus.BAD_REQUEST,
-            );
-        }
+        const userObId = cvtToObjectId(userId, 'userId');
 
-        return await this.usersCollService.findById(userObjectId);
+        return await this.usersCollService.findById(userObId);
     }
 
     private async getUserAndCheckAdmin(userId: Types.ObjectId) {
