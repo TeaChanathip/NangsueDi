@@ -5,11 +5,6 @@ import { Types } from 'mongoose';
 import { Trim } from 'src/common/transformers/trim.transformer';
 
 export class AdminsDeleteUserReqDto {
-    @ApiProperty({ type: Types.ObjectId, required: true, default: 'userId' })
-    @IsNotEmpty()
-    @IsMongoId()
-    userId: Types.ObjectId;
-
     @ApiProperty({
         type: String,
         required: true,

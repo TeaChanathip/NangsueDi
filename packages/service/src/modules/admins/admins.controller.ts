@@ -11,10 +11,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { AdminsService } from './admins.service';
-import { AdminsVerifyUserReqDto } from './dtos/admins.verify-user.req.dto';
 import { AdminsEditUserPermsReqDto } from './dtos/admins.edit-user-permissions.req.dto';
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
-import { AdminsUnsusUserReqDto } from './dtos/admins.unsuspend-user.req.dto';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
 import { AdminsGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 
@@ -25,46 +23,56 @@ import { AdminsGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 export class AdminsController {
     constructor(private adminsService: AdminsService) {}
 
-    @Patch('verify-user')
-    async verifyUser(@Body() adminsVerifyUserReqDto: AdminsVerifyUserReqDto) {
-        return await this.adminsService.verifyUser(
-            adminsVerifyUserReqDto.userId,
-        );
+    @Patch('verify-user/:userId')
+    async verifyUser(@Param('userId') userId: string) {
+        return await this.adminsService.verifyUser(userId);
     }
 
-    @Patch('edit-user-permissions')
+    @Patch('edit-user-permissions/:userId')
     async editUserPermissions(
+        @Param('userId') userId: string,
         @Body() adminsEditUserPermsReqDto: AdminsEditUserPermsReqDto,
     ) {
         return await this.adminsService.editUserPermissions(
+            userId,
             adminsEditUserPermsReqDto,
         );
     }
 
-    @Patch('suspend-user')
-    async suspendUser(@Body() adminsSusUserReqDto: AdminsSusUserReqDto) {
-        return await this.adminsService.suspendUser(adminsSusUserReqDto);
-    }
-
-    @Patch('unsuspend-user')
-    async unsuspendUser(@Body() adminsUnsusUserReqDto: AdminsUnsusUserReqDto) {
-        return await this.adminsService.unsuspendUser(
-            adminsUnsusUserReqDto.userId,
+    @Patch('suspend-user/:userId')
+    async suspendUser(
+        @Param('userId') userId: string,
+        @Body() adminsSusUserReqDto: AdminsSusUserReqDto,
+    ) {
+        return await this.adminsService.suspendUser(
+            userId,
+            adminsSusUserReqDto,
         );
     }
 
-    @Delete('delete-user')
-    async deleteUser(@Body() adminsDeleteUserReqDto: AdminsDeleteUserReqDto) {
-        return await this.adminsService.deleteUser(adminsDeleteUserReqDto);
+    @Patch('unsuspend-user/:userId')
+    async unsuspendUser(@Param('userId') userId: string) {
+        return await this.adminsService.unsuspendUser(userId);
     }
 
-    @Get('get-users')
-    async getUsers(@Query() adminsGetUsersReqDto: AdminsGetUsersReqDto) {
-        return await this.adminsService.getUsers(adminsGetUsersReqDto);
+    @Delete('delete-user/:userId')
+    async deleteUser(
+        @Param('userId') userId: string,
+        @Body() adminsDeleteUserReqDto: AdminsDeleteUserReqDto,
+    ) {
+        return await this.adminsService.deleteUser(
+            userId,
+            adminsDeleteUserReqDto,
+        );
     }
 
     @Get('get-user/:userId')
     async getUser(@Param('userId') userId: string) {
         return await this.adminsService.getUser(userId);
+    }
+
+    @Get('get-users')
+    async getUsers(@Query() adminsGetUsersReqDto: AdminsGetUsersReqDto) {
+        return await this.adminsService.getUsers(adminsGetUsersReqDto);
     }
 }

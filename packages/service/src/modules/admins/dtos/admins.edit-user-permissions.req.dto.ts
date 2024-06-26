@@ -4,15 +4,6 @@ import { Types } from 'mongoose';
 
 export class AdminsEditUserPermsReqDto {
     @ApiProperty({
-        type: Types.ObjectId,
-        required: true,
-        default: 'userId',
-    })
-    @IsNotEmpty()
-    @IsMongoId()
-    userId: Types.ObjectId;
-
-    @ApiProperty({
         type: Boolean,
         required: false,
         default: false,

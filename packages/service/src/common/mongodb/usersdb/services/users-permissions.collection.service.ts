@@ -3,8 +3,8 @@ import { UsersPermissionsModel } from '../schemas/users-permissions.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserPermsRes } from '../interfaces/user-permissions.res.interface';
-import { UserPermsUpdateDto } from '../dtos/user-permissions.update.dto';
 import { UserPermsSaveDto } from '../dtos/user-permissions.save.dto';
+import { AdminsEditUserPermsReqDto } from 'src/modules/admins/dtos/admins.edit-user-permissions.req.dto';
 
 @Injectable()
 export class UsersPermsCollService {
@@ -25,11 +25,11 @@ export class UsersPermsCollService {
 
     async updateByUserId(
         userId: Types.ObjectId,
-        userPermsUpdateDto: UserPermsUpdateDto,
+        adminsEditUserPermsReqDto: AdminsEditUserPermsReqDto,
     ): Promise<UserPermsRes> {
         return await this.userPermsModel.findOneAndUpdate(
             { userId },
-            userPermsUpdateDto,
+            adminsEditUserPermsReqDto,
             { new: true },
         );
     }

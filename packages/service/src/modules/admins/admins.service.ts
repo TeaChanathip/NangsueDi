@@ -26,8 +26,9 @@ export class AdminsService {
         private readonly usersPermsCollService: UsersPermsCollService,
     ) {}
 
-    async verifyUser(userId: Types.ObjectId): Promise<UserFiltered> {
-        const user = await this.getUserAndCheckAdmin(userId);
+    async verifyUser(userId: string): Promise<UserFiltered> {
+        const userObjId = cvtToObjectId(userId, 'userId');
+        const user = await this.getUserAndCheckAdmin(userObjId);
         if (user.role !== Role.USER) {
             throw new HttpException(
                 'Cannot verify non-user role',
@@ -42,7 +43,7 @@ export class AdminsService {
         }
 
         const userPermsSaveDto: UserPermsSaveDto = {
-            userId,
+            userId: userObjId,
             canBorrow: true,
             canReview: true,
         };
@@ -56,7 +57,7 @@ export class AdminsService {
 
         // Update a permissions to User document
         const updatedUser = await this.usersCollService.addPermissions(
-            userId,
+            userObjId,
             userPerms._id,
         );
         if (!updatedUser) {
@@ -67,33 +68,29 @@ export class AdminsService {
     }
 
     async editUserPermissions(
+        userId: string,
         adminsEditUserPermsReqDto: AdminsEditUserPermsReqDto,
     ): Promise<UserFiltered> {
-        const { userId } = adminsEditUserPermsReqDto;
-        await this.getUserAndCheckAdmin(userId);
-
-        const editUserPermsDto = { ...adminsEditUserPermsReqDto };
-        delete editUserPermsDto.userId;
+        const userObjId = cvtToObjectId(userId, 'userId');
+        await this.getUserAndCheckAdmin(userObjId);
 
         const userPerms = await this.usersPermsCollService.updateByUserId(
-            userId,
-            editUserPermsDto,
+            userObjId,
+            adminsEditUserPermsReqDto,
         );
         if (!userPerms) {
             throw new InternalServerErrorException();
         }
 
-        return filterUserRes(
-            await this.usersCollService.findById(userId),
-            userPerms,
-        );
+        return await this.usersCollService.getWithPerms(userObjId);
     }
 
     async suspendUser(
+        userId: string,
         adminsSusUserReqDto: AdminsSusUserReqDto,
     ): Promise<UserFiltered> {
-        const { userId } = adminsSusUserReqDto;
-        const user = await this.getUserAndCheckAdmin(userId);
+        const userObjId = cvtToObjectId(userId, 'userId');
+        const user = await this.getUserAndCheckAdmin(userObjId);
         if (user.suspendedAt) {
             throw new HttpException(
                 'The user was already suspended',
@@ -102,18 +99,19 @@ export class AdminsService {
         }
 
         const suspendedUser = await this.usersCollService.suspend(
-            userId,
+            userObjId,
             getCurrentUnix(),
         );
         if (!suspendedUser) {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getWithPerms(userId);
+        return await this.usersCollService.getWithPerms(userObjId);
     }
 
-    async unsuspendUser(userId: Types.ObjectId): Promise<UserFiltered> {
-        const user = await this.getUserAndCheckAdmin(userId);
+    async unsuspendUser(userId: string): Promise<UserFiltered> {
+        const userObjId = cvtToObjectId(userId, 'userId');
+        const user = await this.getUserAndCheckAdmin(userObjId);
         if (!user.suspendedAt) {
             throw new HttpException(
                 'The user was not suspended',
@@ -121,17 +119,21 @@ export class AdminsService {
             );
         }
 
-        const unsuspendedUser = await this.usersCollService.unsuspend(userId);
+        const unsuspendedUser =
+            await this.usersCollService.unsuspend(userObjId);
         if (!unsuspendedUser) {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getWithPerms(userId);
+        return await this.usersCollService.getWithPerms(userObjId);
     }
 
-    async deleteUser(adminsDeleteUserReqDto: AdminsDeleteUserReqDto) {
-        const { userId } = adminsDeleteUserReqDto;
-        const user = await this.getUserAndCheckAdmin(userId);
+    async deleteUser(
+        userId: string,
+        adminsDeleteUserReqDto: AdminsDeleteUserReqDto,
+    ) {
+        const userObjId = cvtToObjectId(userId, 'userId');
+        const user = await this.getUserAndCheckAdmin(userObjId);
         if (user.permissions) {
             throw new HttpException(
                 'Cannot delete verified user',
@@ -139,7 +141,7 @@ export class AdminsService {
             );
         }
 
-        return await this.usersCollService.delete(userId);
+        return filterUserRes(await this.usersCollService.delete(userObjId));
     }
 
     async getUsers(adminsGetUsersReqDto: AdminsGetUsersReqDto) {
@@ -147,9 +149,9 @@ export class AdminsService {
     }
 
     async getUser(userId: string) {
-        const userObId = cvtToObjectId(userId, 'userId');
+        const userObjId = cvtToObjectId(userId, 'userId');
 
-        return await this.usersCollService.findById(userObId);
+        return await this.usersCollService.getWithPerms(userObjId);
     }
 
     private async getUserAndCheckAdmin(userId: Types.ObjectId) {
