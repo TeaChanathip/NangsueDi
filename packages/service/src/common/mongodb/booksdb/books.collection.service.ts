@@ -125,4 +125,10 @@ export class BooksCollService {
 
         return await this.booksModel.aggregate(pipeline);
     }
+
+    async borrowed(bookId: Types.ObjectId, amount: number) {
+        return await this.booksModel.findByIdAndUpdate(bookId, {
+            borrowed: amount,
+        });
+    }
 }

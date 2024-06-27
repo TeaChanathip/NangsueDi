@@ -10,3 +10,4 @@ export const MIN_PWD = 6;
 
 // Number
 export const MAX_BORROW = 10;
+export const MAX_BORROW_PER_BOOK = 2;

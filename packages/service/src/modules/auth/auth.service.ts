@@ -64,6 +64,13 @@ export class AuthService {
             );
         }
 
+        if (user.suspendedAt !== undefined) {
+            throw new HttpException(
+                'The user has been suspended',
+                HttpStatus.FORBIDDEN,
+            );
+        }
+
         const userPayload: JwtUserPayload = {
             sub: user._id,
             email: user.email,

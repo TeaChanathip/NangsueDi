@@ -14,6 +14,8 @@ import { BooksDBModule } from './common/mongodb/booksdb/booksdb.module';
 import { BooksModule } from './modules/books/books.module';
 import { BorrowsDBModule } from './common/mongodb/borrowsdb/borrowsdb.module';
 import { BorrowsModule } from './modules/borrows/borrows.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { PermsGuard } from './common/guards/permissions.guard';
 
 @Module({
     imports: [
@@ -21,6 +23,12 @@ import { BorrowsModule } from './modules/borrows/borrows.module';
             isGlobal: true,
             envFilePath: '.env',
         }),
+        ThrottlerModule.forRoot([
+            {
+                ttl: 1000,
+                limit: 4,
+            },
+        ]),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -55,11 +63,19 @@ import { BorrowsModule } from './modules/borrows/borrows.module';
     providers: [
         {
             provide: APP_GUARD,
+            useClass: ThrottlerGuard,
+        },
+        {
+            provide: APP_GUARD,
             useClass: AuthGuard,
         },
         {
             provide: APP_GUARD,
             useClass: RolesGuard,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: PermsGuard,
         },
     ],
 })

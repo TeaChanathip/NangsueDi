@@ -98,9 +98,11 @@ export class AdminsService {
             );
         }
 
+        const currentUnix = getCurrentUnix();
         const suspendedUser = await this.usersCollService.suspend(
             userObjId,
-            getCurrentUnix(),
+            currentUnix,
+            currentUnix,
         );
         if (!suspendedUser) {
             throw new InternalServerErrorException();

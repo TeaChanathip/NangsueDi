@@ -109,10 +109,11 @@ export class UsersCollService {
     async suspend(
         userId: Types.ObjectId,
         suspendedAt: number,
+        tokenVersion: number,
     ): Promise<UserRes> {
         return await this.usersModel.findByIdAndUpdate(
             userId,
-            { suspendedAt },
+            { suspendedAt, tokenVersion },
             { new: true },
         );
     }
