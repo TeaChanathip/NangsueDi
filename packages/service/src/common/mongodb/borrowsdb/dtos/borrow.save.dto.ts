@@ -3,8 +3,6 @@ import { Types } from 'mongoose';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 
 export class BorrowSaveDto {
-    amount: number;
-
     @IsNotEmpty()
     @IsMongoId()
     userId: Types.ObjectId;

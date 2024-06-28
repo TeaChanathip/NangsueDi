@@ -25,9 +25,6 @@ export class BorrowsModel {
 
     @Prop({ type: Number, required: true })
     timestamp: number;
-
-    @Prop({ type: Number, required: true })
-    amount: number;
 }
 
 export const BorrowsSchema = SchemaFactory.createForClass(BorrowsModel).index(

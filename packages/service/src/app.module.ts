@@ -13,9 +13,9 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { BooksDBModule } from './common/mongodb/booksdb/booksdb.module';
 import { BooksModule } from './modules/books/books.module';
 import { BorrowsDBModule } from './common/mongodb/borrowsdb/borrowsdb.module';
-import { BorrowsModule } from './modules/borrows/borrows.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PermsGuard } from './common/guards/permissions.guard';
+import { ReturnsdbModule } from './common/mongodb/returnsdb/returnsdb.module';
 
 @Module({
     imports: [
@@ -58,7 +58,7 @@ import { PermsGuard } from './common/guards/permissions.guard';
         UsersModule,
         AdminsModule,
         BooksModule,
-        BorrowsModule,
+        ReturnsdbModule,
     ],
     providers: [
         {

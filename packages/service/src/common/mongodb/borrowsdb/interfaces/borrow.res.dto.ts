@@ -7,5 +7,4 @@ export interface BorrowRes {
     userId: UsersModel;
     bookId: BooksModel;
     timestamp: number;
-    amount: number;
 }
