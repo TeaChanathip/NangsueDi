@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+    ArrayMaxSize,
+    ArrayMinSize,
+    ArrayNotEmpty,
     IsAlpha,
+    IsArray,
     IsEmail,
     IsMobilePhone,
     IsNotEmpty,
@@ -8,10 +12,19 @@ import {
     IsString,
     Matches,
     MaxLength,
+    Min,
     MinLength,
 } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
-import { MAX_NAME, MAX_PWD, MIN_PWD } from 'src/shared/consts/min-max.const';
+import { IsUnix } from 'src/common/validators/isUnix.validator';
+import { UserAddressDto } from 'src/modules/users/dtos/user.address.dto';
+import {
+    MAX_ADDRESS,
+    MAX_NAME,
+    MAX_PWD,
+    MIN_PWD,
+} from 'src/shared/consts/min-max.const';
+import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 
 export class AuthRegisterReqDto {
     @ApiProperty({
@@ -30,6 +43,16 @@ export class AuthRegisterReqDto {
     })
     @Matches(/^0[0-9]*$/, { message: 'Phone number must start with 0' })
     phone: string;
+
+    @ApiProperty({
+        type: UserAddressDto,
+        isArray: true,
+        required: true,
+    })
+    @IsArray()
+    @ArrayNotEmpty()
+    @ArrayMaxSize(5)
+    addresses: UserAddressDto[];
 
     @ApiProperty({
         default: '111111',
@@ -58,4 +81,16 @@ export class AuthRegisterReqDto {
     @MinLength(1, { message: 'The lastName cannot be whitespace' })
     @MaxLength(MAX_NAME)
     lastName?: string;
+
+    @ApiProperty({
+        type: Number,
+        required: true,
+        default: 100000,
+    })
+    @IsNotEmpty()
+    @IsUnix()
+    @Min(getCurrentUnix() - 378683425, {
+        message: 'The age must be at least 12 years',
+    })
+    birthDate: number;
 }

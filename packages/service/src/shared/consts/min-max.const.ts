@@ -5,6 +5,7 @@ export const MAX_NAME = 100;
 export const MAX_TEXT = 400;
 export const MAX_PWD = 100;
 export const MAX_TITLE = 200;
+export const MAX_ADDRESS = 50;
 
 export const MIN_PWD = 6;
 

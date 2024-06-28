@@ -11,4 +11,5 @@ export interface BookRes {
     total: number;
     borrowed: number;
     genres?: number[];
+    coverUrl?: string;
 }

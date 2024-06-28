@@ -5,6 +5,7 @@ export class UserUpdateDto {
     phone?: string;
     firstName?: string;
     lastName?: string;
+    birthDate?: number;
     avartarUrl?: string;
 
     @IsNotEmpty()

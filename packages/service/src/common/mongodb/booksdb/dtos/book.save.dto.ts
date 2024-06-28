@@ -8,6 +8,7 @@ export class BookSaveDto {
     total: number;
     genres?: number[];
     publishedAt?: number;
+    coverUrl?: string;
 
     @IsNotEmpty()
     @IsUnix()

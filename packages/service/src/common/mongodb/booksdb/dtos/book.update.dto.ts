@@ -8,6 +8,7 @@ export class BookUpdateDto {
     publishedAt?: number;
     total: number;
     genres?: number[];
+    coverUrl?: string;
 
     @IsNotEmpty()
     @IsUnix()

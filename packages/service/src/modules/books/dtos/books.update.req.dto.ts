@@ -4,6 +4,7 @@ import {
     IsInt,
     IsOptional,
     IsString,
+    IsUrl,
     Max,
     MaxLength,
     Min,
@@ -73,4 +74,10 @@ export class BooksUpdateReqDto {
     @Max(MAX_GENRE, { each: true })
     @SortArray({ order: 'asce', type: 'number' })
     genres?: number[];
+
+    @ApiProperty({ type: String, required: false })
+    @IsOptional()
+    @Trim()
+    @IsUrl()
+    coverUrl?: string;
 }

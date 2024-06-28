@@ -34,8 +34,8 @@ export class BooksModel {
     @Prop({ required: false })
     genres?: number[];
 
-    // @Prop({required: false})
-    // borrowId?:
+    @Prop({ required: false })
+    coverUrl?: string;
 }
 
 export const BooksSchema = SchemaFactory.createForClass(BooksModel);

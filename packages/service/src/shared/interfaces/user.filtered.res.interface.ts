@@ -5,8 +5,10 @@ export interface UserFiltered {
     _id: Types.ObjectId;
     email: string;
     phone: string;
+    addresses: string[];
     firstName: string;
     lastName?: string;
+    birthDate: number;
     avartarUrl?: string;
     role: Role;
     permissions?: {

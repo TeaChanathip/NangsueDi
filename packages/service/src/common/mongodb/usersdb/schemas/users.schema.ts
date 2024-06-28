@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Role } from 'src/shared/enums/role.enum';
 import { UsersPermissionsModel } from './users-permissions.schema';
+import { UsersAddressesModel } from './users-addresses.schema';
 
 @Schema({
     collection: 'Users',
@@ -15,6 +16,13 @@ export class UsersModel {
     @Prop({ required: true })
     phone: string;
 
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UsersAddresses',
+        required: true,
+    })
+    addresses: UsersAddressesModel[];
+
     @Prop({ required: true })
     password: string;
 
@@ -23,6 +31,9 @@ export class UsersModel {
 
     @Prop({ required: false })
     lastName?: string;
+
+    @Prop({ required: true })
+    birthDate: number;
 
     @Prop({ required: false })
     avartarUrl?: string;
