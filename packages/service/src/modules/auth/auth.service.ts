@@ -15,15 +15,11 @@ import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface
 import { UserSaveDto } from 'src/common/mongodb/usersdb/dtos/user.save.dto';
 import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
 import { UserLoginRes } from './interfaces/user-login.res.interface';
-import { UsersAddrsCollService } from 'src/common/mongodb/usersdb/services/users-addresses.collection/users-addresses.collection.service';
-import { UserAddrDto } from '../users/dtos/user.address.dto';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly usersCollService: UsersCollService,
-        private readonly usersAddrsCollService: UsersAddrsCollService,
         private readonly jwtService: JwtService,
     ) {}
 
@@ -43,34 +39,8 @@ export class AuthService {
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(authRegisterReqDto.password, salt);
 
-        const addrs: UserAddrDto[] = authRegisterReqDto.addresses;
-        delete authRegisterReqDto.addresses;
-
-        let savedAddrIds: Types.ObjectId[];
-        try {
-            const savedAddrs = await Promise.all(
-                addrs.map((addr) => this.usersAddrsCollService.saveNew(addr)),
-            );
-
-            // Filter out any falsy values (e.g., null, undefined) from the results
-            const validSavedAddrs = savedAddrs.filter((savedAddr) => savedAddr);
-
-            // Check if the number of valid saved addresses matches the number of input addresses
-            if (validSavedAddrs.length !== addrs.length) {
-                throw new InternalServerErrorException(
-                    'Some addresses could not be saved.',
-                );
-            }
-
-            // Extract _id from valid saved addresses
-            savedAddrIds = validSavedAddrs.map((savedAddr) => savedAddr._id);
-        } catch (error) {
-            throw new InternalServerErrorException(error);
-        }
-
         const userSaveDto: UserSaveDto = {
             ...authRegisterReqDto,
-            addresses: savedAddrIds,
             password: hash,
             role: Role.USER,
             registeredAt: getCurrentUnix(),

@@ -7,7 +7,7 @@ export interface UserRes {
     _id: Types.ObjectId;
     email: string;
     phone: string;
-    addresses: UsersAddressesModel[];
+    addresses?: UsersAddressesModel[];
     password: string;
     firstName: string;
     lastName?: string;

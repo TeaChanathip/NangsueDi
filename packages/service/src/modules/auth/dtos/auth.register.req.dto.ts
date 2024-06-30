@@ -1,10 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
-    ArrayMaxSize,
-    ArrayNotEmpty,
     IsAlpha,
-    IsArray,
     IsEmail,
     IsMobilePhone,
     IsNotEmpty,
@@ -13,12 +9,10 @@ import {
     Matches,
     MaxLength,
     MinLength,
-    ValidateNested,
 } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsOlderThan } from 'src/common/validators/isOlderThan.validator';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { UserAddrDto } from 'src/modules/users/dtos/user.address.dto';
 import { MAX_NAME, MAX_PWD, MIN_PWD } from 'src/shared/consts/min-max.const';
 
 export class AuthRegisterReqDto {
@@ -38,18 +32,6 @@ export class AuthRegisterReqDto {
     })
     @Matches(/^0[0-9]*$/, { message: 'Phone number must start with 0' })
     phone: string;
-
-    @ApiProperty({
-        type: UserAddrDto,
-        isArray: true,
-        required: true,
-    })
-    @IsArray()
-    @ArrayNotEmpty()
-    @ArrayMaxSize(5)
-    @ValidateNested({ each: true })
-    @Type(() => UserAddrDto)
-    addresses: UserAddrDto[];
 
     @ApiProperty({
         default: '111111',

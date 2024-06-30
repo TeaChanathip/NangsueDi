@@ -17,7 +17,15 @@ export class BorrowsCollService {
         return await borrow.save();
     }
 
+    async findById(borrowId: Types.ObjectId): Promise<BorrowRes> {
+        return await this.borrowsModel.findById(borrowId);
+    }
+
     async findByUserId(userId: Types.ObjectId): Promise<BorrowRes[]> {
         return await this.borrowsModel.find({ userId });
+    }
+
+    async deleteById(borrowId: Types.ObjectId): Promise<BorrowRes> {
+        return await this.borrowsModel.findByIdAndDelete(borrowId);
     }
 }

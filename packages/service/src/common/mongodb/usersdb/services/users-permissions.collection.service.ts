@@ -34,7 +34,11 @@ export class UsersPermsCollService {
         );
     }
 
-    async deleteByUserId(userId: Types.ObjectId) {
+    async deleteById(permsId: Types.ObjectId): Promise<UserPermsRes> {
+        return await this.userPermsModel.findByIdAndDelete(permsId);
+    }
+
+    async deleteByUserId(userId: Types.ObjectId): Promise<UserPermsRes> {
         return await this.userPermsModel.findOneAndDelete({ userId });
     }
 }

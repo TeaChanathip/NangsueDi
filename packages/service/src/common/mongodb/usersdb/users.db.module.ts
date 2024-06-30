@@ -7,7 +7,7 @@ import {
     UsersPermissionsModel,
     UsersPermissionsSchema,
 } from './schemas/users-permissions.schema';
-import { UsersAddrsCollService } from './services/users-addresses.collection/users-addresses.collection.service';
+import { UsersAddrsCollService } from './services/users-addresses.collection.service';
 import {
     UsersAddressesModel,
     UsersAddressesSchema,

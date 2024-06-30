@@ -16,6 +16,7 @@ import { BorrowsDBModule } from './common/mongodb/borrowsdb/borrowsdb.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PermsGuard } from './common/guards/permissions.guard';
 import { ReturnsdbModule } from './common/mongodb/returnsdb/returnsdb.module';
+import { ActionsModule } from './modules/actions/actions.module';
 
 @Module({
     imports: [
@@ -59,6 +60,7 @@ import { ReturnsdbModule } from './common/mongodb/returnsdb/returnsdb.module';
         AdminsModule,
         BooksModule,
         ReturnsdbModule,
+        ActionsModule,
     ],
     providers: [
         {

@@ -19,9 +19,9 @@ export class UsersModel {
     @Prop({
         type: Array<mongoose.Schema.Types.ObjectId>,
         ref: 'UsersAddresses',
-        required: true,
+        required: false,
     })
-    addresses: UsersAddressesModel[];
+    addresses?: UsersAddressesModel[];
 
     @Prop({ required: true })
     password: string;

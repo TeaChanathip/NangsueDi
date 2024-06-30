@@ -39,6 +39,10 @@ export class UsersCollService {
         });
     }
 
+    async delete(userId: Types.ObjectId): Promise<UserRes> {
+        return await this.usersModel.findByIdAndDelete(userId);
+    }
+
     async updatePassword(
         userId: Types.ObjectId,
         passwordUpdateDto: PasswordUpdateDto,
@@ -61,10 +65,6 @@ export class UsersCollService {
             { permissions: permissionsId },
             { new: true },
         );
-    }
-
-    async delete(userId: Types.ObjectId): Promise<UserRes> {
-        return await this.usersModel.findByIdAndDelete(userId);
     }
 
     async getUserFiltered(userId: Types.ObjectId): Promise<UserFiltered> {
