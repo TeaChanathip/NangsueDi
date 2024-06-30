@@ -12,12 +12,12 @@ import { UserPermsSaveDto } from 'src/common/mongodb/usersdb/dtos/user-permissio
 import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { Role } from 'src/shared/enums/role.enum';
 import { AdminsEditUserPermsReqDto } from './dtos/admins.edit-user-permissions.req.dto';
-import { filterUserRes } from 'src/shared/utils/filterUserRes';
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
 import { AdminsGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
+import { filterUserRes } from 'src/shared/utils/filterUserRes';
 
 @Injectable()
 export class AdminsService {
@@ -82,7 +82,7 @@ export class AdminsService {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getWithPerms(userObjId);
+        return await this.usersCollService.getUserFiltered(userObjId);
     }
 
     async suspendUser(
@@ -108,7 +108,7 @@ export class AdminsService {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getWithPerms(userObjId);
+        return await this.usersCollService.getUserFiltered(userObjId);
     }
 
     async unsuspendUser(userId: string): Promise<UserFiltered> {
@@ -127,7 +127,7 @@ export class AdminsService {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getWithPerms(userObjId);
+        return await this.usersCollService.getUserFiltered(userObjId);
     }
 
     async deleteUser(
@@ -153,11 +153,13 @@ export class AdminsService {
     async getUser(userId: string) {
         const userObjId = cvtToObjectId(userId, 'userId');
 
-        return await this.usersCollService.getWithPerms(userObjId);
+        return await this.usersCollService.getUserFiltered(userObjId);
     }
 
-    private async getUserAndCheckAdmin(userId: Types.ObjectId) {
-        const user = await this.usersCollService.findById(userId);
+    private async getUserAndCheckAdmin(
+        userId: Types.ObjectId,
+    ): Promise<UserFiltered> {
+        const user = await this.usersCollService.getUserFiltered(userId);
         if (!user) {
             throw new NotFoundException();
         }

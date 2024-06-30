@@ -17,7 +17,7 @@ export class UsersModel {
     phone: string;
 
     @Prop({
-        type: mongoose.Schema.Types.ObjectId,
+        type: Array<mongoose.Schema.Types.ObjectId>,
         ref: 'UsersAddresses',
         required: true,
     })
@@ -33,7 +33,7 @@ export class UsersModel {
     lastName?: string;
 
     @Prop({ required: true })
-    birthDate: number;
+    birthTime: number;
 
     @Prop({ required: false })
     avartarUrl?: string;

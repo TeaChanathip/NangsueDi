@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { MAX_ADDRESS } from 'src/shared/consts/min-max.const';
 
-export class UserAddressDto {
+export class UserAddrDto {
     @ApiProperty({ type: String, required: true, default: 'ไม่รู้' })
     @IsString()
     @Trim()

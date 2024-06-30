@@ -8,7 +8,7 @@ import {
 
 @ValidatorConstraint({ name: 'isUnix', async: false })
 export class IsUnixConstraint implements ValidatorConstraintInterface {
-    validate(value: any, args: ValidationArguments) {
+    validate(value: any, args?: ValidationArguments): boolean {
         // Check if the value is a number
         if (typeof value !== 'number' || isNaN(value)) {
             return false;
@@ -33,7 +33,7 @@ export class IsUnixConstraint implements ValidatorConstraintInterface {
 }
 
 export function IsUnix(validationOptions?: ValidationOptions) {
-    return function (object: Object, propertyName: string) {
+    return function (object: unknown, propertyName: string) {
         registerDecorator({
             name: 'isUnix',
             target: object.constructor,

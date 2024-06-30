@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
     ArrayMaxSize,
-    ArrayMinSize,
     ArrayNotEmpty,
     IsAlpha,
     IsArray,
@@ -12,19 +12,14 @@ import {
     IsString,
     Matches,
     MaxLength,
-    Min,
     MinLength,
+    ValidateNested,
 } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
+import { IsOlderThan } from 'src/common/validators/isOlderThan.validator';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { UserAddressDto } from 'src/modules/users/dtos/user.address.dto';
-import {
-    MAX_ADDRESS,
-    MAX_NAME,
-    MAX_PWD,
-    MIN_PWD,
-} from 'src/shared/consts/min-max.const';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { UserAddrDto } from 'src/modules/users/dtos/user.address.dto';
+import { MAX_NAME, MAX_PWD, MIN_PWD } from 'src/shared/consts/min-max.const';
 
 export class AuthRegisterReqDto {
     @ApiProperty({
@@ -45,14 +40,16 @@ export class AuthRegisterReqDto {
     phone: string;
 
     @ApiProperty({
-        type: UserAddressDto,
+        type: UserAddrDto,
         isArray: true,
         required: true,
     })
     @IsArray()
     @ArrayNotEmpty()
     @ArrayMaxSize(5)
-    addresses: UserAddressDto[];
+    @ValidateNested({ each: true })
+    @Type(() => UserAddrDto)
+    addresses: UserAddrDto[];
 
     @ApiProperty({
         default: '111111',
@@ -85,12 +82,10 @@ export class AuthRegisterReqDto {
     @ApiProperty({
         type: Number,
         required: true,
-        default: 100000,
+        default: 1340816400,
     })
     @IsNotEmpty()
     @IsUnix()
-    @Min(getCurrentUnix() - 378683425, {
-        message: 'The age must be at least 12 years',
-    })
-    birthDate: number;
+    @IsOlderThan(12)
+    birthTime: number;
 }

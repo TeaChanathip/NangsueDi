@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsMongoId, IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { Types } from 'mongoose';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
 
 export class AdminsDeleteUserReqDto {

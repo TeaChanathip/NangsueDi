@@ -8,6 +8,7 @@ import { UserSaveDto } from '../dtos/user.save.dto';
 import { UserUpdateDto } from '../dtos/user.update.dto';
 import { PasswordUpdateDto } from '../dtos/password.update.dto';
 import { AdminsGetUsersReqDto } from 'src/modules/admins/dtos/admins.get-users.req.dto';
+import { UserAddrsRes } from '../interfaces/user-addresses.res.interface';
 
 @Injectable()
 export class UsersCollService {
@@ -66,7 +67,7 @@ export class UsersCollService {
         return await this.usersModel.findByIdAndDelete(userId);
     }
 
-    async getWithPerms(userId: Types.ObjectId): Promise<UserFiltered> {
+    async getUserFiltered(userId: Types.ObjectId): Promise<UserFiltered> {
         const results = await this.usersModel.aggregate([
             { $match: { _id: new Types.ObjectId(userId) } },
             {
@@ -90,6 +91,7 @@ export class UsersCollService {
                     phone: 1,
                     firstName: 1,
                     lastName: 1,
+                    birthTime: 1,
                     avartarUrl: 1,
                     role: 1,
                     permissions: {
@@ -200,6 +202,7 @@ export class UsersCollService {
                     phone: 1,
                     firstName: 1,
                     lastName: 1,
+                    birthTime: 1,
                     avartarUrl: 1,
                     role: 1,
                     permissions: {
@@ -218,5 +221,61 @@ export class UsersCollService {
                 },
             },
         ]);
+    }
+
+    async getAddresses(userId: Types.ObjectId): Promise<UserAddrsRes[]> {
+        return await this.usersModel.aggregate([
+            {
+                $match: {
+                    _id: new Types.ObjectId(userId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'UsersAddresses',
+                    localField: 'addresses',
+                    foreignField: '_id',
+                    as: 'addresses',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$addresses',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    _id: '$addresses._id',
+                    address: '$addresses.address',
+                    subDistrict: '$addresses.subDistrict',
+                    district: '$addresses.district',
+                    province: '$addresses.province',
+                    postalCode: '$addresses.postalCode',
+                },
+            },
+        ]);
+    }
+
+    async addAddress(
+        userId: Types.ObjectId,
+        addrId: Types.ObjectId,
+    ): Promise<UserRes> {
+        return await this.usersModel.findByIdAndUpdate(
+            userId,
+            {
+                $push: { addresses: addrId },
+            },
+            { new: true },
+        );
+    }
+
+    async removeAddress(
+        userId: Types.ObjectId,
+        addrId: Types.ObjectId,
+    ): Promise<UserRes> {
+        return await this.usersModel.findByIdAndUpdate(userId, {
+            $pull: { addresses: addrId },
+        });
     }
 }

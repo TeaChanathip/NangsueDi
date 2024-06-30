@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
-import { Types } from 'mongoose';
+import { IsBoolean, IsOptional } from 'class-validator';
 
 export class AdminsEditUserPermsReqDto {
     @ApiProperty({

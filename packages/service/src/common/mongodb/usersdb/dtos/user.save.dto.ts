@@ -1,4 +1,12 @@
-import { IsEnum, IsNotEmpty, IsString, Validate } from 'class-validator';
+import {
+    ArrayMaxSize,
+    ArrayNotEmpty,
+    IsEnum,
+    IsMongoId,
+    IsNotEmpty,
+    IsString,
+    Validate,
+} from 'class-validator';
 import { Types } from 'mongoose';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { Role } from 'src/shared/enums/role.enum';
@@ -8,6 +16,12 @@ export class UserSaveDto {
     phone: string;
     firstName: string;
     lastName?: string;
+    birthTime: number;
+
+    @IsNotEmpty()
+    @ArrayNotEmpty()
+    @ArrayMaxSize(5)
+    @IsMongoId({ each: true })
     addresses: Types.ObjectId[];
 
     // hashed password

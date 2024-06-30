@@ -7,6 +7,11 @@ import {
     UsersPermissionsModel,
     UsersPermissionsSchema,
 } from './schemas/users-permissions.schema';
+import { UsersAddrsCollService } from './services/users-addresses.collection/users-addresses.collection.service';
+import {
+    UsersAddressesModel,
+    UsersAddressesSchema,
+} from './schemas/users-addresses.schema';
 
 @Module({
     imports: [
@@ -16,9 +21,13 @@ import {
                 name: UsersPermissionsModel.name,
                 schema: UsersPermissionsSchema,
             },
+            {
+                name: UsersAddressesModel.name,
+                schema: UsersAddressesSchema,
+            },
         ]),
     ],
-    providers: [UsersCollService, UsersPermsCollService],
-    exports: [UsersCollService, UsersPermsCollService],
+    providers: [UsersCollService, UsersPermsCollService, UsersAddrsCollService],
+    exports: [UsersCollService, UsersPermsCollService, UsersAddrsCollService],
 })
 export class UsersDBModule {}

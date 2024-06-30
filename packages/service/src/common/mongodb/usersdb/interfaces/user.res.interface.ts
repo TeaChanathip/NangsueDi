@@ -1,16 +1,17 @@
 import { Types } from 'mongoose';
 import { Role } from 'src/shared/enums/role.enum';
 import { UsersPermissionsModel } from '../schemas/users-permissions.schema';
+import { UsersAddressesModel } from '../schemas/users-addresses.schema';
 
 export interface UserRes {
     _id: Types.ObjectId;
     email: string;
     phone: string;
-    addresses: string[];
+    addresses: UsersAddressesModel[];
     password: string;
     firstName: string;
     lastName?: string;
-    birthDate: number;
+    birthTime: number;
     avartarUrl?: string;
     role: Role;
     permissions?: UsersPermissionsModel;

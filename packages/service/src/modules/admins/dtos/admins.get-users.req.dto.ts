@@ -6,7 +6,6 @@ import {
     IsOptional,
     IsString,
     MaxLength,
-    MinLength,
     Validate,
 } from 'class-validator';
 import { ToArray } from 'src/common/transformers/to-array.transformer';

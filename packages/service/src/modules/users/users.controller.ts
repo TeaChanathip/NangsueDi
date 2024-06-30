@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Patch, Request } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Request,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserUpdateReqDto } from './dtos/user.update.req.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -6,8 +15,9 @@ import { UserDeleteReqDto } from './dtos/user.delete.req.dto';
 import { UsersChangePasswordReqDto } from './dtos/users.change-password.req.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
-import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
+import { UserAddrDto } from './dtos/user.address.dto';
+import { UserAddrUpdateReqDto } from './dtos/user-address.update.req.dto';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -52,5 +62,39 @@ export class UsersController {
             req.user.sub,
             usersChangePasswordReqDto,
         );
+    }
+
+    @Get('address')
+    async getAddresses(@Request() req: RequestHeader) {
+        return this.usersService.getAddresses(req.user.sub);
+    }
+
+    @Post('address')
+    async addAddress(
+        @Request() req: RequestHeader,
+        @Body() userAddrDto: UserAddrDto,
+    ) {
+        return this.usersService.addAddress(req.user.sub, userAddrDto);
+    }
+
+    @Patch('address/:addrId')
+    async updateAddress(
+        @Request() req: RequestHeader,
+        @Param('addrId') addrId: string,
+        @Body() userAddrUpdateReqDto: UserAddrUpdateReqDto,
+    ) {
+        return await this.usersService.updateAddress(
+            req.user.sub,
+            addrId,
+            userAddrUpdateReqDto,
+        );
+    }
+
+    @Delete('address:addrId')
+    async removeAddress(
+        @Request() req: RequestHeader,
+        @Param('addrId') addrId: string,
+    ) {
+        return await this.usersService.removeAddress(req.user.sub, addrId);
     }
 }

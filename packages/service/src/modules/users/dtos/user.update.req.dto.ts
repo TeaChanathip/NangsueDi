@@ -6,13 +6,12 @@ import {
     IsUrl,
     Matches,
     MaxLength,
-    Min,
     MinLength,
 } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
+import { IsOlderThan } from 'src/common/validators/isOlderThan.validator';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MAX_NAME } from 'src/shared/consts/min-max.const';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
 
 export class UserUpdateReqDto {
     @ApiProperty({
@@ -48,14 +47,12 @@ export class UserUpdateReqDto {
     @ApiProperty({
         type: Number,
         required: false,
-        default: 378683426,
+        default: 1340972731,
     })
     @IsOptional()
     @IsUnix()
-    @Min(getCurrentUnix() - 378683425, {
-        message: 'The age must be at least 12 years',
-    })
-    birthDate?: number;
+    @IsOlderThan(12)
+    birthTime?: number;
 
     @ApiProperty({
         default:
