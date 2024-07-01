@@ -8,7 +8,7 @@ import { Types } from 'mongoose';
 import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
 import { BorrowRes } from 'src/common/mongodb/borrowsdb/interfaces/borrow.res.dto';
 import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
-import { ActionsBorrowsReqDto } from '../dtos/books.borrow.req.dto';
+import { ActionsBorrowsReqDto } from '../dtos/actions.borrow.req.dto';
 import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
 import { MAX_BORROW } from 'src/shared/consts/min-max.const';

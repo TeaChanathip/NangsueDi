@@ -102,7 +102,10 @@ export class UsersAddrsService {
         if (!user) {
             throw new InternalServerErrorException();
         }
-        if (!user.addresses.find((id) => String(id) === String(addrId))) {
+        if (
+            !user?.addresses ||
+            !user.addresses.find(({ _id }) => String(_id) === String(addrId))
+        ) {
             throw new HttpException(
                 'The user does not own this address',
                 HttpStatus.BAD_REQUEST,
@@ -120,7 +123,5 @@ export class UsersAddrsService {
                 HttpStatus.BAD_REQUEST,
             );
         }
-
-        return { user, borrows };
     }
 }

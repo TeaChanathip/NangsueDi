@@ -15,7 +15,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { Perms } from 'src/common/decorators/perms.decorator';
 import { Perm } from 'src/shared/enums/perm.enum';
-import { ActionsBorrowsReqDto } from '../dtos/books.borrow.req.dto';
+import { ActionsBorrowsReqDto } from '../dtos/actions.borrow.req.dto';
 
 @ApiTags('Action-Borrow')
 @ApiBearerAuth()

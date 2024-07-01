@@ -15,8 +15,9 @@ import { BooksModule } from './modules/books/books.module';
 import { BorrowsDBModule } from './common/mongodb/borrowsdb/borrowsdb.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { PermsGuard } from './common/guards/permissions.guard';
-import { ReturnsdbModule } from './common/mongodb/returnsdb/returnsdb.module';
+import { ReturnsDBModule } from './common/mongodb/returnsdb/returnsdb.module';
 import { ActionsModule } from './modules/actions/actions.module';
+import { ManagersModule } from './modules/managers/managers.module';
 
 @Module({
     imports: [
@@ -55,12 +56,13 @@ import { ActionsModule } from './modules/actions/actions.module';
         UsersDBModule,
         BooksDBModule,
         BorrowsDBModule,
-        ReturnsdbModule,
+        ReturnsDBModule,
         AuthModule,
         UsersModule,
         AdminsModule,
         BooksModule,
         ActionsModule,
+        ManagersModule,
     ],
     providers: [
         {

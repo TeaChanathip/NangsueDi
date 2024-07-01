@@ -224,7 +224,7 @@ export class UsersCollService {
     }
 
     async getAddresses(userId: Types.ObjectId): Promise<UserAddrsRes[]> {
-        return await this.usersModel.aggregate([
+        const addresses = await this.usersModel.aggregate([
             {
                 $match: {
                     _id: new Types.ObjectId(userId),
@@ -255,6 +255,11 @@ export class UsersCollService {
                 },
             },
         ]);
+
+        const validAddresses = addresses.filter(
+            (addr) => Object.keys(addr).length > 0,
+        );
+        return validAddresses.length > 0 ? validAddresses : [];
     }
 
     async addAddress(
