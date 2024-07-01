@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
-import { BorrowRes } from 'src/common/mongodb/borrowsdb/interfaces/borrow.res.dto';
+import { BorrowRes } from 'src/common/mongodb/borrowsdb/interfaces/borrow.res.interface';
 import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
 import { BorrowsReqDto } from '../dtos/borrows.req.dto';
 import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
@@ -14,6 +14,7 @@ import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.se
 import { MAX_BORROW } from 'src/shared/consts/min-max.const';
 import { BorrowSaveDto } from 'src/common/mongodb/borrowsdb/dtos/borrow.save.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { BorrowsQueryReqDto } from '../dtos/borrows.query.req.dto';
 
 @Injectable()
 export class ActionsBorrowsService {
@@ -23,8 +24,11 @@ export class ActionsBorrowsService {
         private readonly booksCollService: BooksCollService,
     ) {}
 
-    async getBorrows(userId: Types.ObjectId): Promise<BorrowRes[]> {
-        return await this.borrowsCollService.findByUserId(userId);
+    async getBorrows(
+        userId: Types.ObjectId,
+        borrowsQueryReqDto: BorrowsQueryReqDto,
+    ): Promise<BorrowRes[]> {
+        return await this.borrowsCollService.query(userId, borrowsQueryReqDto);
     }
 
     async deleteBorrow(

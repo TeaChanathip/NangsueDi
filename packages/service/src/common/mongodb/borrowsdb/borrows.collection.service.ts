@@ -3,7 +3,8 @@ import { BorrowsModel } from './schemas/borrows.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model, Types, mongo } from 'mongoose';
 import { BorrowSaveDto } from './dtos/borrow.save.dto';
-import { BorrowRes } from './interfaces/borrow.res.dto';
+import { BorrowRes } from './interfaces/borrow.res.interface';
+import { BorrowsQueryReqDto } from 'src/modules/actions/dtos/borrows.query.req.dto';
 
 @Injectable()
 export class BorrowsCollService {
@@ -60,7 +61,73 @@ export class BorrowsCollService {
             .session(session);
     }
 
-    async query() {
-        return;
+    async query(
+        userId: Types.ObjectId,
+        borrowsQueryReqDto: BorrowsQueryReqDto,
+        session?: ClientSession,
+    ): Promise<BorrowRes[]> {
+        const {
+            bookTitle,
+            requestedBegin,
+            requestedEnd,
+            approvedBegin,
+            approvedEnd,
+            rejectedBegin,
+            rejectedEnd,
+        } = borrowsQueryReqDto;
+
+        return await this.borrowsModel
+            .aggregate([
+                {
+                    $match: {
+                        userId: new Types.ObjectId(userId),
+                        ...(requestedBegin && {
+                            requestedBegin: { $gte: requestedBegin },
+                        }),
+                        ...(requestedEnd && {
+                            requestedEnd: { $lte: requestedEnd },
+                        }),
+                        ...(approvedBegin && {
+                            approvedBegin: { $gte: approvedBegin },
+                        }),
+                        ...(approvedEnd && {
+                            approvedEnd: { $lte: approvedEnd },
+                        }),
+                        ...(rejectedBegin && {
+                            rejectedBegin: { $gte: rejectedBegin },
+                        }),
+                        ...(rejectedEnd && {
+                            requestedEnd: { $lte: rejectedEnd },
+                        }),
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'Books',
+                        localField: 'bookId',
+                        foreignField: '_id',
+                        as: 'book',
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$book',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $match: {
+                        ...(bookTitle && {
+                            'book.title': { $regex: bookTitle, $options: 'i' },
+                        }),
+                    },
+                },
+                {
+                    $project: {
+                        book: 0,
+                    },
+                },
+            ])
+            .session(session);
     }
 }

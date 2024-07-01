@@ -5,6 +5,7 @@ import {
     Get,
     Param,
     Post,
+    Query,
     Request,
 } from '@nestjs/common';
 import { ActionsBorrowsService } from '../services/actions.borrows.service';
@@ -16,6 +17,7 @@ import { Role } from 'src/shared/enums/role.enum';
 import { Perms } from 'src/common/decorators/perms.decorator';
 import { Perm } from 'src/shared/enums/perm.enum';
 import { BorrowsReqDto } from '../dtos/borrows.req.dto';
+import { BorrowsQueryReqDto } from '../dtos/borrows.query.req.dto';
 
 @ApiTags('Action-Borrow')
 @ApiBearerAuth()
@@ -26,8 +28,14 @@ export class ActionsBorrowsController {
     constructor(private actionsBorrowService: ActionsBorrowsService) {}
 
     @Get()
-    async getBorrows(@Request() req: RequestHeader) {
-        return await this.actionsBorrowService.getBorrows(req.user.sub);
+    async getBorrows(
+        @Request() req: RequestHeader,
+        @Query() borrowsQueryReqDto: BorrowsQueryReqDto,
+    ) {
+        return await this.actionsBorrowService.getBorrows(
+            req.user.sub,
+            borrowsQueryReqDto,
+        );
     }
 
     @Delete(':borrowId')
