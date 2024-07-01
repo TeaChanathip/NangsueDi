@@ -14,8 +14,4 @@ export class ReturnSaveDto {
     @IsNotEmpty()
     @IsUnix()
     requestedAt: number;
-
-    @IsOptional()
-    @IsUnix()
-    approvedAt?: number;
 }

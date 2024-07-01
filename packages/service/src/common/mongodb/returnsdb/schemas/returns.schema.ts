@@ -28,6 +28,9 @@ export class ReturnsModel {
 
     @Prop({ type: Number, required: false })
     approvedAt?: number;
+
+    @Prop({ type: Number, required: false })
+    rejectedAt?: number;
 }
 
 export const ReturnsSchema = SchemaFactory.createForClass(ReturnsModel).index(

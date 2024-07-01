@@ -15,7 +15,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { Perms } from 'src/common/decorators/perms.decorator';
 import { Perm } from 'src/shared/enums/perm.enum';
-import { ActionsBorrowsReqDto } from '../dtos/actions.borrow.req.dto';
+import { BorrowsReqDto } from '../dtos/borrows.req.dto';
 
 @ApiTags('Action-Borrow')
 @ApiBearerAuth()
@@ -46,12 +46,12 @@ export class ActionsBorrowsController {
     async borrow(
         @Request() req: RequestHeader,
         @Param('bookId') bookId: string,
-        @Body() actionsBorrowsReqDto: ActionsBorrowsReqDto,
+        @Body() borrowsReqDto: BorrowsReqDto,
     ) {
         return this.actionsBorrowService.borrow(
             req.user.sub,
             bookId,
-            actionsBorrowsReqDto,
+            borrowsReqDto,
         );
     }
 }

@@ -8,7 +8,7 @@ import { Types } from 'mongoose';
 import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
 import { BorrowRes } from 'src/common/mongodb/borrowsdb/interfaces/borrow.res.dto';
 import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
-import { ActionsBorrowsReqDto } from '../dtos/actions.borrow.req.dto';
+import { BorrowsReqDto } from '../dtos/borrows.req.dto';
 import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
 import { MAX_BORROW } from 'src/shared/consts/min-max.const';
@@ -54,15 +54,14 @@ export class ActionsBorrowsService {
     async borrow(
         userId: Types.ObjectId,
         bookStrId: string,
-        actionsBorrowsReqDto: ActionsBorrowsReqDto,
+        borrowsReqDto: BorrowsReqDto,
     ) {
         // check if user own the address or not
         const { addresses } = await this.usersCollService.findById(userId);
         if (
             !addresses ||
             !addresses.find(
-                (addrId) =>
-                    String(addrId) === String(actionsBorrowsReqDto.addrId),
+                (addrId) => String(addrId) === String(borrowsReqDto.addrId),
             )
         ) {
             throw new HttpException(
@@ -111,7 +110,7 @@ export class ActionsBorrowsService {
         const borrowSaveDto: BorrowSaveDto = {
             userId,
             bookId: bookObjId,
-            addrId: actionsBorrowsReqDto.addrId,
+            addrId: borrowsReqDto.addrId,
             requestedAt: getCurrentUnix(),
         };
 

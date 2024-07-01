@@ -8,4 +8,5 @@ export interface ReturnRes {
     borrowId: BorrowsModel;
     requestedAt: number;
     approvedAt?: number;
+    rejectedAt?: number;
 }

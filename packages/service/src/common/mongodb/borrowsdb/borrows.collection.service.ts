@@ -59,4 +59,8 @@ export class BorrowsCollService {
             .findByIdAndDelete(borrowId)
             .session(session);
     }
+
+    async query() {
+        return;
+    }
 }
