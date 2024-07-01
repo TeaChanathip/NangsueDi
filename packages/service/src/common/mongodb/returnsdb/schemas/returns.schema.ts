@@ -16,10 +16,10 @@ export class ReturnsModel {
     borrowId: BorrowsModel;
 
     @Prop({ type: Number, required: true })
-    timestamp: number;
+    requestedAt: number;
 
-    @Prop({ type: Number, required: true })
-    amount: number;
+    @Prop({ type: Number, required: false })
+    approvedAt?: number;
 }
 
 export const ReturnsSchema = SchemaFactory.createForClass(ReturnsModel);

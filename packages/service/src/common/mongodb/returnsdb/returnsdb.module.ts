@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ReturnsdbService } from './returnsdb.service';
+import { ReturnsCollService } from './returns.collection.service';
 
 @Module({
-  providers: [ReturnsdbService]
+    providers: [ReturnsCollService],
+    exports: [ReturnsCollService],
 })
 export class ReturnsdbModule {}

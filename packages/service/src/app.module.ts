@@ -55,11 +55,11 @@ import { ActionsModule } from './modules/actions/actions.module';
         UsersDBModule,
         BooksDBModule,
         BorrowsDBModule,
+        ReturnsdbModule,
         AuthModule,
         UsersModule,
         AdminsModule,
         BooksModule,
-        ReturnsdbModule,
         ActionsModule,
     ],
     providers: [
