@@ -75,7 +75,12 @@ export class BooksUpdateReqDto {
     @SortArray({ order: 'asce', type: 'number' })
     genres?: number[];
 
-    @ApiProperty({ type: String, required: false })
+    @ApiProperty({
+        type: String,
+        required: false,
+        default:
+            'https://bci.kinokuniya.com/jsp/images/book-img/97813/97813388/9781338878929.JPG',
+    })
     @IsOptional()
     @Trim()
     @IsUrl()

@@ -20,4 +20,8 @@ export class ReturnsCollService {
     async findByUserId(userId: Types.ObjectId): Promise<ReturnRes[]> {
         return await this.returnsModel.find({ userId });
     }
+
+    async findByBorrowId(borrowId: Types.ObjectId): Promise<ReturnRes> {
+        return await this.returnsModel.findOne({ borrowId });
+    }
 }
