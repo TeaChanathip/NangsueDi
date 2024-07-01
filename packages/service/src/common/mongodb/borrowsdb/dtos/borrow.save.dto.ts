@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsMongoId, IsNotEmpty } from 'class-validator';
 import { Types } from 'mongoose';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 
@@ -18,8 +18,4 @@ export class BorrowSaveDto {
     @IsNotEmpty()
     @IsUnix()
     requestedAt: number;
-
-    @IsOptional()
-    @IsUnix()
-    approvedAt?: number;
 }

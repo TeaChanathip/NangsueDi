@@ -36,6 +36,9 @@ export class BorrowsModel {
 
     @Prop({ type: Number, required: false })
     approvedAt?: number;
+
+    @Prop({ type: Number, required: false })
+    rejectedAt?: number;
 }
 
 export const BorrowsSchema = SchemaFactory.createForClass(BorrowsModel).index(

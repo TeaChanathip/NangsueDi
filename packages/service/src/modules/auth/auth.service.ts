@@ -86,9 +86,19 @@ export class AuthService {
             role: user.role,
             tokenVersion: user.tokenVersion,
         };
+
+        const accessToken = await this.jwtService.signAsync(userPayload);
+        const filteredUser = await this.usersCollService.getUserFiltered(
+            user._id,
+        );
+
+        if (!accessToken || !filteredUser) {
+            throw new InternalServerErrorException();
+        }
+
         return {
-            accessToken: await this.jwtService.signAsync(userPayload),
-            user: await this.usersCollService.getUserFiltered(user._id),
+            accessToken,
+            user: filteredUser,
         };
     }
 }

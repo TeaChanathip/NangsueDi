@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { UserUpdateReqDto } from '../dtos/user.update.req.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
-import { Types } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { UsersChangePasswordReqDto } from '../dtos/users.change-password.req.dto';
 import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { PasswordUpdateDto } from 'src/common/mongodb/usersdb/dtos/password.update.dto';
@@ -18,10 +18,13 @@ import { UsersPermsCollService } from 'src/common/mongodb/usersdb/services/users
 import { UsersAddrsCollService } from 'src/common/mongodb/usersdb/services/users-addresses.collection.service';
 import { filterUserRes } from 'src/shared/utils/filterUserRes';
 import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
+import { InjectConnection } from '@nestjs/mongoose';
+import { transaction } from 'src/shared/utils/mongo.transaction';
 
 @Injectable()
 export class UsersProfilesService {
     constructor(
+        @InjectConnection() private readonly connection: Connection,
         private readonly usersCollService: UsersCollService,
         private readonly usersPermsCollService: UsersPermsCollService,
         private readonly usersAddrsCollService: UsersAddrsCollService,
@@ -36,10 +39,6 @@ export class UsersProfilesService {
         userId: Types.ObjectId,
         userUpdateReqDto: UserUpdateReqDto,
     ): Promise<UserFiltered> {
-        if (!userId) {
-            throw new NotFoundException();
-        }
-
         const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
@@ -86,32 +85,42 @@ export class UsersProfilesService {
 
         const { permissions, addresses } = user;
 
-        if (permissions) {
-            const deletedPerms = await this.usersPermsCollService.deleteById(
-                permissions._id,
+        return transaction(this.connection, async (session) => {
+            if (permissions) {
+                const deletedPerms =
+                    await this.usersPermsCollService.deleteById(
+                        permissions._id,
+                        session,
+                    );
+                if (!deletedPerms) {
+                    throw new InternalServerErrorException();
+                }
+            }
+
+            if (addresses) {
+                const deletedAddrs = await Promise.all(
+                    addresses.map(async ({ _id: addrId }) => {
+                        return await this.usersAddrsCollService.deleteById(
+                            addrId,
+                            session,
+                        );
+                    }),
+                );
+                if (!deletedAddrs || deletedAddrs.includes(null)) {
+                    throw new InternalServerErrorException();
+                }
+            }
+
+            const deletedUser = await this.usersCollService.delete(
+                userId,
+                session,
             );
-            if (!deletedPerms) {
+            if (!deletedUser) {
                 throw new InternalServerErrorException();
             }
-        }
 
-        if (addresses) {
-            const deletedAddrs = await Promise.all(
-                addresses.map(async ({ _id: addrId }) => {
-                    return await this.usersAddrsCollService.removeById(addrId);
-                }),
-            );
-            if (!deletedAddrs || deletedAddrs.includes(null)) {
-                throw new InternalServerErrorException();
-            }
-        }
-
-        const deletedUser = await this.usersCollService.delete(userId);
-        if (!deletedUser) {
-            throw new InternalServerErrorException();
-        }
-
-        return filterUserRes(deletedUser);
+            return filterUserRes(deletedUser);
+        });
     }
 
     async changePassword(

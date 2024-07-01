@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersModel } from '../schemas/users.schema';
-import { Model, Types } from 'mongoose';
+import { ClientSession, HydratedDocument, Model, Types } from 'mongoose';
 import { UserRes } from '../interfaces/user.res.interface';
 import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { UserSaveDto } from '../dtos/user.save.dto';
@@ -17,93 +17,115 @@ export class UsersCollService {
         private readonly usersModel: Model<UsersModel>,
     ) {}
 
-    async findById(userId: Types.ObjectId): Promise<UserRes> {
-        return await this.usersModel.findById(userId);
+    async findById(
+        userId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<HydratedDocument<UsersModel>> {
+        return await this.usersModel.findById(userId).session(session);
     }
 
-    async findByEmail(email: string): Promise<UserRes> {
-        return await this.usersModel.findOne({ email });
+    async findByEmail(
+        email: string,
+        session?: ClientSession,
+    ): Promise<UserRes> {
+        return await this.usersModel.findOne({ email }).session(session);
     }
 
-    async saveNew(userSaveDto: UserSaveDto): Promise<UserRes> {
+    async saveNew(
+        userSaveDto: UserSaveDto,
+        session?: ClientSession,
+    ): Promise<UserRes> {
         const newUser = new this.usersModel(userSaveDto);
-        return await newUser.save();
+        return await newUser.save({ session });
     }
 
     async updateProfile(
         userId: Types.ObjectId,
         userUpdateDto: UserUpdateDto,
+        session?: ClientSession,
     ): Promise<UserRes> {
-        return await this.usersModel.findByIdAndUpdate(userId, userUpdateDto, {
-            new: true,
-        });
+        return await this.usersModel
+            .findByIdAndUpdate(userId, userUpdateDto, {
+                new: true,
+            })
+            .session(session);
     }
 
-    async delete(userId: Types.ObjectId): Promise<UserRes> {
-        return await this.usersModel.findByIdAndDelete(userId);
+    async delete(
+        userId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<UserRes> {
+        return await this.usersModel.findByIdAndDelete(userId).session(session);
     }
 
     async updatePassword(
         userId: Types.ObjectId,
         passwordUpdateDto: PasswordUpdateDto,
+        session?: ClientSession,
     ): Promise<UserRes> {
-        return await this.usersModel.findByIdAndUpdate(
-            userId,
-            passwordUpdateDto,
-            {
+        return await this.usersModel
+            .findByIdAndUpdate(userId, passwordUpdateDto, {
                 new: true,
-            },
-        );
+            })
+            .session(session);
     }
 
     async addPermissions(
         userId: Types.ObjectId,
         permissionsId: Types.ObjectId,
+        session?: ClientSession,
     ): Promise<UserRes> {
-        return await this.usersModel.findByIdAndUpdate(
-            userId,
-            { permissions: permissionsId },
-            { new: true },
-        );
+        return await this.usersModel
+            .findByIdAndUpdate(
+                userId,
+                { permissions: permissionsId },
+                { new: true },
+            )
+            .session(session);
     }
 
-    async getUserFiltered(userId: Types.ObjectId): Promise<UserFiltered> {
-        const results = await this.usersModel.aggregate([
-            { $match: { _id: new Types.ObjectId(userId) } },
-            {
-                $lookup: {
-                    from: 'UsersPermissions',
-                    localField: '_id',
-                    foreignField: 'userId',
-                    as: 'permissions',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$permissions',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    email: 1,
-                    phone: 1,
-                    firstName: 1,
-                    lastName: 1,
-                    birthTime: 1,
-                    avartarUrl: 1,
-                    role: 1,
-                    permissions: {
-                        canBorrow: 1,
-                        canReview: 1,
+    async getUserFiltered(
+        userId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<UserFiltered> {
+        const results = await this.usersModel
+            .aggregate([
+                { $match: { _id: new Types.ObjectId(userId) } },
+                {
+                    $lookup: {
+                        from: 'UsersPermissions',
+                        localField: '_id',
+                        foreignField: 'userId',
+                        as: 'permissions',
                     },
-                    registeredAt: 1,
-                    updatedAt: 1,
-                    suspendedAt: 1,
                 },
-            },
-        ]);
+                {
+                    $unwind: {
+                        path: '$permissions',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        email: 1,
+                        phone: 1,
+                        firstName: 1,
+                        lastName: 1,
+                        birthTime: 1,
+                        avartarUrl: 1,
+                        role: 1,
+                        permissions: {
+                            canBorrow: 1,
+                            canReview: 1,
+                        },
+                        registeredAt: 1,
+                        updatedAt: 1,
+                        suspendedAt: 1,
+                    },
+                },
+            ])
+            .session(session);
 
         return results.length > 0 ? results[0] : null;
     }
@@ -112,26 +134,35 @@ export class UsersCollService {
         userId: Types.ObjectId,
         suspendedAt: number,
         tokenVersion: number,
+        session?: ClientSession,
     ): Promise<UserRes> {
-        return await this.usersModel.findByIdAndUpdate(
-            userId,
-            { suspendedAt, tokenVersion },
-            { new: true },
-        );
+        return await this.usersModel
+            .findByIdAndUpdate(
+                userId,
+                { suspendedAt, tokenVersion },
+                { new: true },
+            )
+            .session(session);
     }
 
-    async unsuspend(userId: Types.ObjectId): Promise<UserRes> {
-        return await this.usersModel.findByIdAndUpdate(
-            userId,
-            {
-                $unset: { suspendedAt: '' },
-            },
-            { new: true },
-        );
+    async unsuspend(
+        userId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<UserRes> {
+        return await this.usersModel
+            .findByIdAndUpdate(
+                userId,
+                {
+                    $unset: { suspendedAt: '' },
+                },
+                { new: true },
+            )
+            .session(session);
     }
 
     async query(
         adminsGetUsersReqDto: AdminsGetUsersReqDto,
+        session?: ClientSession,
     ): Promise<UserFiltered[]> {
         const {
             email,
@@ -149,112 +180,125 @@ export class UsersCollService {
             suspendedEnd,
         } = adminsGetUsersReqDto;
 
-        return await this.usersModel.aggregate([
-            {
-                $match: {
-                    ...(email && { email: { $regex: email, $options: 'i' } }),
-                    ...(phone && { phone: { $regex: phone } }),
-                    ...(firstName && {
-                        firstName: { $regex: firstName, $options: 'i' },
-                    }),
-                    ...(lastName && {
-                        lastName: { $regex: lastName, $options: 'i' },
-                    }),
-                    ...(roles && { role: { $in: roles } }),
-                    ...(registeredBegin && {
-                        registeredAt: { $gte: registeredBegin },
-                    }),
-                    ...(registeredEnd && {
-                        registeredAt: { $lte: registeredEnd },
-                    }),
-                    ...(updatedBegin && {
-                        updatedAt: { $gte: updatedBegin },
-                    }),
-                    ...(updatedEnd && {
-                        updatedAt: { $lte: updatedEnd },
-                    }),
-                    ...(suspendedBegin && {
-                        suspendedAt: { $gte: suspendedBegin },
-                    }),
-                    ...(suspendedEnd && {
-                        suspendedAt: { $lte: suspendedEnd },
-                    }),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'UsersPermissions',
-                    localField: '_id',
-                    foreignField: 'userId',
-                    as: 'permissions',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$permissions',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    email: 1,
-                    phone: 1,
-                    firstName: 1,
-                    lastName: 1,
-                    birthTime: 1,
-                    avartarUrl: 1,
-                    role: 1,
-                    permissions: {
-                        canBorrow: 1,
-                        canReview: 1,
+        return await this.usersModel
+            .aggregate([
+                {
+                    $match: {
+                        ...(email && {
+                            email: { $regex: email, $options: 'i' },
+                        }),
+                        ...(phone && { phone: { $regex: phone } }),
+                        ...(firstName && {
+                            firstName: { $regex: firstName, $options: 'i' },
+                        }),
+                        ...(lastName && {
+                            lastName: { $regex: lastName, $options: 'i' },
+                        }),
+                        ...(roles && { role: { $in: roles } }),
+                        ...(registeredBegin && {
+                            registeredAt: { $gte: registeredBegin },
+                        }),
+                        ...(registeredEnd && {
+                            registeredAt: { $lte: registeredEnd },
+                        }),
+                        ...(updatedBegin && {
+                            updatedAt: { $gte: updatedBegin },
+                        }),
+                        ...(updatedEnd && {
+                            updatedAt: { $lte: updatedEnd },
+                        }),
+                        ...(suspendedBegin && {
+                            suspendedAt: { $gte: suspendedBegin },
+                        }),
+                        ...(suspendedEnd && {
+                            suspendedAt: { $lte: suspendedEnd },
+                        }),
                     },
-                    registeredAt: 1,
-                    updatedAt: 1,
-                    suspendedAt: 1,
                 },
-            },
-            {
-                $match: {
-                    ...(canBorrow && { 'permissions.canBorrow': canBorrow }),
-                    ...(canReview && { 'permissions.canReview': canReview }),
+                {
+                    $lookup: {
+                        from: 'UsersPermissions',
+                        localField: '_id',
+                        foreignField: 'userId',
+                        as: 'permissions',
+                    },
                 },
-            },
-        ]);
+                {
+                    $unwind: {
+                        path: '$permissions',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        email: 1,
+                        phone: 1,
+                        firstName: 1,
+                        lastName: 1,
+                        birthTime: 1,
+                        avartarUrl: 1,
+                        role: 1,
+                        permissions: {
+                            canBorrow: 1,
+                            canReview: 1,
+                        },
+                        registeredAt: 1,
+                        updatedAt: 1,
+                        suspendedAt: 1,
+                    },
+                },
+                {
+                    $match: {
+                        ...(canBorrow && {
+                            'permissions.canBorrow': canBorrow,
+                        }),
+                        ...(canReview && {
+                            'permissions.canReview': canReview,
+                        }),
+                    },
+                },
+            ])
+            .session(session);
     }
 
-    async getAddresses(userId: Types.ObjectId): Promise<UserAddrsRes[]> {
-        const addresses = await this.usersModel.aggregate([
-            {
-                $match: {
-                    _id: new Types.ObjectId(userId),
+    async getAddresses(
+        userId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<UserAddrsRes[]> {
+        const addresses = await this.usersModel
+            .aggregate([
+                {
+                    $match: {
+                        _id: new Types.ObjectId(userId),
+                    },
                 },
-            },
-            {
-                $lookup: {
-                    from: 'UsersAddresses',
-                    localField: 'addresses',
-                    foreignField: '_id',
-                    as: 'addresses',
+                {
+                    $lookup: {
+                        from: 'UsersAddresses',
+                        localField: 'addresses',
+                        foreignField: '_id',
+                        as: 'addresses',
+                    },
                 },
-            },
-            {
-                $unwind: {
-                    path: '$addresses',
-                    preserveNullAndEmptyArrays: true,
+                {
+                    $unwind: {
+                        path: '$addresses',
+                        preserveNullAndEmptyArrays: true,
+                    },
                 },
-            },
-            {
-                $project: {
-                    _id: '$addresses._id',
-                    address: '$addresses.address',
-                    subDistrict: '$addresses.subDistrict',
-                    district: '$addresses.district',
-                    province: '$addresses.province',
-                    postalCode: '$addresses.postalCode',
+                {
+                    $project: {
+                        _id: '$addresses._id',
+                        address: '$addresses.address',
+                        subDistrict: '$addresses.subDistrict',
+                        district: '$addresses.district',
+                        province: '$addresses.province',
+                        postalCode: '$addresses.postalCode',
+                    },
                 },
-            },
-        ]);
+            ])
+            .session(session);
 
         const validAddresses = addresses.filter(
             (addr) => Object.keys(addr).length > 0,
@@ -265,22 +309,28 @@ export class UsersCollService {
     async addAddress(
         userId: Types.ObjectId,
         addrId: Types.ObjectId,
+        session?: ClientSession,
     ): Promise<UserRes> {
-        return await this.usersModel.findByIdAndUpdate(
-            userId,
-            {
-                $push: { addresses: addrId },
-            },
-            { new: true },
-        );
+        return await this.usersModel
+            .findByIdAndUpdate(
+                userId,
+                {
+                    $push: { addresses: addrId },
+                },
+                { new: true },
+            )
+            .session(session);
     }
 
     async removeAddress(
         userId: Types.ObjectId,
         addrId: Types.ObjectId,
+        session?: ClientSession,
     ): Promise<UserRes> {
-        return await this.usersModel.findByIdAndUpdate(userId, {
-            $pull: { addresses: addrId },
-        });
+        return await this.usersModel
+            .findByIdAndUpdate(userId, {
+                $pull: { addresses: addrId },
+            })
+            .session(session);
     }
 }

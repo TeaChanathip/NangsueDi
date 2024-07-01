@@ -10,4 +10,5 @@ export interface BorrowRes {
     addrId: UsersAddressesModel;
     requestedAt: number;
     approvedAt?: number;
+    rejectedAt?: number;
 }

@@ -4,7 +4,7 @@ import {
     Injectable,
     InternalServerErrorException,
 } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { UserAddrsRes } from 'src/common/mongodb/usersdb/interfaces/user-addresses.res.interface';
 import { UsersAddrsCollService } from 'src/common/mongodb/usersdb/services/users-addresses.collection.service';
 import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
@@ -12,10 +12,13 @@ import { UserAddrDto } from '../dtos/user.address.dto';
 import { UserAddrUpdateReqDto } from '../dtos/user-address.update.req.dto';
 import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
 import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
+import { transaction } from 'src/shared/utils/mongo.transaction';
+import { InjectConnection } from '@nestjs/mongoose';
 
 @Injectable()
 export class UsersAddrsService {
     constructor(
+        @InjectConnection() private readonly connection: Connection,
         private readonly usersCollService: UsersCollService,
         private readonly usersAddrsCollService: UsersAddrsCollService,
         private readonly borrowsCollService: BorrowsCollService,
@@ -37,20 +40,26 @@ export class UsersAddrsService {
             );
         }
 
-        const addr = await this.usersAddrsCollService.saveNew(userAddrDto);
-        if (!addr) {
-            throw new InternalServerErrorException();
-        }
+        return transaction(this.connection, async (session) => {
+            const addr = await this.usersAddrsCollService.saveNew(
+                userAddrDto,
+                session,
+            );
+            if (!addr) {
+                throw new InternalServerErrorException();
+            }
 
-        const newUser = await this.usersCollService.addAddress(
-            userId,
-            addr._id,
-        );
-        if (!newUser) {
-            throw new InternalServerErrorException();
-        }
+            const newUser = await this.usersCollService.addAddress(
+                userId,
+                addr._id,
+                session,
+            );
+            if (!newUser) {
+                throw new InternalServerErrorException();
+            }
 
-        return addr;
+            return addr;
+        });
     }
 
     async updateAddress(
@@ -76,21 +85,26 @@ export class UsersAddrsService {
 
         await this.checkAddrAndBorrows(userId, addrObjId);
 
-        const deletedAddr =
-            await this.usersAddrsCollService.removeById(addrObjId);
-        if (!deletedAddr) {
-            throw new InternalServerErrorException();
-        }
+        return transaction(this.connection, async (session) => {
+            const deletedAddr = await this.usersAddrsCollService.deleteById(
+                addrObjId,
+                session,
+            );
+            if (!deletedAddr) {
+                throw new InternalServerErrorException();
+            }
 
-        const newUser = await this.usersCollService.removeAddress(
-            userId,
-            deletedAddr._id,
-        );
-        if (!newUser) {
-            throw new InternalServerErrorException();
-        }
+            const newUser = await this.usersCollService.removeAddress(
+                userId,
+                deletedAddr._id,
+                session,
+            );
+            if (!newUser) {
+                throw new InternalServerErrorException();
+            }
 
-        return deletedAddr;
+            return deletedAddr;
+        });
     }
 
     private async checkAddrAndBorrows(

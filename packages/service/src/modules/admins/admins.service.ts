@@ -5,7 +5,7 @@ import {
     InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { UsersPermsCollService } from 'src/common/mongodb/usersdb/services/users-permissions.collection.service';
 import { UserPermsSaveDto } from 'src/common/mongodb/usersdb/dtos/user-permissions.save.dto';
@@ -18,12 +18,18 @@ import { AdminsDeleteUserReqDto } from './dtos/admins.delete-user.req.dto';
 import { AdminsGetUsersReqDto } from './dtos/admins.get-users.req.dto';
 import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
 import { filterUserRes } from 'src/shared/utils/filterUserRes';
+import { InjectConnection } from '@nestjs/mongoose';
+import { transaction } from 'src/shared/utils/mongo.transaction';
+import { UserRes } from 'src/common/mongodb/usersdb/interfaces/user.res.interface';
+import { UsersAddrsCollService } from 'src/common/mongodb/usersdb/services/users-addresses.collection.service';
 
 @Injectable()
 export class AdminsService {
     constructor(
+        @InjectConnection() private readonly connection: Connection,
         private readonly usersCollService: UsersCollService,
         private readonly usersPermsCollService: UsersPermsCollService,
+        private readonly usersAddrsCollService: UsersAddrsCollService,
     ) {}
 
     async verifyUser(userId: string): Promise<UserFiltered> {
@@ -48,23 +54,28 @@ export class AdminsService {
             canReview: true,
         };
 
-        // Save a Permissions document
-        const userPerms =
-            await this.usersPermsCollService.saveNew(userPermsSaveDto);
-        if (!userPerms) {
-            throw new InternalServerErrorException();
-        }
+        return transaction(this.connection, async (session) => {
+            // Save a Permissions document
+            const userPerms = await this.usersPermsCollService.saveNew(
+                userPermsSaveDto,
+                session,
+            );
+            if (!userPerms) {
+                throw new InternalServerErrorException();
+            }
 
-        // Update a permissions to User document
-        const updatedUser = await this.usersCollService.addPermissions(
-            userObjId,
-            userPerms._id,
-        );
-        if (!updatedUser) {
-            throw new InternalServerErrorException();
-        }
+            // Update a permissions to User document
+            const updatedUser = await this.usersCollService.addPermissions(
+                userObjId,
+                userPerms._id,
+                session,
+            );
+            if (!updatedUser) {
+                throw new InternalServerErrorException();
+            }
 
-        return filterUserRes(updatedUser, userPerms);
+            return filterUserRes(updatedUser, userPerms);
+        });
     }
 
     async editUserPermissions(
@@ -143,7 +154,33 @@ export class AdminsService {
             );
         }
 
-        return filterUserRes(await this.usersCollService.delete(userObjId));
+        return transaction(this.connection, async (session) => {
+            // Delete user's addresses if available
+            const { addresses } = user;
+            if (addresses) {
+                const deletedAddrs = await Promise.all(
+                    addresses.map(async ({ _id: addrId }) => {
+                        return await this.usersAddrsCollService.deleteById(
+                            addrId,
+                            session,
+                        );
+                    }),
+                );
+                if (!deletedAddrs || deletedAddrs.includes(null)) {
+                    throw new InternalServerErrorException();
+                }
+            }
+
+            const deletedUser = await this.usersCollService.delete(
+                userObjId,
+                session,
+            );
+            if (!deletedUser) {
+                throw new InternalServerErrorException();
+            }
+
+            return filterUserRes(deletedUser);
+        });
     }
 
     async getUsers(adminsGetUsersReqDto: AdminsGetUsersReqDto) {
@@ -158,8 +195,8 @@ export class AdminsService {
 
     private async getUserAndCheckAdmin(
         userId: Types.ObjectId,
-    ): Promise<UserFiltered> {
-        const user = await this.usersCollService.getUserFiltered(userId);
+    ): Promise<UserRes> {
+        const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
