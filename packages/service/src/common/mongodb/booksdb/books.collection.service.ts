@@ -25,7 +25,7 @@ export class BooksCollService {
         title: string,
         session?: ClientSession,
     ): Promise<BookRes> {
-        return await this.booksModel.findOne({ title: title });
+        return await this.booksModel.findOne({ title: title }).session(session);
     }
 
     async saveNew(
@@ -132,6 +132,7 @@ export class BooksCollService {
                     ...(genres && { genres: { $all: genres } }),
                 },
             },
+            { $sort: { _id: -1 } },
         ];
 
         if (page) {
@@ -145,13 +146,33 @@ export class BooksCollService {
         return await this.booksModel.aggregate(pipeline).session(session);
     }
 
-    // async borrowed(bookId: Types.ObjectId) {
-    //     return await this.booksModel.findByIdAndUpdate(
-    //         bookId,
-    //         {
-    //             $inc: { borrowed: 1 },
-    //         },
-    //         { new: true },
-    //     );
-    // }
+    async borrowed(
+        bookId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<BookRes> {
+        return await this.booksModel
+            .findByIdAndUpdate(
+                bookId,
+                {
+                    $inc: { borrowed: 1 },
+                },
+                { new: true },
+            )
+            .session(session);
+    }
+
+    async returned(
+        bookId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<BookRes> {
+        return await this.booksModel
+            .findByIdAndUpdate(
+                bookId,
+                {
+                    $inc: { borrowed: -1 },
+                },
+                { new: true },
+            )
+            .session(session);
+    }
 }

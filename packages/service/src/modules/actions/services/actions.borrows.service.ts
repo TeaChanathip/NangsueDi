@@ -15,7 +15,7 @@ import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.se
 import { MAX_BORROW } from 'src/shared/consts/min-max.const';
 import { BorrowSaveDto } from 'src/common/mongodb/borrowsdb/dtos/borrow.save.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
-import { ActBorrowsQueryReqDto } from '../dtos/actions.borrows.query.req.dto';
+import { BorrowsQueryReqDto } from '../../../common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
 import { BorrowFiltered } from 'src/common/mongodb/borrowsdb/interfaces/borrow.filtered.interface';
 import { InjectConnection } from '@nestjs/mongoose';
 import { transaction } from 'src/shared/utils/mongo.transaction';
@@ -31,12 +31,9 @@ export class ActionsBorrowsService {
 
     async getBorrows(
         userId: Types.ObjectId,
-        actBorrowsQueryReqDto: ActBorrowsQueryReqDto,
+        borrowsQueryReqDto: BorrowsQueryReqDto,
     ): Promise<BorrowFiltered[]> {
-        return await this.borrowsCollService.query(
-            actBorrowsQueryReqDto,
-            userId,
-        );
+        return await this.borrowsCollService.query(borrowsQueryReqDto, userId);
     }
 
     async deleteBorrow(
@@ -108,7 +105,7 @@ export class ActionsBorrowsService {
             );
         }
 
-        const borrows = await this.borrowsCollService.findByUserId(userId);
+        const borrows = await this.borrowsCollService.getPendings(userId);
         if (borrows) {
             // Check if the borrows will exceed the limit
             const total = borrows.length;

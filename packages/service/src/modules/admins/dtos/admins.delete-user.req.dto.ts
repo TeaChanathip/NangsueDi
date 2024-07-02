@@ -1,17 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
+import { MAX_REASON } from 'src/shared/consts/min-max.const';
 
 export class AdminsDeleteUserReqDto {
     @ApiProperty({
         type: String,
         required: true,
+        maxLength: MAX_REASON,
         default: 'test test test',
-        maxLength: 200,
     })
     @IsString()
     @Trim()
     @IsNotEmpty()
-    @MaxLength(200)
+    @MaxLength(MAX_REASON)
     reasons: string;
 }

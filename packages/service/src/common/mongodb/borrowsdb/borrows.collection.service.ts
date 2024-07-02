@@ -4,8 +4,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model, PipelineStage, Types, mongo } from 'mongoose';
 import { BorrowSaveDto } from './dtos/borrow.save.dto';
 import { BorrowRes } from './interfaces/borrow.res.interface';
-import { ActBorrowsQueryReqDto } from 'src/modules/actions/dtos/actions.borrows.query.req.dto';
+import { BorrowsQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
 import { BorrowFiltered } from './interfaces/borrow.filtered.interface';
+import { BorrowUpdateDto } from './dtos/borrow.update.dto';
 
 @Injectable()
 export class BorrowsCollService {
@@ -34,6 +35,16 @@ export class BorrowsCollService {
         session?: ClientSession,
     ): Promise<BorrowRes[]> {
         return await this.borrowsModel.find({ userId }).session(session);
+    }
+
+    async updateById(
+        borrowId: Types.ObjectId,
+        borrowUpdateDto: BorrowUpdateDto,
+        session?: ClientSession,
+    ): Promise<BorrowRes> {
+        return await this.borrowsModel
+            .findByIdAndUpdate(borrowId, borrowUpdateDto, { new: true })
+            .session(session);
     }
 
     async rejectByBookId(
@@ -109,7 +120,7 @@ export class BorrowsCollService {
     }
 
     async query(
-        actBorrowsQueryReqDto: ActBorrowsQueryReqDto,
+        BorrowsQueryReqDto: BorrowsQueryReqDto,
         userId?: Types.ObjectId,
         withUser: boolean = false,
         session?: ClientSession,
@@ -124,7 +135,7 @@ export class BorrowsCollService {
             rejectedEnd,
             limit,
             page,
-        } = actBorrowsQueryReqDto;
+        } = BorrowsQueryReqDto;
 
         const pipeline: PipelineStage[] = [
             {
@@ -278,5 +289,52 @@ export class BorrowsCollService {
                 rejectedAt: 1,
             },
         });
+
+        pipeline.push({ $sort: { _id: -1 } });
+    }
+
+    async getNonReturned(
+        userId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<BorrowRes[]> {
+        return await this.borrowsModel
+            .aggregate([
+                {
+                    $match: {
+                        userId,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'Returns',
+                        localField: '_id',
+                        foreignField: 'borrowId',
+                        as: 'return',
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$return',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $match: {
+                        $and: [
+                            {
+                                $or: [
+                                    { return: { $exists: false } },
+                                    { 'return.approvedAt': { $exists: false } },
+                                ],
+                            },
+                            { rejectedAt: { $exists: false } },
+                        ],
+                    },
+                },
+                {
+                    $project: { return: 0 },
+                },
+            ])
+            .session(session);
     }
 }

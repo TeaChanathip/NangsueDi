@@ -1,24 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-    IsInt,
-    IsOptional,
-    IsString,
-    MaxLength,
-    Min,
-    MinLength,
-} from 'class-validator';
-import { Types } from 'mongoose';
+import { IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MAX_TITLE } from 'src/shared/consts/min-max.const';
 
-export class ActBorrowsQueryReqDto {
+export class ReturnsQueryReqDto {
     @ApiProperty({ type: String, required: false })
     @IsOptional()
     @IsString()
     @Trim()
     @MaxLength(MAX_TITLE)
     bookKeyword?: string;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsUnix()
+    borrowedBegin?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsUnix()
+    borrowedEnd?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()

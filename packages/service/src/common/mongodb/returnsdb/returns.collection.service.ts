@@ -4,8 +4,9 @@ import { ReturnRes } from './interfaces/return.res.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { ReturnsModel } from './schemas/returns.schema';
 import { ClientSession, Model, PipelineStage, Types } from 'mongoose';
-import { ActReturnsQueryReqDto } from 'src/modules/actions/dtos/actions.returns.query.req.dto';
+import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
 import { ReturnFiltered } from './interfaces/return.filtered.interface';
+import { ReturnUpdateDto } from './dtos/return.update.dto';
 
 @Injectable()
 export class ReturnsCollService {
@@ -22,6 +23,13 @@ export class ReturnsCollService {
         return await newReturn.save({ session });
     }
 
+    async findById(
+        returnId: Types.ObjectId,
+        session?: ClientSession,
+    ): Promise<ReturnRes> {
+        return await this.returnsModel.findById(returnId).session(session);
+    }
+
     async findByUserId(
         userId: Types.ObjectId,
         session?: ClientSession,
@@ -34,6 +42,16 @@ export class ReturnsCollService {
         session?: ClientSession,
     ): Promise<ReturnRes> {
         return await this.returnsModel.findOne({ borrowId }).session(session);
+    }
+
+    async updateById(
+        returnId: Types.ObjectId,
+        returnUpdateDto: ReturnUpdateDto,
+        session?: ClientSession,
+    ): Promise<ReturnRes> {
+        return await this.returnsModel
+            .findByIdAndUpdate(returnId, returnUpdateDto, { new: true })
+            .session(session);
     }
 
     async deleteById(returnId: Types.ObjectId, session?: ClientSession) {
@@ -77,7 +95,7 @@ export class ReturnsCollService {
     }
 
     async query(
-        actReturnsQueryReqDto: ActReturnsQueryReqDto,
+        ReturnsQueryReqDto: ReturnsQueryReqDto,
         userId?: Types.ObjectId,
         withUser: boolean = false,
         session?: ClientSession,
@@ -94,7 +112,7 @@ export class ReturnsCollService {
             rejectedEnd,
             limit,
             page,
-        } = actReturnsQueryReqDto;
+        } = ReturnsQueryReqDto;
 
         const pipeline: PipelineStage[] = [
             {
@@ -241,5 +259,7 @@ export class ReturnsCollService {
                 rejectedAt: 1,
             },
         });
+
+        pipeline.push({ $sort: { _id: -1 } });
     }
 }

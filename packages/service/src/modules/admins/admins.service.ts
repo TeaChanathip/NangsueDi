@@ -34,13 +34,7 @@ export class AdminsService {
 
     async verifyUser(userId: string): Promise<UserFiltered> {
         const userObjId = cvtToObjectId(userId, 'userId');
-        const user = await this.getUserAndCheckAdmin(userObjId);
-        if (user.role !== Role.USER) {
-            throw new HttpException(
-                'Cannot verify non-user role',
-                HttpStatus.FORBIDDEN,
-            );
-        }
+        const user = await this.getUserAndCheckRole(userObjId, Role.USER);
         if (user.permissions) {
             throw new HttpException(
                 'This user was already verified',
@@ -83,7 +77,7 @@ export class AdminsService {
         adminsEditUserPermsReqDto: AdminsEditUserPermsReqDto,
     ): Promise<UserFiltered> {
         const userObjId = cvtToObjectId(userId, 'userId');
-        await this.getUserAndCheckAdmin(userObjId);
+        await this.getUserAndCheckRole(userObjId, Role.USER);
 
         const userPerms = await this.usersPermsCollService.updateByUserId(
             userObjId,
@@ -101,7 +95,10 @@ export class AdminsService {
         adminsSusUserReqDto: AdminsSusUserReqDto,
     ): Promise<UserFiltered> {
         const userObjId = cvtToObjectId(userId, 'userId');
-        const user = await this.getUserAndCheckAdmin(userObjId);
+        const user = await this.getUserAndCheckRole(userObjId, [
+            Role.USER,
+            Role.MANAGER,
+        ]);
         if (user.suspendedAt) {
             throw new HttpException(
                 'The user was already suspended',
@@ -124,7 +121,10 @@ export class AdminsService {
 
     async unsuspendUser(userId: string): Promise<UserFiltered> {
         const userObjId = cvtToObjectId(userId, 'userId');
-        const user = await this.getUserAndCheckAdmin(userObjId);
+        const user = await this.getUserAndCheckRole(userObjId, [
+            Role.USER,
+            Role.MANAGER,
+        ]);
         if (!user.suspendedAt) {
             throw new HttpException(
                 'The user was not suspended',
@@ -146,7 +146,10 @@ export class AdminsService {
         adminsDeleteUserReqDto: AdminsDeleteUserReqDto,
     ) {
         const userObjId = cvtToObjectId(userId, 'userId');
-        const user = await this.getUserAndCheckAdmin(userObjId);
+        const user = await this.getUserAndCheckRole(userObjId, [
+            Role.USER,
+            Role.MANAGER,
+        ]);
         if (user.permissions) {
             throw new HttpException(
                 'Cannot delete verified user',
@@ -193,16 +196,22 @@ export class AdminsService {
         return await this.usersCollService.query(adminsGetUsersReqDto);
     }
 
-    private async getUserAndCheckAdmin(
+    private async getUserAndCheckRole(
         userId: Types.ObjectId,
+        allowedRoles: Role[] | Role,
     ): Promise<UserRes> {
         const user = await this.usersCollService.findById(userId);
         if (!user) {
             throw new NotFoundException();
         }
-        if (user.role === Role.ADMIN) {
+
+        if (
+            (Array.isArray(allowedRoles) &&
+                !allowedRoles.includes(user.role)) ||
+            (!Array.isArray(allowedRoles) && allowedRoles !== user.role)
+        ) {
             throw new HttpException(
-                'Cannot perform this action on an Admin user',
+                `The action on the '${user.role}' role is not allowed`,
                 HttpStatus.BAD_REQUEST,
             );
         }

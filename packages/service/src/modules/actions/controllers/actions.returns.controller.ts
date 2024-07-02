@@ -14,7 +14,7 @@ import { Role } from 'src/shared/enums/role.enum';
 import { ActionsReturnsService } from '../services/actions.returns.service';
 import { Throttle } from '@nestjs/throttler';
 import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
-import { ActReturnsQueryReqDto } from '../dtos/actions.returns.query.req.dto';
+import { ReturnsQueryReqDto } from '../../../common/mongodb/returnsdb/dtos/returns.query.req.dto';
 
 @ApiTags('Action-Return')
 @ApiBearerAuth()
@@ -26,11 +26,11 @@ export class ActionsReturnsController {
     @Get()
     async getReturns(
         @Request() req: RequestHeader,
-        @Query() actReturnsQueryReqDto: ActReturnsQueryReqDto,
+        @Query() ReturnsQueryReqDto: ReturnsQueryReqDto,
     ) {
         return await this.actionsReturnsService.getReturns(
             req.user.sub,
-            actReturnsQueryReqDto,
+            ReturnsQueryReqDto,
         );
     }
 

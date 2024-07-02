@@ -265,6 +265,7 @@ export class UsersCollService {
                     }),
                 },
             },
+            { $sort: { _id: -1 } },
         ];
 
         if (page) {

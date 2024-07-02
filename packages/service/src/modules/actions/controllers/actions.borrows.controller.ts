@@ -17,7 +17,7 @@ import { Role } from 'src/shared/enums/role.enum';
 import { Perms } from 'src/common/decorators/perms.decorator';
 import { Perm } from 'src/shared/enums/perm.enum';
 import { ActBorrowsReqDto } from '../dtos/actions.borrows.req.dto';
-import { ActBorrowsQueryReqDto } from '../dtos/actions.borrows.query.req.dto';
+import { BorrowsQueryReqDto } from '../../../common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
 
 @ApiTags('Action-Borrow')
 @ApiBearerAuth()
@@ -30,11 +30,11 @@ export class ActionsBorrowsController {
     @Get()
     async getBorrows(
         @Request() req: RequestHeader,
-        @Query() actBorrowsQueryReqDto: ActBorrowsQueryReqDto,
+        @Query() borrowsQueryReqDto: BorrowsQueryReqDto,
     ) {
         return await this.actionsBorrowService.getBorrows(
             req.user.sub,
-            actBorrowsQueryReqDto,
+            borrowsQueryReqDto,
         );
     }
 
