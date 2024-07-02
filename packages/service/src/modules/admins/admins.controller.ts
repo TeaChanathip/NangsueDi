@@ -71,8 +71,8 @@ export class AdminsController {
         return await this.adminsService.getUser(userId);
     }
 
-    @Get('get-users')
-    async getUsers(@Query() adminsGetUsersReqDto: AdminsGetUsersReqDto) {
-        return await this.adminsService.getUsers(adminsGetUsersReqDto);
+    @Get('search-users')
+    async searchUsers(@Query() adminsGetUsersReqDto: AdminsGetUsersReqDto) {
+        return await this.adminsService.searchUsers(adminsGetUsersReqDto);
     }
 }

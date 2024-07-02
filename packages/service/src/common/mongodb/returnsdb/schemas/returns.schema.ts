@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { BorrowsModel } from '../../borrowsdb/schemas/borrows.schema';
 import { UsersModel } from '../../usersdb/schemas/users.schema';
+import { BooksModel } from '../../booksdb/schemas/books.schema';
 
 @Schema({
     collection: 'Returns',
@@ -18,10 +19,20 @@ export class ReturnsModel {
 
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Books',
+        required: true,
+    })
+    bookId: BooksModel;
+
+    @Prop({
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Borrows',
         required: true,
     })
     borrowId: BorrowsModel;
+
+    @Prop({ type: Number, required: true })
+    borrowedAt: number;
 
     @Prop({ type: Number, required: true })
     requestedAt: number;

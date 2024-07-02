@@ -1,10 +1,20 @@
-import { Controller, Get, Param, Post, Request } from '@nestjs/common';
+import {
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Query,
+    Req,
+    Request,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { ActionsReturnsService } from '../services/actions.returns.service';
 import { Throttle } from '@nestjs/throttler';
 import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
+import { ActReturnsQueryReqDto } from '../dtos/actions.returns.query.req.dto';
 
 @ApiTags('Action-Return')
 @ApiBearerAuth()
@@ -14,8 +24,14 @@ export class ActionsReturnsController {
     constructor(private actionsReturnsService: ActionsReturnsService) {}
 
     @Get()
-    async getReturns(@Request() req: RequestHeader) {
-        return await this.actionsReturnsService.getReturns(req.user.sub);
+    async getReturns(
+        @Request() req: RequestHeader,
+        @Query() actReturnsQueryReqDto: ActReturnsQueryReqDto,
+    ) {
+        return await this.actionsReturnsService.getReturns(
+            req.user.sub,
+            actReturnsQueryReqDto,
+        );
     }
 
     @Throttle({ default: { limit: 1, ttl: 2000 } })
@@ -27,6 +43,17 @@ export class ActionsReturnsController {
         return await this.actionsReturnsService.returnBook(
             req.user.sub,
             borrowId,
+        );
+    }
+
+    @Delete(':returnId')
+    async deleteReturn(
+        @Request() req: RequestHeader,
+        @Param('returnId') returnId: string,
+    ) {
+        return await this.actionsReturnsService.deleteReturn(
+            req.user.sub,
+            returnId,
         );
     }
 }

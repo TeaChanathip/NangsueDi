@@ -53,9 +53,9 @@ export class ActionsBorrowsService {
                 HttpStatus.BAD_REQUEST,
             );
         }
-        if (borrow?.approvedAt) {
+        if (borrow?.approvedAt || borrow?.rejectedAt) {
             throw new HttpException(
-                'Cannot delete a verified borrow request',
+                'Deleting an approved or rejected borrow request is not allowed',
                 HttpStatus.BAD_REQUEST,
             );
         }

@@ -17,9 +17,8 @@ export class ActBorrowsQueryReqDto {
     @IsOptional()
     @IsString()
     @Trim()
-    @MinLength(1, { message: 'The bookTitle cannot be whitespace' })
     @MaxLength(MAX_TITLE)
-    bookTitle?: Types.ObjectId;
+    bookKeyword?: string;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()

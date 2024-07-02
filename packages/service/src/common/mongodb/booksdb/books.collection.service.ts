@@ -60,8 +60,7 @@ export class BooksCollService {
         session?: ClientSession,
     ): Promise<BookRes[]> {
         const {
-            title,
-            author,
+            bookKeyword,
             publishedBegin,
             publishedEnd,
             registeredBegin,
@@ -81,9 +80,11 @@ export class BooksCollService {
         const pipeline: PipelineStage[] = [
             {
                 $match: {
-                    ...(title && { title: { $regex: title, $options: 'i' } }),
-                    ...(author && {
-                        author: { $regex: author, $options: 'i' },
+                    ...(bookKeyword && {
+                        $or: [
+                            { title: { $regex: bookKeyword, $options: 'i' } },
+                            { author: { $regex: bookKeyword, $options: 'i' } },
+                        ],
                     }),
                     ...(publishedBegin && {
                         publishedAt: { $gte: publishedBegin },

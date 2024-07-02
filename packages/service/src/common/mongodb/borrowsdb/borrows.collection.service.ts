@@ -115,7 +115,7 @@ export class BorrowsCollService {
         session?: ClientSession,
     ): Promise<BorrowFiltered[]> {
         const {
-            bookTitle,
+            bookKeyword,
             requestedBegin,
             requestedEnd,
             approvedBegin,
@@ -131,22 +131,22 @@ export class BorrowsCollService {
                 $match: {
                     ...(userId && { userId: new Types.ObjectId(userId) }),
                     ...(requestedBegin && {
-                        requestedBegin: { $gte: requestedBegin },
+                        requestedAt: { $gte: requestedBegin },
                     }),
                     ...(requestedEnd && {
-                        requestedEnd: { $lte: requestedEnd },
+                        requestedAt: { $lte: requestedEnd },
                     }),
                     ...(approvedBegin && {
-                        approvedBegin: { $gte: approvedBegin },
+                        approvedAt: { $gte: approvedBegin },
                     }),
                     ...(approvedEnd && {
-                        approvedEnd: { $lte: approvedEnd },
+                        approvedAt: { $lte: approvedEnd },
                     }),
                     ...(rejectedBegin && {
-                        rejectedBegin: { $gte: rejectedBegin },
+                        rejectedAt: { $gte: rejectedBegin },
                     }),
                     ...(rejectedEnd && {
-                        requestedEnd: { $lte: rejectedEnd },
+                        rejectedAt: { $lte: rejectedEnd },
                     }),
                 },
             },
@@ -166,8 +166,21 @@ export class BorrowsCollService {
             },
             {
                 $match: {
-                    ...(bookTitle && {
-                        'book.title': { $regex: bookTitle, $options: 'i' },
+                    ...(bookKeyword && {
+                        $or: [
+                            {
+                                'book.title': {
+                                    $regex: bookKeyword,
+                                    $options: 'i',
+                                },
+                            },
+                            {
+                                'book.author': {
+                                    $regex: bookKeyword,
+                                    $options: 'i',
+                                },
+                            },
+                        ],
                     }),
                 },
             },

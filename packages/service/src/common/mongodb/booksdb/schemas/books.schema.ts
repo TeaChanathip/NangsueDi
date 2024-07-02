@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
 @Schema({
     collection: 'Books',
@@ -6,6 +7,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
     versionKey: false,
 })
 export class BooksModel {
+    _id: Types.ObjectId;
+
     @Prop({ required: true, unique: true })
     title: string;
 

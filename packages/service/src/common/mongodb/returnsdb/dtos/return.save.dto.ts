@@ -9,7 +9,15 @@ export class ReturnSaveDto {
 
     @IsNotEmpty()
     @IsMongoId()
+    bookId: Types.ObjectId;
+
+    @IsNotEmpty()
+    @IsMongoId()
     borrowId: Types.ObjectId;
+
+    @IsNotEmpty()
+    @IsUnix()
+    borrowedAt: number;
 
     @IsNotEmpty()
     @IsUnix()

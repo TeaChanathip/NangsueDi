@@ -183,14 +183,14 @@ export class AdminsService {
         });
     }
 
-    async getUsers(adminsGetUsersReqDto: AdminsGetUsersReqDto) {
-        return await this.usersCollService.query(adminsGetUsersReqDto);
-    }
-
     async getUser(userId: string) {
         const userObjId = cvtToObjectId(userId, 'userId');
 
         return await this.usersCollService.getUserFiltered(userObjId);
+    }
+
+    async searchUsers(adminsGetUsersReqDto: AdminsGetUsersReqDto) {
+        return await this.usersCollService.query(adminsGetUsersReqDto);
     }
 
     private async getUserAndCheckAdmin(

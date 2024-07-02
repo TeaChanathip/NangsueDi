@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-    ArrayUnique,
     IsInt,
     IsOptional,
-    Max,
+    IsString,
     MaxLength,
     Min,
+    MinLength,
 } from 'class-validator';
-import { ToArray } from 'src/common/transformers/to-array.transformer';
+import { Types } from 'mongoose';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MAX_GENRE, MIN_GENRE } from 'src/shared/consts/genre.map';
-import { MAX_NAME, MAX_TITLE } from 'src/shared/consts/min-max.const';
+import { MAX_TITLE } from 'src/shared/consts/min-max.const';
 
-export class BooksSearchReqDto {
+export class ActReturnsQueryReqDto {
     @ApiProperty({ type: String, required: false })
     @IsOptional()
+    @IsString()
     @Trim()
     @MaxLength(MAX_TITLE)
     bookKeyword?: string;
@@ -23,76 +23,42 @@ export class BooksSearchReqDto {
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsUnix()
-    publishedBegin?: number;
+    borrowedBegin?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsUnix()
-    publishedEnd?: number;
+    borrowedEnd?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsUnix()
-    registeredBegin?: number;
+    requestedBegin?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsUnix()
-    registeredEnd?: number;
+    requestedEnd?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsUnix()
-    updatedBegin?: number;
+    approvedBegin?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsUnix()
-    updatedEnd?: number;
+    approvedEnd?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
-    @IsInt()
-    @Min(1)
-    totalLB: number;
+    @IsUnix()
+    rejectedBegin?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
-    @IsInt()
-    @Min(1)
-    totalUB: number;
-
-    @ApiProperty({ type: Number, required: false })
-    @IsOptional()
-    @IsInt()
-    @Min(0)
-    borrowedLB: number;
-
-    @ApiProperty({ type: Number, required: false })
-    @IsOptional()
-    @IsInt()
-    @Min(0)
-    borrowedUB: number;
-
-    @ApiProperty({ type: Number, required: false })
-    @IsOptional()
-    @IsInt()
-    @Min(1)
-    remainLB?: number;
-
-    @ApiProperty({
-        type: Number,
-        isArray: true,
-        uniqueItems: true,
-        required: false,
-    })
-    @IsOptional()
-    @IsInt({ each: true })
-    @ArrayUnique()
-    @ToArray({ type: 'number' })
-    @Min(MIN_GENRE, { each: true })
-    @Max(MAX_GENRE, { each: true })
-    genres?: number[];
+    @IsUnix()
+    rejectedEnd?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
