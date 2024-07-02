@@ -2,23 +2,28 @@ import {
     HttpException,
     HttpStatus,
     Injectable,
+    InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
 import { BorrowRes } from 'src/common/mongodb/borrowsdb/interfaces/borrow.res.interface';
 import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
-import { BorrowsReqDto } from '../dtos/borrows.req.dto';
+import { ActBorrowsReqDto } from '../dtos/actions.borrows.req.dto';
 import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
 import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
 import { MAX_BORROW } from 'src/shared/consts/min-max.const';
 import { BorrowSaveDto } from 'src/common/mongodb/borrowsdb/dtos/borrow.save.dto';
 import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
-import { BorrowsQueryReqDto } from '../dtos/borrows.query.req.dto';
+import { ActBorrowsQueryReqDto } from '../dtos/actions.borrows.query.req.dto';
+import { BorrowFiltered } from 'src/common/mongodb/borrowsdb/interfaces/borrow.filtered.interface';
+import { InjectConnection } from '@nestjs/mongoose';
+import { transaction } from 'src/shared/utils/mongo.transaction';
 
 @Injectable()
 export class ActionsBorrowsService {
     constructor(
+        @InjectConnection() private readonly connection: Connection,
         private readonly borrowsCollService: BorrowsCollService,
         private readonly usersCollService: UsersCollService,
         private readonly booksCollService: BooksCollService,
@@ -26,15 +31,18 @@ export class ActionsBorrowsService {
 
     async getBorrows(
         userId: Types.ObjectId,
-        borrowsQueryReqDto: BorrowsQueryReqDto,
-    ): Promise<BorrowRes[]> {
-        return await this.borrowsCollService.query(userId, borrowsQueryReqDto);
+        actBorrowsQueryReqDto: ActBorrowsQueryReqDto,
+    ): Promise<BorrowFiltered[]> {
+        return await this.borrowsCollService.query(
+            actBorrowsQueryReqDto,
+            userId,
+        );
     }
 
     async deleteBorrow(
         userId: Types.ObjectId,
         borrowId: string,
-    ): Promise<BorrowRes> {
+    ): Promise<BorrowFiltered> {
         const borrowObjId = cvtToObjectId(borrowId, 'borrowId');
 
         // check if user own this borrow request
@@ -52,20 +60,32 @@ export class ActionsBorrowsService {
             );
         }
 
-        return await this.borrowsCollService.deleteById(borrowObjId);
+        const borrowFiltered =
+            await this.borrowsCollService.getBorrowFiltered(borrowObjId);
+        if (!borrowFiltered) {
+            throw new InternalServerErrorException();
+        }
+
+        const deletedBorrow =
+            await this.borrowsCollService.deleteById(borrowObjId);
+        if (!deletedBorrow) {
+            throw new InternalServerErrorException();
+        }
+
+        return borrowFiltered;
     }
 
     async borrow(
         userId: Types.ObjectId,
         bookStrId: string,
-        borrowsReqDto: BorrowsReqDto,
-    ) {
+        actBorrowsReqDto: ActBorrowsReqDto,
+    ): Promise<BorrowFiltered> {
         // check if user own the address or not
         const { addresses } = await this.usersCollService.findById(userId);
         if (
             !addresses ||
             !addresses.find(
-                (addrId) => String(addrId) === String(borrowsReqDto.addrId),
+                (addrId) => String(addrId) === String(actBorrowsReqDto.addrId),
             )
         ) {
             throw new HttpException(
@@ -114,10 +134,26 @@ export class ActionsBorrowsService {
         const borrowSaveDto: BorrowSaveDto = {
             userId,
             bookId: bookObjId,
-            addrId: borrowsReqDto.addrId,
+            addrId: actBorrowsReqDto.addrId,
             requestedAt: getCurrentUnix(),
         };
 
-        return await this.borrowsCollService.saveNew(borrowSaveDto);
+        return transaction(this.connection, async (session) => {
+            const savedBorrow =
+                await this.borrowsCollService.saveNew(borrowSaveDto);
+            if (!savedBorrow) {
+                throw new InternalServerErrorException();
+            }
+
+            const borrowFiltered =
+                await this.borrowsCollService.getBorrowFiltered(
+                    savedBorrow._id,
+                );
+            if (!borrowFiltered) {
+                throw new InternalServerErrorException();
+            }
+
+            return borrowFiltered;
+        });
     }
 }

@@ -3,9 +3,11 @@ import {
     ArrayUnique,
     IsBoolean,
     IsEnum,
+    IsInt,
     IsOptional,
     IsString,
     MaxLength,
+    Min,
     Validate,
 } from 'class-validator';
 import { ToArray } from 'src/common/transformers/to-array.transformer';
@@ -121,4 +123,16 @@ export class AdminsGetUsersReqDto {
     @IsOptional()
     @Validate(IsUnix)
     suspendedEnd?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    limit?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(1)
+    page?: number;
 }

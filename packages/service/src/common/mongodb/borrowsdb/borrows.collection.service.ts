@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { BorrowsModel } from './schemas/borrows.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { ClientSession, Model, Types, mongo } from 'mongoose';
+import { ClientSession, Model, PipelineStage, Types, mongo } from 'mongoose';
 import { BorrowSaveDto } from './dtos/borrow.save.dto';
 import { BorrowRes } from './interfaces/borrow.res.interface';
-import { BorrowsQueryReqDto } from 'src/modules/actions/dtos/borrows.query.req.dto';
+import { ActBorrowsQueryReqDto } from 'src/modules/actions/dtos/actions.borrows.query.req.dto';
+import { BorrowFiltered } from './interfaces/borrow.filtered.interface';
 
 @Injectable()
 export class BorrowsCollService {
@@ -61,11 +62,58 @@ export class BorrowsCollService {
             .session(session);
     }
 
-    async query(
-        userId: Types.ObjectId,
-        borrowsQueryReqDto: BorrowsQueryReqDto,
+    async getBorrowFiltered(
+        borrowId: Types.ObjectId,
+        withUser: boolean = false,
         session?: ClientSession,
-    ): Promise<BorrowRes[]> {
+    ): Promise<BorrowFiltered> {
+        const pipeline: PipelineStage[] = [
+            { $match: { _id: new Types.ObjectId(borrowId) } },
+            {
+                $lookup: {
+                    from: 'Books',
+                    localField: 'bookId',
+                    foreignField: '_id',
+                    as: 'book',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$book',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $lookup: {
+                    from: 'UsersAddresses',
+                    localField: 'addrId',
+                    foreignField: '_id',
+                    as: 'address',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$address',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+        ];
+
+        this.addUserAndProject(pipeline, withUser);
+
+        const results = await this.borrowsModel
+            .aggregate(pipeline)
+            .session(session);
+
+        return results.length > 0 ? results[0] : null;
+    }
+
+    async query(
+        actBorrowsQueryReqDto: ActBorrowsQueryReqDto,
+        userId?: Types.ObjectId,
+        withUser: boolean = false,
+        session?: ClientSession,
+    ): Promise<BorrowFiltered[]> {
         const {
             bookTitle,
             requestedBegin,
@@ -74,60 +122,148 @@ export class BorrowsCollService {
             approvedEnd,
             rejectedBegin,
             rejectedEnd,
-        } = borrowsQueryReqDto;
+            limit,
+            page,
+        } = actBorrowsQueryReqDto;
 
-        return await this.borrowsModel
-            .aggregate([
-                {
-                    $match: {
-                        userId: new Types.ObjectId(userId),
-                        ...(requestedBegin && {
-                            requestedBegin: { $gte: requestedBegin },
-                        }),
-                        ...(requestedEnd && {
-                            requestedEnd: { $lte: requestedEnd },
-                        }),
-                        ...(approvedBegin && {
-                            approvedBegin: { $gte: approvedBegin },
-                        }),
-                        ...(approvedEnd && {
-                            approvedEnd: { $lte: approvedEnd },
-                        }),
-                        ...(rejectedBegin && {
-                            rejectedBegin: { $gte: rejectedBegin },
-                        }),
-                        ...(rejectedEnd && {
-                            requestedEnd: { $lte: rejectedEnd },
-                        }),
-                    },
+        const pipeline: PipelineStage[] = [
+            {
+                $match: {
+                    ...(userId && { userId: new Types.ObjectId(userId) }),
+                    ...(requestedBegin && {
+                        requestedBegin: { $gte: requestedBegin },
+                    }),
+                    ...(requestedEnd && {
+                        requestedEnd: { $lte: requestedEnd },
+                    }),
+                    ...(approvedBegin && {
+                        approvedBegin: { $gte: approvedBegin },
+                    }),
+                    ...(approvedEnd && {
+                        approvedEnd: { $lte: approvedEnd },
+                    }),
+                    ...(rejectedBegin && {
+                        rejectedBegin: { $gte: rejectedBegin },
+                    }),
+                    ...(rejectedEnd && {
+                        requestedEnd: { $lte: rejectedEnd },
+                    }),
                 },
-                {
-                    $lookup: {
-                        from: 'Books',
-                        localField: 'bookId',
-                        foreignField: '_id',
-                        as: 'book',
-                    },
+            },
+            {
+                $lookup: {
+                    from: 'Books',
+                    localField: 'bookId',
+                    foreignField: '_id',
+                    as: 'book',
                 },
-                {
-                    $unwind: {
-                        path: '$book',
-                        preserveNullAndEmptyArrays: true,
-                    },
+            },
+            {
+                $unwind: {
+                    path: '$book',
+                    preserveNullAndEmptyArrays: true,
                 },
-                {
-                    $match: {
-                        ...(bookTitle && {
-                            'book.title': { $regex: bookTitle, $options: 'i' },
-                        }),
-                    },
+            },
+            {
+                $match: {
+                    ...(bookTitle && {
+                        'book.title': { $regex: bookTitle, $options: 'i' },
+                    }),
                 },
-                {
-                    $project: {
-                        book: 0,
-                    },
+            },
+            {
+                $lookup: {
+                    from: 'UsersAddresses',
+                    localField: 'addrId',
+                    foreignField: '_id',
+                    as: 'address',
                 },
-            ])
-            .session(session);
+            },
+            {
+                $unwind: {
+                    path: '$address',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+        ];
+
+        this.addUserAndProject(pipeline, withUser);
+
+        if (page) {
+            pipeline.push({ $skip: (page - 1) * limit });
+        }
+
+        if (limit) {
+            pipeline.push({ $limit: limit });
+        }
+
+        return await this.borrowsModel.aggregate(pipeline).session(session);
+    }
+
+    private addUserAndProject(pipeline: PipelineStage[], withUser: boolean) {
+        if (withUser) {
+            pipeline.push(
+                ...[
+                    {
+                        $lookup: {
+                            from: 'Users',
+                            localField: 'userId',
+                            foreignField: '_id',
+                            as: 'user',
+                        },
+                    },
+                    {
+                        $unwind: {
+                            path: '$user',
+                            preserveNullAndEmptyArrays: true,
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'UsersPermissions',
+                            localField: 'user.permissions',
+                            foreignField: '_id',
+                            as: 'permissions',
+                        },
+                    },
+                    {
+                        $unwind: {
+                            path: '$permissions',
+                            preserveNullAndEmptyArrays: true,
+                        },
+                    },
+                ],
+            );
+        }
+
+        pipeline.push({
+            $project: {
+                _id: 1,
+                ...(withUser && {
+                    user: {
+                        _id: 1,
+                        email: 1,
+                        phone: 1,
+                        firstName: 1,
+                        lastName: 1,
+                        birthTime: 1,
+                        avartarUrl: 1,
+                        role: 1,
+                        permissions: {
+                            canBorrow: '$permissions.canBorrow',
+                            canReview: '$permissions.canReview',
+                        },
+                        registeredAt: 1,
+                        updatedAt: 1,
+                        suspendedAt: 1,
+                    },
+                }),
+                book: 1,
+                address: 1,
+                requestedAt: 1,
+                approvedAt: 1,
+                rejectedAt: 1,
+            },
+        });
     }
 }

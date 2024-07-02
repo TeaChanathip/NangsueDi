@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersModel } from '../schemas/users.schema';
-import { ClientSession, HydratedDocument, Model, Types } from 'mongoose';
+import {
+    ClientSession,
+    HydratedDocument,
+    Model,
+    PipelineStage,
+    Types,
+} from 'mongoose';
 import { UserRes } from '../interfaces/user.res.interface';
 import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
 import { UserSaveDto } from '../dtos/user.save.dto';
@@ -178,88 +184,98 @@ export class UsersCollService {
             updatedEnd,
             suspendedBegin,
             suspendedEnd,
+            limit,
+            page,
         } = adminsGetUsersReqDto;
 
-        return await this.usersModel
-            .aggregate([
-                {
-                    $match: {
-                        ...(email && {
-                            email: { $regex: email, $options: 'i' },
-                        }),
-                        ...(phone && { phone: { $regex: phone } }),
-                        ...(firstName && {
-                            firstName: { $regex: firstName, $options: 'i' },
-                        }),
-                        ...(lastName && {
-                            lastName: { $regex: lastName, $options: 'i' },
-                        }),
-                        ...(roles && { role: { $in: roles } }),
-                        ...(registeredBegin && {
-                            registeredAt: { $gte: registeredBegin },
-                        }),
-                        ...(registeredEnd && {
-                            registeredAt: { $lte: registeredEnd },
-                        }),
-                        ...(updatedBegin && {
-                            updatedAt: { $gte: updatedBegin },
-                        }),
-                        ...(updatedEnd && {
-                            updatedAt: { $lte: updatedEnd },
-                        }),
-                        ...(suspendedBegin && {
-                            suspendedAt: { $gte: suspendedBegin },
-                        }),
-                        ...(suspendedEnd && {
-                            suspendedAt: { $lte: suspendedEnd },
-                        }),
-                    },
+        const pipeline: PipelineStage[] = [
+            {
+                $match: {
+                    ...(email && {
+                        email: { $regex: email, $options: 'i' },
+                    }),
+                    ...(phone && { phone: { $regex: phone } }),
+                    ...(firstName && {
+                        firstName: { $regex: firstName, $options: 'i' },
+                    }),
+                    ...(lastName && {
+                        lastName: { $regex: lastName, $options: 'i' },
+                    }),
+                    ...(roles && { role: { $in: roles } }),
+                    ...(registeredBegin && {
+                        registeredAt: { $gte: registeredBegin },
+                    }),
+                    ...(registeredEnd && {
+                        registeredAt: { $lte: registeredEnd },
+                    }),
+                    ...(updatedBegin && {
+                        updatedAt: { $gte: updatedBegin },
+                    }),
+                    ...(updatedEnd && {
+                        updatedAt: { $lte: updatedEnd },
+                    }),
+                    ...(suspendedBegin && {
+                        suspendedAt: { $gte: suspendedBegin },
+                    }),
+                    ...(suspendedEnd && {
+                        suspendedAt: { $lte: suspendedEnd },
+                    }),
                 },
-                {
-                    $lookup: {
-                        from: 'UsersPermissions',
-                        localField: '_id',
-                        foreignField: 'userId',
-                        as: 'permissions',
-                    },
+            },
+            {
+                $lookup: {
+                    from: 'UsersPermissions',
+                    localField: 'permissions',
+                    foreignField: '_id',
+                    as: 'permissions',
                 },
-                {
-                    $unwind: {
-                        path: '$permissions',
-                        preserveNullAndEmptyArrays: true,
-                    },
+            },
+            {
+                $unwind: {
+                    path: '$permissions',
+                    preserveNullAndEmptyArrays: true,
                 },
-                {
-                    $project: {
-                        _id: 1,
-                        email: 1,
-                        phone: 1,
-                        firstName: 1,
-                        lastName: 1,
-                        birthTime: 1,
-                        avartarUrl: 1,
-                        role: 1,
-                        permissions: {
-                            canBorrow: 1,
-                            canReview: 1,
-                        },
-                        registeredAt: 1,
-                        updatedAt: 1,
-                        suspendedAt: 1,
+            },
+            {
+                $project: {
+                    _id: 1,
+                    email: 1,
+                    phone: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    birthTime: 1,
+                    avartarUrl: 1,
+                    role: 1,
+                    permissions: {
+                        canBorrow: 1,
+                        canReview: 1,
                     },
+                    registeredAt: 1,
+                    updatedAt: 1,
+                    suspendedAt: 1,
                 },
-                {
-                    $match: {
-                        ...(canBorrow && {
-                            'permissions.canBorrow': canBorrow,
-                        }),
-                        ...(canReview && {
-                            'permissions.canReview': canReview,
-                        }),
-                    },
+            },
+            {
+                $match: {
+                    ...(canBorrow && {
+                        'permissions.canBorrow': canBorrow,
+                    }),
+                    ...(canReview && {
+                        'permissions.canReview': canReview,
+                    }),
                 },
-            ])
-            .session(session);
+            },
+        ];
+
+        if (page) {
+            pipeline.push({ $skip: (page - 1) * limit });
+        }
+
+        if (limit) {
+            pipeline.push({ $limit: limit });
+        }
+
+        return await this.usersModel.aggregate(pipeline).session(session);
     }
 
     async getAddresses(
