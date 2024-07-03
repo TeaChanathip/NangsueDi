@@ -5,7 +5,6 @@ import {
     HttpStatus,
     Injectable,
     InternalServerErrorException,
-    NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -25,6 +24,7 @@ import { JwtResetPassPayload } from './interfaces/jwt-reset-password.payload.int
 import { isEmail } from 'class-validator';
 import { AuthResetReqDto } from './dtos/auth.reset.req.dto';
 import { PasswordUpdateDto } from 'src/common/mongodb/usersdb/dtos/password.update.dto';
+import { EmailService } from 'src/features/email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -32,6 +32,7 @@ export class AuthService {
         @InjectConnection() private readonly connection: Connection,
         private readonly usersCollService: UsersCollService,
         private readonly jwtService: JwtService,
+        private readonly emailService: EmailService,
     ) {}
 
     async register(
@@ -154,10 +155,17 @@ export class AuthService {
             }
 
             // Sending reset-password url to user's email
-            // logic here later
+            const sendedEmail = await this.emailService.sendResetUrl(
+                email,
+                resetToken,
+            );
+            if (!sendedEmail) {
+                throw new InternalServerErrorException();
+            }
 
-            // temporary return
-            return resetToken;
+            return {
+                message: 'Sending reset-password URL to your email',
+            };
         });
     }
 
@@ -194,9 +202,16 @@ export class AuthService {
             $unset: { resetTokenVer: '' },
         };
 
-        return await this.usersCollService.updatePassword(
+        const updatedUser = await this.usersCollService.updatePassword(
             userId,
             passwordUpdateDto,
         );
+        if (!updatedUser) {
+            throw new InternalServerErrorException();
+        }
+
+        return {
+            message: 'Password reset successfully',
+        };
     }
 }

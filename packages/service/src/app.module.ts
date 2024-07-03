@@ -18,6 +18,7 @@ import { PermsGuard } from './common/guards/permissions.guard';
 import { ReturnsDBModule } from './common/mongodb/returnsdb/returnsdb.module';
 import { ActionsModule } from './modules/actions/actions.module';
 import { ManagersModule } from './modules/managers/managers.module';
+import { EmailModule } from './features/email/email.module';
 
 @Module({
     imports: [
@@ -57,6 +58,7 @@ import { ManagersModule } from './modules/managers/managers.module';
         BooksDBModule,
         BorrowsDBModule,
         ReturnsDBModule,
+        EmailModule,
         AuthModule,
         UsersModule,
         AdminsModule,
