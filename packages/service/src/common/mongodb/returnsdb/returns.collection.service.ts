@@ -246,6 +246,7 @@ export class ReturnsCollService {
                 requestedAt: 1,
                 approvedAt: 1,
                 rejectedAt: 1,
+                rejectReason: 1,
             },
         });
 

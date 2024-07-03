@@ -12,4 +12,5 @@ export interface ReturnRes {
     requestedAt: number;
     approvedAt?: number;
     rejectedAt?: number;
+    rejectReason?: string;
 }

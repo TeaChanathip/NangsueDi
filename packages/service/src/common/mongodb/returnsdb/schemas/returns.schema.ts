@@ -42,6 +42,9 @@ export class ReturnsModel {
 
     @Prop({ type: Number, required: false })
     rejectedAt?: number;
+
+    @Prop({ type: String, required: false })
+    rejectReason?: string;
 }
 
 export const ReturnsSchema = SchemaFactory.createForClass(ReturnsModel).index(

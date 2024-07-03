@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString, MaxLength, Min } from 'class-validator';
+import {
+    IsInt,
+    IsMongoId,
+    IsOptional,
+    IsString,
+    MaxLength,
+    Min,
+} from 'class-validator';
+import { Types } from 'mongoose';
 import { Trim } from 'src/common/transformers/trim.transformer';
 import { IsUnix } from 'src/common/validators/isUnix.validator';
 import { MAX_TITLE } from 'src/shared/consts/min-max.const';
@@ -22,7 +30,7 @@ export class ReturnsQueryReqDto {
     @IsUnix()
     borrowedEnd?: number;
 
-    @ApiProperty({ type: Number, required: false })
+    @ApiProperty({ type: Number, required: false, default: 0 })
     @IsOptional()
     @IsUnix()
     requestedBegin?: number;
@@ -63,4 +71,10 @@ export class ReturnsQueryReqDto {
     @IsInt()
     @Min(1)
     page?: number;
+}
+
+export class MgrRetQueryReqDto extends ReturnsQueryReqDto {
+    @IsOptional()
+    @IsMongoId()
+    userId: Types.ObjectId;
 }

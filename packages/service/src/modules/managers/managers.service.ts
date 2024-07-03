@@ -20,8 +20,8 @@ import { MgrRejectReqDto } from './dtos/managers.reject.req.dto';
 import { ReturnFiltered } from 'src/common/mongodb/returnsdb/interfaces/return.filtered.interface';
 import { ReturnRes } from 'src/common/mongodb/returnsdb/interfaces/return.res.interface';
 import { ReturnUpdateDto } from 'src/common/mongodb/returnsdb/dtos/return.update.dto';
-import { BorrowsQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
-import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
+import { MgrBrwQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
+import { MgrRetQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
 
 @Injectable()
 export class ManagersService {
@@ -33,14 +33,11 @@ export class ManagersService {
     ) {}
 
     async getBorrows(
-        borrowsQueryReqDto: BorrowsQueryReqDto,
-        userId?: string,
+        mgrBrwQueryReqDto: MgrBrwQueryReqDto,
     ): Promise<BorrowFiltered[]> {
-        const userObjId = userId ? cvtToObjectId(userId, 'userId') : undefined;
-
         return await this.borrowsCollService.query(
-            borrowsQueryReqDto,
-            userObjId,
+            mgrBrwQueryReqDto,
+            mgrBrwQueryReqDto.userId,
             true,
         );
     }
@@ -96,6 +93,7 @@ export class ManagersService {
 
         const borrowUpdateDto: BorrowUpdateDto = {
             rejectedAt: getCurrentUnix(),
+            ...mgrRejectReqDto,
         };
 
         return transaction(this.connection, async (session) => {
@@ -138,14 +136,11 @@ export class ManagersService {
     }
 
     async getReturns(
-        returnsQueryReqDto: ReturnsQueryReqDto,
-        userId?: string,
+        mgrRetQueryReqDto: MgrRetQueryReqDto,
     ): Promise<ReturnFiltered[]> {
-        const userObjId = userId ? cvtToObjectId(userId, 'userId') : undefined;
-
         return await this.returnsCollService.query(
-            returnsQueryReqDto,
-            userObjId,
+            mgrRetQueryReqDto,
+            mgrRetQueryReqDto.userId,
             undefined,
             true,
         );
@@ -209,6 +204,7 @@ export class ManagersService {
 
         const returnUpdateDto: ReturnUpdateDto = {
             rejectedAt: getCurrentUnix(),
+            ...mgrRejectReqDto,
         };
 
         return transaction(this.connection, async (session) => {

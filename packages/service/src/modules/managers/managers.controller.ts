@@ -5,8 +5,8 @@ import { Role } from 'src/shared/enums/role.enum';
 import { MgrRejectReqDto } from './dtos/managers.reject.req.dto';
 import { Throttle } from '@nestjs/throttler';
 import { ManagersService } from './managers.service';
-import { BorrowsQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
-import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
+import { MgrBrwQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
+import { MgrRetQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
 
 @ApiTags('Manager')
 @Throttle({ default: { limit: 1, ttl: 1200 } })
@@ -16,19 +16,9 @@ import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.qu
 export class ManagersController {
     constructor(private managersService: ManagersService) {}
 
-    @Get('get-borrows/:userId')
-    @ApiParam({
-        name: 'userId',
-        required: false,
-    })
-    async getBorrows(
-        @Query() borrowsQueryReqDto: BorrowsQueryReqDto,
-        @Param('userId') userId?: string,
-    ) {
-        return await this.managersService.getBorrows(
-            borrowsQueryReqDto,
-            userId,
-        );
+    @Get('get-borrows')
+    async getBorrows(@Query() mgrBrwQueryReqDto: MgrBrwQueryReqDto) {
+        return await this.managersService.getBorrows(mgrBrwQueryReqDto);
     }
 
     @Patch('approve-borrow/:borrowId')
@@ -47,19 +37,9 @@ export class ManagersController {
         );
     }
 
-    @Get('get-returns/:userId')
-    @ApiParam({
-        name: 'userId',
-        required: false,
-    })
-    async getReturns(
-        @Query() returnsQueryReqDto: ReturnsQueryReqDto,
-        @Param('userId') userId?: string,
-    ) {
-        return await this.managersService.getReturns(
-            returnsQueryReqDto,
-            userId,
-        );
+    @Get('get-returns')
+    async getReturns(@Query() mgrRetQueryReqDto: MgrRetQueryReqDto) {
+        return await this.managersService.getReturns(mgrRetQueryReqDto);
     }
 
     @Patch('approve-return/:returnId')

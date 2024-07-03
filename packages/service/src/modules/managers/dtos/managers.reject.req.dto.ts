@@ -14,5 +14,5 @@ export class MgrRejectReqDto {
     @Trim()
     @IsNotEmpty()
     @MaxLength(MAX_REASON)
-    reasons: string;
+    rejectReason: string;
 }

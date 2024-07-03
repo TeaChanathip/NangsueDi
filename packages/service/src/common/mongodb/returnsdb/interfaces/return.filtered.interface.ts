@@ -11,4 +11,5 @@ export interface ReturnFiltered {
     requestedAt: number;
     approvedAt?: number;
     rejectedAt?: number;
+    rejectReason?: string;
 }

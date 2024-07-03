@@ -42,6 +42,9 @@ export class BorrowsModel {
     @Prop({ type: Number, required: false })
     rejectedAt?: number;
 
+    @Prop({ type: String, required: false })
+    rejectReason?: string;
+
     @Prop({ type: Number, required: false })
     returnedAt?: number;
 }
