@@ -19,4 +19,5 @@ export interface UserRes {
     updatedAt?: number;
     suspendedAt?: number;
     tokenVersion: number;
+    resetTokenVer?: number;
 }

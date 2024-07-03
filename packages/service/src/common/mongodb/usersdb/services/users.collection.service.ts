@@ -350,4 +350,14 @@ export class UsersCollService {
             })
             .session(session);
     }
+
+    async updateFogotToken(
+        userId: Types.ObjectId,
+        token: number,
+        session?: ClientSession,
+    ): Promise<UserRes> {
+        return await this.usersModel
+            .findByIdAndUpdate(userId, { resetTokenVer: token }, { new: true })
+            .session(session);
+    }
 }

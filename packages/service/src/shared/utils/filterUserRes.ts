@@ -20,7 +20,6 @@ export function filterUserRes(
         birthTime: user.birthTime,
         avartarUrl: user.avartarUrl,
         role: user.role,
-        // addresses: user.addresses,
         registeredAt: user.registeredAt,
         ...(user.updatedAt && { updatedAt: user.updatedAt }),
         ...(user.suspendedAt && { suspendedAt: user.suspendedAt }),

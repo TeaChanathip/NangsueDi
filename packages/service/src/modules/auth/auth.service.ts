@@ -1,8 +1,11 @@
 import {
+    BadRequestException,
+    ForbiddenException,
     HttpException,
     HttpStatus,
     Injectable,
     InternalServerErrorException,
+    NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -15,10 +18,18 @@ import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface
 import { UserSaveDto } from 'src/common/mongodb/usersdb/dtos/user.save.dto';
 import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
 import { UserLoginRes } from './interfaces/user-login.res.interface';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
+import { transaction } from 'src/shared/utils/mongo.transaction';
+import { JwtResetPassPayload } from './interfaces/jwt-reset-password.payload.interface';
+import { isEmail } from 'class-validator';
+import { AuthResetReqDto } from './dtos/auth.reset.req.dto';
+import { PasswordUpdateDto } from 'src/common/mongodb/usersdb/dtos/password.update.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
+        @InjectConnection() private readonly connection: Connection,
         private readonly usersCollService: UsersCollService,
         private readonly jwtService: JwtService,
     ) {}
@@ -100,5 +111,92 @@ export class AuthService {
             accessToken,
             user: filteredUser,
         };
+    }
+
+    async forgotPassword(email: string) {
+        if (!isEmail(email)) {
+            throw new HttpException(
+                'The email format is incorrect',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        const user = await this.usersCollService.findByEmail(email);
+        if (!user) {
+            throw new HttpException(
+                'The email is incorrect',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        return transaction(this.connection, async (session) => {
+            // Update forgotTokenVer in Users document
+            const currentUnix = getCurrentUnix();
+            const updatedUser = await this.usersCollService.updateFogotToken(
+                user._id,
+                currentUnix,
+                session,
+            );
+            if (!updatedUser) {
+                throw new InternalServerErrorException();
+            }
+
+            // Generate a reset token
+            const resetPayload: JwtResetPassPayload = {
+                userId: updatedUser._id,
+                resetTokenVer: updatedUser.resetTokenVer,
+            };
+            const resetToken = await this.jwtService.signAsync(resetPayload, {
+                expiresIn: '1d',
+            });
+            if (!resetToken) {
+                throw new InternalServerErrorException();
+            }
+
+            // Sending reset-password url to user's email
+            // logic here later
+
+            // temporary return
+            return resetToken;
+        });
+    }
+
+    async resetPassword(authResetReqDto: AuthResetReqDto) {
+        const { resetToken, newPassword } = authResetReqDto;
+
+        let resetPayload: JwtResetPassPayload;
+        try {
+            resetPayload = await this.jwtService.verifyAsync(resetToken, {
+                secret: process.env.JWT_SECRET,
+            });
+        } catch {
+            throw new BadRequestException();
+        }
+
+        const { userId, resetTokenVer } = resetPayload;
+        const user = await this.usersCollService.findById(userId);
+        if (!user?.resetTokenVer) {
+            throw new ForbiddenException();
+        }
+        if (user.resetTokenVer > resetTokenVer) {
+            throw new HttpException(
+                'The reset token version does not match',
+                HttpStatus.FORBIDDEN,
+            );
+        }
+
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(newPassword, salt);
+
+        const passwordUpdateDto: PasswordUpdateDto = {
+            password: hash,
+            tokenVersion: getCurrentUnix(),
+            $unset: { resetTokenVer: '' },
+        };
+
+        return await this.usersCollService.updatePassword(
+            userId,
+            passwordUpdateDto,
+        );
     }
 }

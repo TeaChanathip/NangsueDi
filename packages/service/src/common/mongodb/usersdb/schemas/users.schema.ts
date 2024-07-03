@@ -59,6 +59,9 @@ export class UsersModel {
 
     @Prop({ required: true })
     tokenVersion: number;
+
+    @Prop({ required: false })
+    resetTokenVer?: number;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(UsersModel);
