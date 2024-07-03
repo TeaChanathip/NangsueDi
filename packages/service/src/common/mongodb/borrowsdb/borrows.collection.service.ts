@@ -8,6 +8,7 @@ import { BorrowsQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.qu
 import { BorrowFiltered } from './interfaces/borrow.filtered.interface';
 import { BorrowUpdateDto } from './dtos/borrow.update.dto';
 import { BorrowGetNonReturnedDto } from './dtos/borrow.get-non-returned.dto';
+import { unixFilterQuery } from 'src/shared/utils/unixFilterQuery';
 
 @Injectable()
 export class BorrowsCollService {
@@ -134,6 +135,8 @@ export class BorrowsCollService {
             approvedEnd,
             rejectedBegin,
             rejectedEnd,
+            returnedBegin,
+            returnedEnd,
             limit,
             page,
         } = BorrowsQueryReqDto;
@@ -142,24 +145,26 @@ export class BorrowsCollService {
             {
                 $match: {
                     ...(userId && { userId: new Types.ObjectId(userId) }),
-                    ...(requestedBegin && {
-                        requestedAt: { $gte: requestedBegin },
-                    }),
-                    ...(requestedEnd && {
-                        requestedAt: { $lte: requestedEnd },
-                    }),
-                    ...(approvedBegin && {
-                        approvedAt: { $gte: approvedBegin },
-                    }),
-                    ...(approvedEnd && {
-                        approvedAt: { $lte: approvedEnd },
-                    }),
-                    ...(rejectedBegin && {
-                        rejectedAt: { $gte: rejectedBegin },
-                    }),
-                    ...(rejectedEnd && {
-                        rejectedAt: { $lte: rejectedEnd },
-                    }),
+                    ...unixFilterQuery(
+                        'requestedAt',
+                        requestedBegin,
+                        requestedEnd,
+                    ),
+                    ...unixFilterQuery(
+                        'approvedAt',
+                        approvedBegin,
+                        approvedEnd,
+                    ),
+                    ...unixFilterQuery(
+                        'rejectedAt',
+                        rejectedBegin,
+                        rejectedEnd,
+                    ),
+                    ...unixFilterQuery(
+                        'returnedAt',
+                        returnedBegin,
+                        returnedEnd,
+                    ),
                 },
             },
             {
@@ -230,33 +235,13 @@ export class BorrowsCollService {
                 },
             },
             {
-                $lookup: {
-                    from: 'Returns',
-                    localField: '_id',
-                    foreignField: 'borrowId',
-                    as: 'return',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$return',
-                    preserveNullAndEmptyArrays: true,
-                },
-            },
-            {
                 $match: {
-                    $or: [
+                    $and: [
                         {
-                            $and: [
-                                { return: { $exists: true } },
-                                { 'return.approvedAt': { $exists: false } },
-                            ],
+                            rejectedAt: { $exists: false },
                         },
                         {
-                            $and: [
-                                { return: { $exists: false } },
-                                { rejectedAt: { $exists: false } },
-                            ],
+                            returnedAt: { $exists: false },
                         },
                     ],
                 },
@@ -364,6 +349,7 @@ export class BorrowsCollService {
                 requestedAt: 1,
                 approvedAt: 1,
                 rejectedAt: 1,
+                returnedAt: 1,
             },
         });
 

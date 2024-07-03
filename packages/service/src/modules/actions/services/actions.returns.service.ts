@@ -37,12 +37,11 @@ export class ActionsReturnsService {
         const borrowObjId = cvtToObjectId(borrowId, 'borrowId');
 
         // Check if the return request already submitted (need fixed)
-        const foundReturns = await this.returnsCollService.getPendings({
+        const foundReturns = await this.returnsCollService.query(
+            { borrowedBegin: 0, requestedBegin: 0, limit: 1 },
             userId,
-            borrowId: borrowObjId,
-            limit: 1,
-        });
-        console.log(foundReturns);
+            borrowObjId,
+        );
         if (foundReturns && foundReturns.length > 0) {
             throw new HttpException(
                 'The user has already submitted this return request',
@@ -50,17 +49,23 @@ export class ActionsReturnsService {
             );
         }
 
-        // Check if borrow request is user's and was approved
+        // Check if borrow request is user's, was already approved, and non-returned borrow
         const borrow = await this.borrowsCollService.findById(borrowObjId);
         if (!borrow || String(borrow.userId) !== String(userId)) {
             throw new HttpException(
                 'This borrow request does not belong to the user',
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.FORBIDDEN,
             );
         }
         if (!borrow?.approvedAt) {
             throw new HttpException(
                 'The borrow request has not been approved yet',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+        if (borrow?.returnedAt) {
+            throw new HttpException(
+                'The borrow request was already returned',
                 HttpStatus.BAD_REQUEST,
             );
         }
@@ -103,7 +108,7 @@ export class ActionsReturnsService {
         if (!returnFiltered || String(returnFiltered.user) === String(userId)) {
             throw new HttpException(
                 'This return request does not belong to the user',
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.FORBIDDEN,
             );
         }
         if (returnFiltered?.approvedAt || returnFiltered?.rejectedAt) {

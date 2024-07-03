@@ -212,7 +212,7 @@ export class AdminsService {
         ) {
             throw new HttpException(
                 `The action on the '${user.role}' role is not allowed`,
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.FORBIDDEN,
             );
         }
 

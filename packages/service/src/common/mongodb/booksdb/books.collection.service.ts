@@ -132,7 +132,7 @@ export class BooksCollService {
                     ...(genres && { genres: { $all: genres } }),
                 },
             },
-            { $sort: { _id: -1 } },
+            { $sort: { title: 1 } },
         ];
 
         if (page) {

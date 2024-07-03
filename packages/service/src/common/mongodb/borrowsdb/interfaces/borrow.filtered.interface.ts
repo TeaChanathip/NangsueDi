@@ -11,4 +11,5 @@ export interface BorrowFiltered {
     requestedAt: number;
     approvedAt?: number;
     rejectedAt?: number;
+    returnedAt?: number;
 }

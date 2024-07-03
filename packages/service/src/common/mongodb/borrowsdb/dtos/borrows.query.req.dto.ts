@@ -12,7 +12,7 @@ export class BorrowsQueryReqDto {
     @MaxLength(MAX_TITLE)
     bookKeyword?: string;
 
-    @ApiProperty({ type: Number, required: false })
+    @ApiProperty({ type: Number, required: false, default: 0 })
     @IsOptional()
     @IsUnix()
     requestedBegin?: number;
@@ -41,6 +41,16 @@ export class BorrowsQueryReqDto {
     @IsOptional()
     @IsUnix()
     rejectedEnd?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsUnix()
+    returnedBegin?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsUnix()
+    returnedEnd?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()

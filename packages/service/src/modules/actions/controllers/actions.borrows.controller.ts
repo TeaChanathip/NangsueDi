@@ -18,6 +18,7 @@ import { Perms } from 'src/common/decorators/perms.decorator';
 import { Perm } from 'src/shared/enums/perm.enum';
 import { ActBorrowsReqDto } from '../dtos/actions.borrows.req.dto';
 import { BorrowsQueryReqDto } from '../../../common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
+import { ActBrwGetNonRetReqDto } from '../dtos/actions.borrows.get-non-returned.req.dto';
 
 @ApiTags('Action-Borrow')
 @ApiBearerAuth()
@@ -35,6 +36,17 @@ export class ActionsBorrowsController {
         return await this.actionsBorrowService.getBorrows(
             req.user.sub,
             borrowsQueryReqDto,
+        );
+    }
+
+    @Get('non-returned')
+    async getNonReturned(
+        @Request() req: RequestHeader,
+        @Query() actBrwGetNonRetReqDto: ActBrwGetNonRetReqDto,
+    ) {
+        return await this.actionsBorrowService.getNonReturned(
+            req.user.sub,
+            actBrwGetNonRetReqDto,
         );
     }
 

@@ -122,7 +122,7 @@ export class UsersAddrsService {
         ) {
             throw new HttpException(
                 'The user does not own this address',
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.FORBIDDEN,
             );
         }
 

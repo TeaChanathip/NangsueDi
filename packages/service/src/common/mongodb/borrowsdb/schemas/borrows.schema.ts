@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { UsersModel } from '../../usersdb/schemas/users.schema';
 import { BooksModel } from '../../booksdb/schemas/books.schema';
 import { UsersAddressesModel } from '../../usersdb/schemas/users-addresses.schema';
@@ -10,6 +10,8 @@ import { UsersAddressesModel } from '../../usersdb/schemas/users-addresses.schem
     versionKey: false,
 })
 export class BorrowsModel {
+    _id: Types.ObjectId;
+
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
@@ -39,6 +41,9 @@ export class BorrowsModel {
 
     @Prop({ type: Number, required: false })
     rejectedAt?: number;
+
+    @Prop({ type: Number, required: false })
+    returnedAt?: number;
 }
 
 export const BorrowsSchema = SchemaFactory.createForClass(BorrowsModel).index(

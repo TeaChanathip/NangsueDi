@@ -19,6 +19,7 @@ import { BorrowsQueryReqDto } from '../../../common/mongodb/borrowsdb/dtos/borro
 import { BorrowFiltered } from 'src/common/mongodb/borrowsdb/interfaces/borrow.filtered.interface';
 import { InjectConnection } from '@nestjs/mongoose';
 import { transaction } from 'src/shared/utils/mongo.transaction';
+import { ActBrwGetNonRetReqDto } from '../dtos/actions.borrows.get-non-returned.req.dto';
 
 @Injectable()
 export class ActionsBorrowsService {
@@ -36,6 +37,16 @@ export class ActionsBorrowsService {
         return await this.borrowsCollService.query(borrowsQueryReqDto, userId);
     }
 
+    async getNonReturned(
+        userId: Types.ObjectId,
+        actBrwGetNonRetReqDto: ActBrwGetNonRetReqDto,
+    ): Promise<BorrowFiltered[]> {
+        return await this.borrowsCollService.getNonReturned({
+            userId,
+            ...actBrwGetNonRetReqDto,
+        });
+    }
+
     async deleteBorrow(
         userId: Types.ObjectId,
         borrowId: string,
@@ -47,7 +58,7 @@ export class ActionsBorrowsService {
         if (!borrow || String(borrow.userId) !== String(userId)) {
             throw new HttpException(
                 'The borrowId does not belong to the user',
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.FORBIDDEN,
             );
         }
         if (borrow?.approvedAt || borrow?.rejectedAt) {
@@ -87,7 +98,7 @@ export class ActionsBorrowsService {
         ) {
             throw new HttpException(
                 'The user does not own this address',
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.FORBIDDEN,
             );
         }
 
@@ -100,7 +111,7 @@ export class ActionsBorrowsService {
         }
         if (book.total - book.borrowed <= 0) {
             throw new HttpException(
-                'The requested amount exceeds the available number of books',
+                'No desired book is available',
                 HttpStatus.BAD_REQUEST,
             );
         }

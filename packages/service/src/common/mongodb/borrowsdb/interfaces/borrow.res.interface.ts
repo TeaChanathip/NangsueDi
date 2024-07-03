@@ -11,4 +11,5 @@ export interface BorrowRes {
     requestedAt: number;
     approvedAt?: number;
     rejectedAt?: number;
+    returnedAt?: number;
 }

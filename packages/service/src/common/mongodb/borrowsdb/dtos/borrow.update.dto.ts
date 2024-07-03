@@ -9,4 +9,8 @@ export class BorrowUpdateDto {
     @IsOptional()
     @IsUnix()
     rejectedAt?: number;
+
+    @IsOptional()
+    @IsUnix()
+    returnedAt?: number;
 }

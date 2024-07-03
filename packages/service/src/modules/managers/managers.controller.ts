@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
 import { MgrRejectReqDto } from './dtos/managers.reject.req.dto';
@@ -16,9 +16,19 @@ import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.qu
 export class ManagersController {
     constructor(private managersService: ManagersService) {}
 
-    @Get('get-borrows')
-    async getBorrows(@Query() borrowsQueryReqDto: BorrowsQueryReqDto) {
-        return await this.managersService.getBorrows(borrowsQueryReqDto);
+    @Get('get-borrows/:userId')
+    @ApiParam({
+        name: 'userId',
+        required: false,
+    })
+    async getBorrows(
+        @Query() borrowsQueryReqDto: BorrowsQueryReqDto,
+        @Param('userId') userId?: string,
+    ) {
+        return await this.managersService.getBorrows(
+            borrowsQueryReqDto,
+            userId,
+        );
     }
 
     @Patch('approve-borrow/:borrowId')
@@ -37,9 +47,19 @@ export class ManagersController {
         );
     }
 
-    @Get('get-returns')
-    async getReturns(@Query() returnsQueryReqDto: ReturnsQueryReqDto) {
-        return await this.managersService.getReturns(returnsQueryReqDto);
+    @Get('get-returns/:userId')
+    @ApiParam({
+        name: 'userId',
+        required: false,
+    })
+    async getReturns(
+        @Query() returnsQueryReqDto: ReturnsQueryReqDto,
+        @Param('userId') userId?: string,
+    ) {
+        return await this.managersService.getReturns(
+            returnsQueryReqDto,
+            userId,
+        );
     }
 
     @Patch('approve-return/:returnId')

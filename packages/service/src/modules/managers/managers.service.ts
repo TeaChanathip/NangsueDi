@@ -34,10 +34,13 @@ export class ManagersService {
 
     async getBorrows(
         borrowsQueryReqDto: BorrowsQueryReqDto,
+        userId?: string,
     ): Promise<BorrowFiltered[]> {
+        const userObjId = userId ? cvtToObjectId(userId, 'userId') : undefined;
+
         return await this.borrowsCollService.query(
             borrowsQueryReqDto,
-            null,
+            userObjId,
             true,
         );
     }
@@ -136,10 +139,14 @@ export class ManagersService {
 
     async getReturns(
         returnsQueryReqDto: ReturnsQueryReqDto,
+        userId?: string,
     ): Promise<ReturnFiltered[]> {
+        const userObjId = userId ? cvtToObjectId(userId, 'userId') : undefined;
+
         return await this.returnsCollService.query(
             returnsQueryReqDto,
-            null,
+            userObjId,
+            undefined,
             true,
         );
     }
@@ -148,18 +155,25 @@ export class ManagersService {
         const returnObjId = cvtToObjectId(returnId, 'returnId');
         await this.checkReturn(returnObjId);
 
-        const returnUpdateDto: ReturnUpdateDto = {
-            approvedAt: getCurrentUnix(),
-        };
+        const currentUnix = getCurrentUnix();
 
         return transaction(this.connection, async (session) => {
             // find and update return request
             const approvedReturn = await this.returnsCollService.updateById(
                 returnObjId,
-                returnUpdateDto,
+                { approvedAt: currentUnix },
                 session,
             );
             if (!approvedReturn) {
+                throw new InternalServerErrorException();
+            }
+
+            // add returnedAt in borrow document
+            const updatedBorrow = await this.borrowsCollService.updateById(
+                approvedReturn.borrowId._id,
+                { returnedAt: currentUnix },
+            );
+            if (!updatedBorrow) {
                 throw new InternalServerErrorException();
             }
 

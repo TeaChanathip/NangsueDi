@@ -7,7 +7,7 @@ import { ClientSession, Model, PipelineStage, Types } from 'mongoose';
 import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
 import { ReturnFiltered } from './interfaces/return.filtered.interface';
 import { ReturnUpdateDto } from './dtos/return.update.dto';
-import { ReturnGetPendingDto } from './dtos/return.get-pendings.dto';
+import { unixFilterQuery } from 'src/shared/utils/unixFilterQuery';
 
 @Injectable()
 export class ReturnsCollService {
@@ -91,6 +91,7 @@ export class ReturnsCollService {
     async query(
         ReturnsQueryReqDto: ReturnsQueryReqDto,
         userId?: Types.ObjectId,
+        borrowId?: Types.ObjectId,
         withUser: boolean = false,
         session?: ClientSession,
     ): Promise<ReturnFiltered[]> {
@@ -112,30 +113,27 @@ export class ReturnsCollService {
             {
                 $match: {
                     ...(userId && { userId: new Types.ObjectId(userId) }),
-                    ...(borrowedBegin && {
-                        borrowedAt: { $gte: borrowedBegin },
-                    }),
-                    ...(borrowedEnd && {
-                        borrowedAt: { $lte: borrowedEnd },
-                    }),
-                    ...(requestedBegin && {
-                        requestedAt: { $gte: requestedBegin },
-                    }),
-                    ...(requestedEnd && {
-                        requestedAt: { $lte: requestedEnd },
-                    }),
-                    ...(approvedBegin && {
-                        approvedAt: { $gte: approvedBegin },
-                    }),
-                    ...(approvedEnd && {
-                        approvedAt: { $lte: approvedEnd },
-                    }),
-                    ...(rejectedBegin && {
-                        rejectedAt: { $gte: rejectedBegin },
-                    }),
-                    ...(rejectedEnd && {
-                        requestedAt: { $lte: rejectedEnd },
-                    }),
+                    ...(borrowId && { borrowId: new Types.ObjectId(borrowId) }),
+                    ...unixFilterQuery(
+                        'borrowedAt',
+                        borrowedBegin,
+                        borrowedEnd,
+                    ),
+                    ...unixFilterQuery(
+                        'requestedAt',
+                        requestedBegin,
+                        requestedEnd,
+                    ),
+                    ...unixFilterQuery(
+                        'approvedAt',
+                        approvedBegin,
+                        approvedEnd,
+                    ),
+                    ...unixFilterQuery(
+                        'rejectedAt',
+                        rejectedBegin,
+                        rejectedEnd,
+                    ),
                 },
             },
             {
@@ -170,44 +168,6 @@ export class ReturnsCollService {
                             },
                         ],
                     }),
-                },
-            },
-        ];
-
-        this.addUserAndProject(pipeline, withUser, limit, page);
-
-        return await this.returnsModel.aggregate(pipeline).session(session);
-    }
-
-    async getPendings(
-        returnGetPendingDto: ReturnGetPendingDto,
-    ): Promise<ReturnFiltered[]> {
-        const { userId, borrowId, withUser, session, limit, page } =
-            returnGetPendingDto;
-
-        const pipeline: PipelineStage[] = [
-            {
-                $match: {
-                    userId: new Types.ObjectId(userId),
-                    borrowId: new Types.ObjectId(borrowId),
-                    $and: [
-                        { approvedAt: { $exists: false } },
-                        { rejectedAt: { $exists: false } },
-                    ],
-                },
-            },
-            {
-                $lookup: {
-                    from: 'Books',
-                    localField: 'bookId',
-                    foreignField: '_id',
-                    as: 'book',
-                },
-            },
-            {
-                $unwind: {
-                    path: '$book',
-                    preserveNullAndEmptyArrays: true,
                 },
             },
         ];
