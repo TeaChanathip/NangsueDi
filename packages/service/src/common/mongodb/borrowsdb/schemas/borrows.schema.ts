@@ -42,6 +42,6 @@ export class BorrowsModel {
 }
 
 export const BorrowsSchema = SchemaFactory.createForClass(BorrowsModel).index(
-    { userId: 1, bookId: 1 },
+    { userId: 1, bookId: 1, requestedAt: 1 },
     { unique: true },
 );

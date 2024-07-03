@@ -36,22 +36,21 @@ export class ActionsReturnsService {
     ): Promise<ReturnFiltered> {
         const borrowObjId = cvtToObjectId(borrowId, 'borrowId');
 
-        const foundReturn =
-            await this.returnsCollService.findByBorrowId(borrowObjId);
-        if (foundReturn) {
-            if (String(foundReturn.userId) === String(userId)) {
-                throw new HttpException(
-                    'The user has already submitted this return request',
-                    HttpStatus.BAD_REQUEST,
-                );
-            } else {
-                throw new HttpException(
-                    'This borrow request does not belong to the user',
-                    HttpStatus.BAD_REQUEST,
-                );
-            }
+        // Check if the return request already submitted (need fixed)
+        const foundReturns = await this.returnsCollService.getPendings({
+            userId,
+            borrowId: borrowObjId,
+            limit: 1,
+        });
+        console.log(foundReturns);
+        if (foundReturns && foundReturns.length > 0) {
+            throw new HttpException(
+                'The user has already submitted this return request',
+                HttpStatus.BAD_REQUEST,
+            );
         }
 
+        // Check if borrow request is user's and was approved
         const borrow = await this.borrowsCollService.findById(borrowObjId);
         if (!borrow || String(borrow.userId) !== String(userId)) {
             throw new HttpException(

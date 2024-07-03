@@ -105,10 +105,12 @@ export class ActionsBorrowsService {
             );
         }
 
-        const borrows = await this.borrowsCollService.getPendings(userId);
-        if (borrows) {
+        const nonReturnedBorrows = await this.borrowsCollService.getNonReturned(
+            { userId },
+        );
+        if (nonReturnedBorrows && nonReturnedBorrows.length > 0) {
             // Check if the borrows will exceed the limit
-            const total = borrows.length;
+            const total = nonReturnedBorrows.length;
             if (total + 1 > MAX_BORROW) {
                 throw new HttpException(
                     `A user can borrow at most ${MAX_BORROW} books at a time`,
@@ -117,8 +119,8 @@ export class ActionsBorrowsService {
             }
 
             // Check if the books is duplicated
-            const isDuplicated = borrows.find(
-                ({ bookId }) => String(bookId) === String(bookObjId),
+            const isDuplicated = nonReturnedBorrows.find(
+                ({ book }) => String(book._id) === String(bookObjId),
             );
             if (isDuplicated) {
                 throw new HttpException(
@@ -136,8 +138,10 @@ export class ActionsBorrowsService {
         };
 
         return transaction(this.connection, async (session) => {
-            const savedBorrow =
-                await this.borrowsCollService.saveNew(borrowSaveDto);
+            const savedBorrow = await this.borrowsCollService.saveNew(
+                borrowSaveDto,
+                session,
+            );
             if (!savedBorrow) {
                 throw new InternalServerErrorException();
             }
@@ -145,6 +149,8 @@ export class ActionsBorrowsService {
             const borrowFiltered =
                 await this.borrowsCollService.getBorrowFiltered(
                     savedBorrow._id,
+                    false,
+                    session,
                 );
             if (!borrowFiltered) {
                 throw new InternalServerErrorException();

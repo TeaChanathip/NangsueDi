@@ -7,6 +7,7 @@ import { ClientSession, Model, PipelineStage, Types } from 'mongoose';
 import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
 import { ReturnFiltered } from './interfaces/return.filtered.interface';
 import { ReturnUpdateDto } from './dtos/return.update.dto';
+import { ReturnGetPendingDto } from './dtos/return.get-pendings.dto';
 
 @Injectable()
 export class ReturnsCollService {
@@ -35,13 +36,6 @@ export class ReturnsCollService {
         session?: ClientSession,
     ): Promise<ReturnRes[]> {
         return await this.returnsModel.find({ userId }).session(session);
-    }
-
-    async findByBorrowId(
-        borrowId: Types.ObjectId,
-        session?: ClientSession,
-    ): Promise<ReturnRes> {
-        return await this.returnsModel.findOne({ borrowId }).session(session);
     }
 
     async updateById(
@@ -180,20 +174,55 @@ export class ReturnsCollService {
             },
         ];
 
-        this.addUserAndProject(pipeline, withUser);
-
-        if (page) {
-            pipeline.push({ $skip: (page - 1) * limit });
-        }
-
-        if (limit) {
-            pipeline.push({ $limit: limit });
-        }
+        this.addUserAndProject(pipeline, withUser, limit, page);
 
         return await this.returnsModel.aggregate(pipeline).session(session);
     }
 
-    private addUserAndProject(pipeline: PipelineStage[], withUser: boolean) {
+    async getPendings(
+        returnGetPendingDto: ReturnGetPendingDto,
+    ): Promise<ReturnFiltered[]> {
+        const { userId, borrowId, withUser, session, limit, page } =
+            returnGetPendingDto;
+
+        const pipeline: PipelineStage[] = [
+            {
+                $match: {
+                    userId: new Types.ObjectId(userId),
+                    borrowId: new Types.ObjectId(borrowId),
+                    $and: [
+                        { approvedAt: { $exists: false } },
+                        { rejectedAt: { $exists: false } },
+                    ],
+                },
+            },
+            {
+                $lookup: {
+                    from: 'Books',
+                    localField: 'bookId',
+                    foreignField: '_id',
+                    as: 'book',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$book',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+        ];
+
+        this.addUserAndProject(pipeline, withUser, limit, page);
+
+        return await this.returnsModel.aggregate(pipeline).session(session);
+    }
+
+    private addUserAndProject(
+        pipeline: PipelineStage[],
+        withUser: boolean,
+        limit?: number,
+        page?: number,
+    ) {
         if (withUser) {
             pipeline.push(
                 ...[
@@ -261,5 +290,13 @@ export class ReturnsCollService {
         });
 
         pipeline.push({ $sort: { _id: -1 } });
+
+        if (page) {
+            pipeline.push({ $skip: (page - 1) * limit });
+        }
+
+        if (limit) {
+            pipeline.push({ $limit: limit });
+        }
     }
 }

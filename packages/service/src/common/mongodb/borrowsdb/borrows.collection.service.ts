@@ -7,6 +7,7 @@ import { BorrowRes } from './interfaces/borrow.res.interface';
 import { BorrowsQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
 import { BorrowFiltered } from './interfaces/borrow.filtered.interface';
 import { BorrowUpdateDto } from './dtos/borrow.update.dto';
+import { BorrowGetNonReturnedDto } from './dtos/borrow.get-non-returned.dto';
 
 @Injectable()
 export class BorrowsCollService {
@@ -211,20 +212,96 @@ export class BorrowsCollService {
             },
         ];
 
-        this.addUserAndProject(pipeline, withUser);
-
-        if (page) {
-            pipeline.push({ $skip: (page - 1) * limit });
-        }
-
-        if (limit) {
-            pipeline.push({ $limit: limit });
-        }
+        this.addUserAndProject(pipeline, withUser, limit, page);
 
         return await this.borrowsModel.aggregate(pipeline).session(session);
     }
 
-    private addUserAndProject(pipeline: PipelineStage[], withUser: boolean) {
+    async getNonReturned(
+        borrowGetNonReturnedDto: BorrowGetNonReturnedDto,
+    ): Promise<BorrowFiltered[]> {
+        const { userId, withUser, session, limit, page } =
+            borrowGetNonReturnedDto;
+
+        const pipeline: PipelineStage[] = [
+            {
+                $match: {
+                    ...(userId && { userId: new Types.ObjectId(userId) }),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'Returns',
+                    localField: '_id',
+                    foreignField: 'borrowId',
+                    as: 'return',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$return',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $match: {
+                    $or: [
+                        {
+                            $and: [
+                                { return: { $exists: true } },
+                                { 'return.approvedAt': { $exists: false } },
+                            ],
+                        },
+                        {
+                            $and: [
+                                { return: { $exists: false } },
+                                { rejectedAt: { $exists: false } },
+                            ],
+                        },
+                    ],
+                },
+            },
+            {
+                $lookup: {
+                    from: 'Books',
+                    localField: 'bookId',
+                    foreignField: '_id',
+                    as: 'book',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$book',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $lookup: {
+                    from: 'UsersAddresses',
+                    localField: 'addrId',
+                    foreignField: '_id',
+                    as: 'address',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$address',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+        ];
+
+        this.addUserAndProject(pipeline, withUser, limit, page);
+
+        return await this.borrowsModel.aggregate(pipeline).session(session);
+    }
+
+    private addUserAndProject(
+        pipeline: PipelineStage[],
+        withUser: boolean,
+        limit?: number,
+        page?: number,
+    ) {
         if (withUser) {
             pipeline.push(
                 ...[
@@ -291,50 +368,13 @@ export class BorrowsCollService {
         });
 
         pipeline.push({ $sort: { _id: -1 } });
-    }
 
-    async getNonReturned(
-        userId: Types.ObjectId,
-        session?: ClientSession,
-    ): Promise<BorrowRes[]> {
-        return await this.borrowsModel
-            .aggregate([
-                {
-                    $match: {
-                        userId,
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'Returns',
-                        localField: '_id',
-                        foreignField: 'borrowId',
-                        as: 'return',
-                    },
-                },
-                {
-                    $unwind: {
-                        path: '$return',
-                        preserveNullAndEmptyArrays: true,
-                    },
-                },
-                {
-                    $match: {
-                        $and: [
-                            {
-                                $or: [
-                                    { return: { $exists: false } },
-                                    { 'return.approvedAt': { $exists: false } },
-                                ],
-                            },
-                            { rejectedAt: { $exists: false } },
-                        ],
-                    },
-                },
-                {
-                    $project: { return: 0 },
-                },
-            ])
-            .session(session);
+        if (page) {
+            pipeline.push({ $skip: (page - 1) * limit });
+        }
+
+        if (limit) {
+            pipeline.push({ $limit: limit });
+        }
     }
 }

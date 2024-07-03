@@ -45,6 +45,6 @@ export class ReturnsModel {
 }
 
 export const ReturnsSchema = SchemaFactory.createForClass(ReturnsModel).index(
-    { userId: 1, borrowId: 1 },
+    { userId: 1, borrowId: 1, requestedAt: 1 },
     { unique: true },
 );
