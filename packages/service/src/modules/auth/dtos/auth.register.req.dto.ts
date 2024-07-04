@@ -20,6 +20,7 @@ export class AuthRegisterReqDto {
         default: 'test1@test.com',
     })
     @IsNotEmpty()
+    @Trim()
     @IsEmail()
     email: string;
 
