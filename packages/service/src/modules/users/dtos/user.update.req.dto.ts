@@ -8,10 +8,10 @@ import {
     MaxLength,
     MinLength,
 } from 'class-validator';
-import { Trim } from 'src/common/transformers/trim.transformer';
-import { IsOlderThan } from 'src/common/validators/isOlderThan.validator';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MAX_NAME } from 'src/shared/consts/min-max.const';
+import { Trim } from '../../../common/transformers/trim.transformer';
+import { IsOlderThan } from '../../../common/validators/isOlderThan.validator';
+import { IsUnix } from '../../../common/validators/isUnix.validator';
+import { MAX_NAME } from '../../../shared/consts/min-max.const';
 
 export class UserUpdateReqDto {
     @ApiProperty({

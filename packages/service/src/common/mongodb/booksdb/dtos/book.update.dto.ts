@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
+import { IsUnix } from '../../../validators/isUnix.validator';
 
 export class BookUpdateDto {
     title?: string;

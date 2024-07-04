@@ -7,9 +7,9 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Perm } from 'src/shared/enums/perm.enum';
+import { Perm } from '../../shared/enums/perm.enum';
 import { PERMS_KEY } from '../decorators/perms.decorator';
-import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface';
+import { JwtUserPayload } from '../../shared/interfaces/jwt-user.payload.interface';
 import { UsersCollService } from '../mongodb/usersdb/services/users.collection.service';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsString, Validate } from 'class-validator';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { Role } from 'src/shared/enums/role.enum';
+import { IsUnix } from '../../../validators/isUnix.validator';
+import { Role } from '../../../../shared/enums/role.enum';
 
 export class UserSaveDto {
     email: string;

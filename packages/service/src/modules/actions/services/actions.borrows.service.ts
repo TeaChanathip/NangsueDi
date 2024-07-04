@@ -6,19 +6,18 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { Connection, Types } from 'mongoose';
-import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
-import { BorrowRes } from 'src/common/mongodb/borrowsdb/interfaces/borrow.res.interface';
-import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
+import { BorrowsCollService } from '../../../common/mongodb/borrowsdb/borrows.collection.service';
+import { cvtToObjectId } from '../../../shared/utils/cvtToObjectId';
 import { ActBorrowsReqDto } from '../dtos/actions.borrows.req.dto';
-import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
-import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
-import { MAX_BORROW } from 'src/shared/consts/min-max.const';
-import { BorrowSaveDto } from 'src/common/mongodb/borrowsdb/dtos/borrow.save.dto';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { UsersCollService } from '../../../common/mongodb/usersdb/services/users.collection.service';
+import { BooksCollService } from '../../../common/mongodb/booksdb/books.collection.service';
+import { MAX_BORROW } from '../../../shared/consts/min-max.const';
+import { BorrowSaveDto } from '../../../common/mongodb/borrowsdb/dtos/borrow.save.dto';
+import { getCurrentUnix } from '../../../shared/utils/getCurrentUnix';
 import { BorrowsQueryReqDto } from '../../../common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
-import { BorrowFiltered } from 'src/common/mongodb/borrowsdb/interfaces/borrow.filtered.interface';
+import { BorrowFiltered } from '../../../common/mongodb/borrowsdb/interfaces/borrow.filtered.interface';
 import { InjectConnection } from '@nestjs/mongoose';
-import { transaction } from 'src/shared/utils/mongo.transaction';
+import { transaction } from '../../../shared/utils/mongo.transaction';
 import { ActBrwGetNonRetReqDto } from '../dtos/actions.borrows.get-non-returned.req.dto';
 
 @Injectable()

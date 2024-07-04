@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { Trim } from 'src/common/transformers/trim.transformer';
-import { MAX_ADDRESS } from 'src/shared/consts/min-max.const';
+import { Trim } from '../../../common/transformers/trim.transformer';
+import { MAX_ADDRESS } from '../../../shared/consts/min-max.const';
 
 export class UserAddrUpdateReqDto {
     @ApiProperty({ type: String, required: false, default: '9/11' })

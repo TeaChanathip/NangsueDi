@@ -9,12 +9,12 @@ import {
     Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/shared/enums/role.enum';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '../../shared/enums/role.enum';
 import { BooksRegisterReqDto } from './dtos/books.register.req.dto';
 import { BooksService } from './books.service';
 import { BooksSearchReqDto } from './dtos/books.search.req.dto';
-import { PublicRoute } from 'src/common/decorators/public-route.decorator';
+import { PublicRoute } from '../../common/decorators/public-route.decorator';
 import { BooksUpdateReqDto } from './dtos/books.update.req.dto';
 
 @ApiTags('Book')

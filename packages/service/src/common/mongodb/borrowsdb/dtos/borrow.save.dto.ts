@@ -1,6 +1,6 @@
 import { IsMongoId, IsNotEmpty } from 'class-validator';
 import { Types } from 'mongoose';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
+import { IsUnix } from '../../../validators/isUnix.validator';
 
 export class BorrowSaveDto {
     @IsNotEmpty()

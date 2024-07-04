@@ -8,11 +8,11 @@ import {
     Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/shared/enums/role.enum';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { Role } from '../../../shared/enums/role.enum';
 import { ActionsReturnsService } from '../services/actions.returns.service';
 import { Throttle } from '@nestjs/throttler';
-import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
+import { RequestHeader } from '../../../shared/interfaces/request-header.interface';
 import { ReturnsQueryReqDto } from '../../../common/mongodb/returnsdb/dtos/returns.query.req.dto';
 
 @ApiTags('Action-Return')

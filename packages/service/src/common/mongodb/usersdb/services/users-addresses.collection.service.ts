@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersAddressesModel } from '../schemas/users-addresses.schema';
 import { ClientSession, Model, Types } from 'mongoose';
-import { UserAddrDto } from 'src/modules/users/dtos/user.address.dto';
+import { UserAddrDto } from '../../../../modules/users/dtos/user.address.dto';
 import { UserAddrsRes } from '../interfaces/user-addresses.res.interface';
-import { UserAddrUpdateReqDto } from 'src/modules/users/dtos/user-address.update.req.dto';
+import { UserAddrUpdateReqDto } from '../../../../modules/users/dtos/user-address.update.req.dto';
 
 @Injectable()
 export class UsersAddrsCollService {

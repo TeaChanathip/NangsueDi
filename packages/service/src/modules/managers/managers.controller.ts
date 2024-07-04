@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/shared/enums/role.enum';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '../../shared/enums/role.enum';
 import { MgrRejectReqDto } from './dtos/managers.reject.req.dto';
 import { Throttle } from '@nestjs/throttler';
 import { ManagersService } from './managers.service';
-import { MgrBrwQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
-import { MgrRetQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
+import { MgrBrwQueryReqDto } from '../../common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
+import { MgrRetQueryReqDto } from '../../common/mongodb/returnsdb/dtos/returns.query.req.dto';
 
 @ApiTags('Manager')
 @Throttle({ default: { limit: 1, ttl: 1200 } })

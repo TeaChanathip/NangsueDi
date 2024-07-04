@@ -9,12 +9,13 @@ import {
     Types,
 } from 'mongoose';
 import { UserRes } from '../interfaces/user.res.interface';
-import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
+import { UserFiltered } from '../../../../shared/interfaces/user.filtered.res.interface';
 import { UserSaveDto } from '../dtos/user.save.dto';
 import { UserUpdateDto } from '../dtos/user.update.dto';
 import { PasswordUpdateDto } from '../dtos/password.update.dto';
-import { AdminsGetUsersReqDto } from 'src/modules/admins/dtos/admins.get-users.req.dto';
+import { AdminsGetUsersReqDto } from '../../../../modules/admins/dtos/admins.get-users.req.dto';
 import { UserAddrsRes } from '../interfaces/user-addresses.res.interface';
+import { Role } from '../../../../shared/enums/role.enum';
 
 @Injectable()
 export class UsersCollService {
@@ -54,6 +55,16 @@ export class UsersCollService {
             .findByIdAndUpdate(userId, userUpdateDto, {
                 new: true,
             })
+            .session(session);
+    }
+
+    async changeRole(
+        userId: Types.ObjectId,
+        role: Role,
+        session?: ClientSession,
+    ): Promise<UserRes> {
+        return await this.usersModel
+            .findByIdAndUpdate(userId, { role }, { new: true })
             .session(session);
     }
 

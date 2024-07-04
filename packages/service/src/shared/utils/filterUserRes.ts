@@ -1,6 +1,6 @@
-import { UserRes } from 'src/common/mongodb/usersdb/interfaces/user.res.interface';
+import { UserRes } from '../../common/mongodb/usersdb/interfaces/user.res.interface';
 import { UserFiltered } from '../interfaces/user.filtered.res.interface';
-import { UserPermsRes } from 'src/common/mongodb/usersdb/interfaces/user-permissions.res.interface';
+import { UserPermsRes } from '../../common/mongodb/usersdb/interfaces/user-permissions.res.interface';
 
 export function filterUserRes(
     user: UserRes | null,

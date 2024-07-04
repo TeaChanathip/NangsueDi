@@ -1,17 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersAddressesCollectionService } from './users-addresses.collection.service';
+import { UsersAddrsCollService } from './users-addresses.collection.service';
 
-describe('UsersAddressesCollectionService', () => {
-    let service: UsersAddressesCollectionService;
+describe('UsersAddrsCollService', () => {
+    let service: UsersAddrsCollService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [UsersAddressesCollectionService],
+            providers: [UsersAddrsCollService],
         }).compile();
 
-        service = module.get<UsersAddressesCollectionService>(
-            UsersAddressesCollectionService,
-        );
+        service = module.get<UsersAddrsCollService>(UsersAddrsCollService);
     });
 
     it('should be defined', () => {

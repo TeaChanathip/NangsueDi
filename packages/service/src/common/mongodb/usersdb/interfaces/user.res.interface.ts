@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Role } from 'src/shared/enums/role.enum';
+import { Role } from '../../../../shared/enums/role.enum';
 import { UsersPermissionsModel } from '../schemas/users-permissions.schema';
 import { UsersAddressesModel } from '../schemas/users-addresses.schema';
 

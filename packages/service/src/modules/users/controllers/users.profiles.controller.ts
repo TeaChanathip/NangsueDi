@@ -4,9 +4,9 @@ import { UserUpdateReqDto } from '../dtos/user.update.req.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserDeleteReqDto } from '../dtos/user.delete.req.dto';
 import { UsersChangePasswordReqDto } from '../dtos/users.change-password.req.dto';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/shared/enums/role.enum';
-import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { Role } from '../../../shared/enums/role.enum';
+import { RequestHeader } from '../../../shared/interfaces/request-header.interface';
 
 @ApiTags('User-Profile')
 @ApiBearerAuth()

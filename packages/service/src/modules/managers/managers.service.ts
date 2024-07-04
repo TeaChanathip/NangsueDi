@@ -7,21 +7,21 @@ import {
 } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection, Types } from 'mongoose';
-import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
-import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
-import { BorrowUpdateDto } from 'src/common/mongodb/borrowsdb/dtos/borrow.update.dto';
-import { BorrowFiltered } from 'src/common/mongodb/borrowsdb/interfaces/borrow.filtered.interface';
-import { BorrowRes } from 'src/common/mongodb/borrowsdb/interfaces/borrow.res.interface';
-import { ReturnsCollService } from 'src/common/mongodb/returnsdb/returns.collection.service';
-import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
-import { transaction } from 'src/shared/utils/mongo.transaction';
+import { BooksCollService } from '../../common/mongodb/booksdb/books.collection.service';
+import { BorrowsCollService } from '../../common/mongodb/borrowsdb/borrows.collection.service';
+import { BorrowUpdateDto } from '../../common/mongodb/borrowsdb/dtos/borrow.update.dto';
+import { BorrowFiltered } from '../../common/mongodb/borrowsdb/interfaces/borrow.filtered.interface';
+import { BorrowRes } from '../../common/mongodb/borrowsdb/interfaces/borrow.res.interface';
+import { ReturnsCollService } from '../../common/mongodb/returnsdb/returns.collection.service';
+import { cvtToObjectId } from '../../shared/utils/cvtToObjectId';
+import { getCurrentUnix } from '../../shared/utils/getCurrentUnix';
+import { transaction } from '../../shared/utils/mongo.transaction';
 import { MgrRejectReqDto } from './dtos/managers.reject.req.dto';
-import { ReturnFiltered } from 'src/common/mongodb/returnsdb/interfaces/return.filtered.interface';
-import { ReturnRes } from 'src/common/mongodb/returnsdb/interfaces/return.res.interface';
-import { ReturnUpdateDto } from 'src/common/mongodb/returnsdb/dtos/return.update.dto';
-import { MgrBrwQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
-import { MgrRetQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
+import { ReturnFiltered } from '../../common/mongodb/returnsdb/interfaces/return.filtered.interface';
+import { ReturnRes } from '../../common/mongodb/returnsdb/interfaces/return.res.interface';
+import { ReturnUpdateDto } from '../../common/mongodb/returnsdb/dtos/return.update.dto';
+import { MgrBrwQueryReqDto } from '../../common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
+import { MgrRetQueryReqDto } from '../../common/mongodb/returnsdb/dtos/returns.query.req.dto';
 
 @Injectable()
 export class ManagersService {

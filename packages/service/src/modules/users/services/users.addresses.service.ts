@@ -5,14 +5,14 @@ import {
     InternalServerErrorException,
 } from '@nestjs/common';
 import { Connection, Types } from 'mongoose';
-import { UserAddrsRes } from 'src/common/mongodb/usersdb/interfaces/user-addresses.res.interface';
-import { UsersAddrsCollService } from 'src/common/mongodb/usersdb/services/users-addresses.collection.service';
-import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
+import { UserAddrsRes } from '../../../common/mongodb/usersdb/interfaces/user-addresses.res.interface';
+import { UsersAddrsCollService } from '../../../common/mongodb/usersdb/services/users-addresses.collection.service';
+import { UsersCollService } from '../../../common/mongodb/usersdb/services/users.collection.service';
 import { UserAddrDto } from '../dtos/user.address.dto';
 import { UserAddrUpdateReqDto } from '../dtos/user-address.update.req.dto';
-import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
-import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
-import { transaction } from 'src/shared/utils/mongo.transaction';
+import { cvtToObjectId } from '../../../shared/utils/cvtToObjectId';
+import { BorrowsCollService } from '../../../common/mongodb/borrowsdb/borrows.collection.service';
+import { transaction } from '../../../shared/utils/mongo.transaction';
 import { InjectConnection } from '@nestjs/mongoose';
 
 @Injectable()

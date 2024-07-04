@@ -8,23 +8,23 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
+import { UsersCollService } from '../../common/mongodb/usersdb/services/users.collection.service';
 import { AuthRegisterReqDto } from './dtos/auth.register.req.dto';
-import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
-import { Role } from 'src/shared/enums/role.enum';
-import { JwtUserPayload } from 'src/shared/interfaces/jwt-user.payload.interface';
-import { UserSaveDto } from 'src/common/mongodb/usersdb/dtos/user.save.dto';
+import { UserFiltered } from '../../shared/interfaces/user.filtered.res.interface';
+import { getCurrentUnix } from '../../shared/utils/getCurrentUnix';
+import { Role } from '../../shared/enums/role.enum';
+import { JwtUserPayload } from '../../shared/interfaces/jwt-user.payload.interface';
+import { UserSaveDto } from '../../common/mongodb/usersdb/dtos/user.save.dto';
 import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
 import { UserLoginRes } from './interfaces/user-login.res.interface';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
-import { transaction } from 'src/shared/utils/mongo.transaction';
+import { transaction } from '../../shared/utils/mongo.transaction';
 import { JwtResetPassPayload } from './interfaces/jwt-reset-password.payload.interface';
 import { isEmail } from 'class-validator';
 import { AuthResetReqDto } from './dtos/auth.reset.req.dto';
-import { PasswordUpdateDto } from 'src/common/mongodb/usersdb/dtos/password.update.dto';
-import { EmailService } from 'src/features/email/email.service';
+import { PasswordUpdateDto } from '../../common/mongodb/usersdb/dtos/password.update.dto';
+import { EmailService } from '../../features/email/email.service';
 
 @Injectable()
 export class AuthService {

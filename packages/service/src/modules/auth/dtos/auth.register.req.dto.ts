@@ -10,16 +10,21 @@ import {
     MaxLength,
     MinLength,
 } from 'class-validator';
-import { Trim } from 'src/common/transformers/trim.transformer';
-import { IsOlderThan } from 'src/common/validators/isOlderThan.validator';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MAX_NAME, MAX_PWD, MIN_PWD } from 'src/shared/consts/min-max.const';
+import { Trim } from '../../../common/transformers/trim.transformer';
+import { IsOlderThan } from '../../../common/validators/isOlderThan.validator';
+import { IsUnix } from '../../../common/validators/isUnix.validator';
+import {
+    MAX_NAME,
+    MAX_PWD,
+    MIN_PWD,
+} from '../../../shared/consts/min-max.const';
 
 export class AuthRegisterReqDto {
     @ApiProperty({
         default: 'test1@test.com',
     })
     @IsNotEmpty()
+    @Trim()
     @IsEmail()
     email: string;
 

@@ -5,7 +5,7 @@ import {
     ValidatorConstraintInterface,
     registerDecorator,
 } from 'class-validator';
-import { calculateAge } from 'src/shared/utils/calculateAge';
+import { calculateAge } from '../../shared/utils/calculateAge';
 
 @ValidatorConstraint({ name: 'isOlderThan', async: false })
 export class IsOlderThanConstraint implements ValidatorConstraintInterface {

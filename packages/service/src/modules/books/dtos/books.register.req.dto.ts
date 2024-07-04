@@ -11,11 +11,15 @@ import {
     Min,
     MinLength,
 } from 'class-validator';
-import { SortArray } from 'src/common/transformers/sort-array.transformer';
-import { Trim } from 'src/common/transformers/trim.transformer';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MIN_GENRE, MAX_GENRE } from 'src/shared/consts/genre.map';
-import { MAX_NAME, MAX_TEXT, MAX_TITLE } from 'src/shared/consts/min-max.const';
+import { SortArray } from '../../../common/transformers/sort-array.transformer';
+import { Trim } from '../../../common/transformers/trim.transformer';
+import { IsUnix } from '../../../common/validators/isUnix.validator';
+import { MIN_GENRE, MAX_GENRE } from '../../../shared/consts/genre.map';
+import {
+    MAX_NAME,
+    MAX_TEXT,
+    MAX_TITLE,
+} from '../../../shared/consts/min-max.const';
 
 export class BooksRegisterReqDto {
     @ApiProperty({ type: String, required: true, default: 'Harry Potter 1st' })

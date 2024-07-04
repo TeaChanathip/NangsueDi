@@ -8,9 +8,9 @@ import {
     Min,
 } from 'class-validator';
 import { Types } from 'mongoose';
-import { Trim } from 'src/common/transformers/trim.transformer';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MAX_TITLE } from 'src/shared/consts/min-max.const';
+import { Trim } from '../../../transformers/trim.transformer';
+import { IsUnix } from '../../../validators/isUnix.validator';
+import { MAX_TITLE } from '../../../../shared/consts/min-max.const';
 
 export class BorrowsQueryReqDto {
     @ApiProperty({ type: String, required: false })
