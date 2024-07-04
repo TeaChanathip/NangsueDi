@@ -5,18 +5,18 @@ import {
     InternalServerErrorException,
     NotFoundException,
 } from '@nestjs/common';
-import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
+import { BooksCollService } from '../../common/mongodb/booksdb/books.collection.service';
 import { BooksRegisterReqDto } from './dtos/books.register.req.dto';
-import { BookSaveDto } from 'src/common/mongodb/booksdb/dtos/book.save.dto';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { BookSaveDto } from '../../common/mongodb/booksdb/dtos/book.save.dto';
+import { getCurrentUnix } from '../../shared/utils/getCurrentUnix';
 import { BooksSearchReqDto } from './dtos/books.search.req.dto';
-import { BookRes } from 'src/common/mongodb/booksdb/interfaces/book.res.interface';
+import { BookRes } from '../../common/mongodb/booksdb/interfaces/book.res.interface';
 import { Connection, Types } from 'mongoose';
 import { BooksUpdateReqDto } from './dtos/books.update.req.dto';
-import { BookUpdateDto } from 'src/common/mongodb/booksdb/dtos/book.update.dto';
-import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
-import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
-import { transaction } from 'src/shared/utils/mongo.transaction';
+import { BookUpdateDto } from '../../common/mongodb/booksdb/dtos/book.update.dto';
+import { cvtToObjectId } from '../../shared/utils/cvtToObjectId';
+import { BorrowsCollService } from '../../common/mongodb/borrowsdb/borrows.collection.service';
+import { transaction } from '../../shared/utils/mongo.transaction';
 import { InjectConnection } from '@nestjs/mongoose';
 
 @Injectable()

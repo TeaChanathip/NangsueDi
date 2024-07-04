@@ -4,7 +4,7 @@ import { ClientSession, Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserPermsRes } from '../interfaces/user-permissions.res.interface';
 import { UserPermsSaveDto } from '../dtos/user-permissions.save.dto';
-import { AdminsEditUserPermsReqDto } from 'src/modules/admins/dtos/admins.edit-user-permissions.req.dto';
+import { AdminsEditUserPermsReqDto } from '../../../../modules/admins/dtos/admins.edit-user-permissions.req.dto';
 
 @Injectable()
 export class UsersPermsCollService {

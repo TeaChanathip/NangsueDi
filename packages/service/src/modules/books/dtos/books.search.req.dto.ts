@@ -7,11 +7,11 @@ import {
     MaxLength,
     Min,
 } from 'class-validator';
-import { ToArray } from 'src/common/transformers/to-array.transformer';
-import { Trim } from 'src/common/transformers/trim.transformer';
-import { IsUnix } from 'src/common/validators/isUnix.validator';
-import { MAX_GENRE, MIN_GENRE } from 'src/shared/consts/genre.map';
-import { MAX_NAME, MAX_TITLE } from 'src/shared/consts/min-max.const';
+import { ToArray } from '../../../common/transformers/to-array.transformer';
+import { Trim } from '../../../common/transformers/trim.transformer';
+import { IsUnix } from '../../../common/validators/isUnix.validator';
+import { MAX_GENRE, MIN_GENRE } from '../../../shared/consts/genre.map';
+import { MAX_TITLE } from '../../../shared/consts/min-max.const';
 
 export class BooksSearchReqDto {
     @ApiProperty({ type: String, required: false })

@@ -8,8 +8,8 @@ import {
     Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/shared/enums/role.enum';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { Role } from '../../shared/enums/role.enum';
 import { AdminsService } from './admins.service';
 import { AdminsEditUserPermsReqDto } from './dtos/admins.edit-user-permissions.req.dto';
 import { AdminsSusUserReqDto } from './dtos/admins.suspend-user.req.dto';

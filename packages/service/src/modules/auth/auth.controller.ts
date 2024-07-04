@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AuthLoginReqDto } from './dtos/auth.login.req.dto';
 import { AuthService } from './auth.service';
-import { PublicRoute } from 'src/common/decorators/public-route.decorator';
+import { PublicRoute } from '../../common/decorators/public-route.decorator';
 import { AuthRegisterReqDto } from './dtos/auth.register.req.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthResetReqDto } from './dtos/auth.reset.req.dto';

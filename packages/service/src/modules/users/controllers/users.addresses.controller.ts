@@ -8,13 +8,13 @@ import {
     Post,
     Request,
 } from '@nestjs/common';
-import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
+import { RequestHeader } from '../../../shared/interfaces/request-header.interface';
 import { UserAddrDto } from '../dtos/user.address.dto';
 import { UsersAddrsService } from '../services/users.addresses.service';
 import { UserAddrUpdateReqDto } from '../dtos/user-address.update.req.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/shared/enums/role.enum';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { Role } from '../../../shared/enums/role.enum';
 
 @ApiTags('User-Address')
 @ApiBearerAuth()

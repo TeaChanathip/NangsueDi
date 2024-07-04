@@ -1,29 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
 import { isValidObjectId } from 'mongoose';
-import { isUnix } from 'src/common/validators/isUnix.validator';
+import { isUnix } from '../src/common/validators/isUnix.validator';
 
 describe('AuthController E2E Test', () => {
-    let app: INestApplication;
-
-    beforeAll(async () => {
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-
-        app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(
-            new ValidationPipe({
-                transform: true,
-                transformOptions: { enableImplicitConversion: true },
-                whitelist: true,
-                forbidNonWhitelisted: true,
-            }),
-        );
-        await app.init();
-    });
+    const app: INestApplication = globalThis.app;
 
     afterEach(async () => {
         return new Promise((resolve) => setTimeout(resolve, 260));

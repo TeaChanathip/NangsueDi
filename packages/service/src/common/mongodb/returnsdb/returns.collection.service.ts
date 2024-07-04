@@ -4,10 +4,10 @@ import { ReturnRes } from './interfaces/return.res.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { ReturnsModel } from './schemas/returns.schema';
 import { ClientSession, Model, PipelineStage, Types } from 'mongoose';
-import { ReturnsQueryReqDto } from 'src/common/mongodb/returnsdb/dtos/returns.query.req.dto';
+import { ReturnsQueryReqDto } from './dtos/returns.query.req.dto';
 import { ReturnFiltered } from './interfaces/return.filtered.interface';
 import { ReturnUpdateDto } from './dtos/return.update.dto';
-import { unixFilterQuery } from 'src/shared/utils/unixFilterQuery';
+import { unixFilterQuery } from '../../../shared/utils/unixFilterQuery';
 
 @Injectable()
 export class ReturnsCollService {

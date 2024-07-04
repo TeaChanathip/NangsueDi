@@ -5,14 +5,14 @@ import {
     InternalServerErrorException,
 } from '@nestjs/common';
 import { Connection, Types } from 'mongoose';
-import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
-import { ReturnSaveDto } from 'src/common/mongodb/returnsdb/dtos/return.save.dto';
-import { ReturnsCollService } from 'src/common/mongodb/returnsdb/returns.collection.service';
-import { cvtToObjectId } from 'src/shared/utils/cvtToObjectId';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { BorrowsCollService } from '../../../common/mongodb/borrowsdb/borrows.collection.service';
+import { ReturnSaveDto } from '../../../common/mongodb/returnsdb/dtos/return.save.dto';
+import { ReturnsCollService } from '../../../common/mongodb/returnsdb/returns.collection.service';
+import { cvtToObjectId } from '../../../shared/utils/cvtToObjectId';
+import { getCurrentUnix } from '../../../shared/utils/getCurrentUnix';
 import { ReturnsQueryReqDto } from '../../../common/mongodb/returnsdb/dtos/returns.query.req.dto';
-import { ReturnFiltered } from 'src/common/mongodb/returnsdb/interfaces/return.filtered.interface';
-import { transaction } from 'src/shared/utils/mongo.transaction';
+import { ReturnFiltered } from '../../../common/mongodb/returnsdb/interfaces/return.filtered.interface';
+import { transaction } from '../../../shared/utils/mongo.transaction';
 import { InjectConnection } from '@nestjs/mongoose';
 
 @Injectable()

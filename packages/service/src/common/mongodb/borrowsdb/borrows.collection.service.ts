@@ -4,11 +4,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model, PipelineStage, Types, mongo } from 'mongoose';
 import { BorrowSaveDto } from './dtos/borrow.save.dto';
 import { BorrowRes } from './interfaces/borrow.res.interface';
-import { BorrowsQueryReqDto } from 'src/common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
+import { BorrowsQueryReqDto } from './dtos/borrows.query.req.dto';
 import { BorrowFiltered } from './interfaces/borrow.filtered.interface';
 import { BorrowUpdateDto } from './dtos/borrow.update.dto';
 import { BorrowGetNonReturnedDto } from './dtos/borrow.get-non-returned.dto';
-import { unixFilterQuery } from 'src/shared/utils/unixFilterQuery';
+import { unixFilterQuery } from '../../../shared/utils/unixFilterQuery';
 
 @Injectable()
 export class BorrowsCollService {

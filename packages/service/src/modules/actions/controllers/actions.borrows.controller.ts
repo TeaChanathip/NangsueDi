@@ -9,13 +9,13 @@ import {
     Request,
 } from '@nestjs/common';
 import { ActionsBorrowsService } from '../services/actions.borrows.service';
-import { RequestHeader } from 'src/shared/interfaces/request-header.interface';
+import { RequestHeader } from '../../../shared/interfaces/request-header.interface';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/shared/enums/role.enum';
-import { Perms } from 'src/common/decorators/perms.decorator';
-import { Perm } from 'src/shared/enums/perm.enum';
+import { Roles } from '../../../common/decorators/roles.decorator';
+import { Role } from '../../../shared/enums/role.enum';
+import { Perms } from '../../../common/decorators/perms.decorator';
+import { Perm } from '../../../shared/enums/perm.enum';
 import { ActBorrowsReqDto } from '../dtos/actions.borrows.req.dto';
 import { BorrowsQueryReqDto } from '../../../common/mongodb/borrowsdb/dtos/borrows.query.req.dto';
 import { ActBrwGetNonRetReqDto } from '../dtos/actions.borrows.get-non-returned.req.dto';

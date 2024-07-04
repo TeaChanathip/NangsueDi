@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { Trim } from 'src/common/transformers/trim.transformer';
-import { MAX_REASON, MAX_TEXT } from 'src/shared/consts/min-max.const';
+import { Trim } from '../../../common/transformers/trim.transformer';
+import { MAX_REASON } from '../../../shared/consts/min-max.const';
 
 export class AdminsSusUserReqDto {
     @ApiProperty({

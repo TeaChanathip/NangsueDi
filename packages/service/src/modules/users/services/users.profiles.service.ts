@@ -6,20 +6,20 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UsersCollService } from 'src/common/mongodb/usersdb/services/users.collection.service';
+import { UsersCollService } from '../../../common/mongodb/usersdb/services/users.collection.service';
 import { UserUpdateReqDto } from '../dtos/user.update.req.dto';
-import { getCurrentUnix } from 'src/shared/utils/getCurrentUnix';
+import { getCurrentUnix } from '../../../shared/utils/getCurrentUnix';
 import { Connection, Types } from 'mongoose';
 import { UsersChangePasswordReqDto } from '../dtos/users.change-password.req.dto';
-import { UserFiltered } from 'src/shared/interfaces/user.filtered.res.interface';
-import { PasswordUpdateDto } from 'src/common/mongodb/usersdb/dtos/password.update.dto';
-import { UserUpdateDto } from 'src/common/mongodb/usersdb/dtos/user.update.dto';
-import { UsersPermsCollService } from 'src/common/mongodb/usersdb/services/users-permissions.collection.service';
-import { UsersAddrsCollService } from 'src/common/mongodb/usersdb/services/users-addresses.collection.service';
-import { filterUserRes } from 'src/shared/utils/filterUserRes';
-import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
+import { UserFiltered } from '../../../shared/interfaces/user.filtered.res.interface';
+import { PasswordUpdateDto } from '../../../common/mongodb/usersdb/dtos/password.update.dto';
+import { UserUpdateDto } from '../../../common/mongodb/usersdb/dtos/user.update.dto';
+import { UsersPermsCollService } from '../../../common/mongodb/usersdb/services/users-permissions.collection.service';
+import { UsersAddrsCollService } from '../../../common/mongodb/usersdb/services/users-addresses.collection.service';
+import { filterUserRes } from '../../../shared/utils/filterUserRes';
+import { BorrowsCollService } from '../../../common/mongodb/borrowsdb/borrows.collection.service';
 import { InjectConnection } from '@nestjs/mongoose';
-import { transaction } from 'src/shared/utils/mongo.transaction';
+import { transaction } from '../../../shared/utils/mongo.transaction';
 
 @Injectable()
 export class UsersProfilesService {

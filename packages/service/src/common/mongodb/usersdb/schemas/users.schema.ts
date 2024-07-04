@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Role } from 'src/shared/enums/role.enum';
+import { Role } from '../../../../shared/enums/role.enum';
 import { UsersPermissionsModel } from './users-permissions.schema';
 import { UsersAddressesModel } from './users-addresses.schema';
 

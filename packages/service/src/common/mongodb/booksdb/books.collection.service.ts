@@ -3,7 +3,7 @@ import { BookSaveDto } from './dtos/book.save.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { BooksModel } from './schemas/books.schema';
 import { ClientSession, Model, PipelineStage, Types } from 'mongoose';
-import { BooksSearchReqDto } from 'src/modules/books/dtos/books.search.req.dto';
+import { BooksSearchReqDto } from '../../../modules/books/dtos/books.search.req.dto';
 import { BookRes } from './interfaces/book.res.interface';
 import { BookUpdateDto } from './dtos/book.update.dto';
 
