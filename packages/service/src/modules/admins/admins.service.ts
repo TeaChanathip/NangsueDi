@@ -196,6 +196,58 @@ export class AdminsService {
         return await this.usersCollService.query(adminsGetUsersReqDto);
     }
 
+    async grantMgrRole(userId: string): Promise<UserFiltered> {
+        const userObjId = cvtToObjectId(userId, 'userId');
+        await this.getUserAndCheckRole(userObjId, Role.USER);
+
+        return transaction(this.connection, async (session) => {
+            const updatedUser = await this.usersCollService.changeRole(
+                userObjId,
+                Role.MANAGER,
+                session,
+            );
+            if (!updatedUser) {
+                throw new InternalServerErrorException();
+            }
+
+            const userFiltered = await this.usersCollService.getUserFiltered(
+                userObjId,
+                session,
+            );
+            if (!userFiltered) {
+                throw new InternalServerErrorException();
+            }
+
+            return userFiltered;
+        });
+    }
+
+    async revokeMgrRole(userId: string): Promise<UserFiltered> {
+        const userObjId = cvtToObjectId(userId, 'userId');
+        await this.getUserAndCheckRole(userObjId, Role.MANAGER);
+
+        return transaction(this.connection, async (session) => {
+            const updatedUser = await this.usersCollService.changeRole(
+                userObjId,
+                Role.USER,
+                session,
+            );
+            if (!updatedUser) {
+                throw new InternalServerErrorException();
+            }
+
+            const userFiltered = await this.usersCollService.getUserFiltered(
+                userObjId,
+                session,
+            );
+            if (!userFiltered) {
+                throw new InternalServerErrorException();
+            }
+
+            return userFiltered;
+        });
+    }
+
     private async getUserAndCheckRole(
         userId: Types.ObjectId,
         allowedRoles: Role[] | Role,

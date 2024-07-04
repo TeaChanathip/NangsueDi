@@ -75,4 +75,14 @@ export class AdminsController {
     async searchUsers(@Query() adminsGetUsersReqDto: AdminsGetUsersReqDto) {
         return await this.adminsService.searchUsers(adminsGetUsersReqDto);
     }
+
+    @Patch('grant-manager-role/:userId')
+    async grantMgrRole(@Param('userId') userId: string) {
+        return await this.adminsService.grantMgrRole(userId);
+    }
+
+    @Patch('revoke-manager-role/:userId')
+    async revokeMgrRole(@Param('userId') userId: string) {
+        return await this.adminsService.revokeMgrRole(userId);
+    }
 }
