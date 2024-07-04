@@ -1,15 +1,14 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 
 module.exports = async () => {
-    let app: INestApplication;
     const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(
+    globalThis.app = moduleFixture.createNestApplication();
+    globalThis.app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
             transformOptions: { enableImplicitConversion: true },
@@ -17,6 +16,6 @@ module.exports = async () => {
             forbidNonWhitelisted: true,
         }),
     );
-    await app.init();
-    globalThis.app = app;
+    await globalThis.app.init();
+    console.log('globalThis.app', globalThis.app);
 };

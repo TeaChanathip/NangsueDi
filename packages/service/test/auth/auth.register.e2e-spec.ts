@@ -1,10 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { isValidObjectId } from 'mongoose';
-import { isUnix } from '../src/common/validators/isUnix.validator';
+import { isUnix } from '../../src/common/validators/isUnix.validator';
 
-describe('AuthController E2E Test', () => {
-    const app: INestApplication = globalThis.app;
+describe('GET /auth/register', () => {
+    let app: INestApplication = globalThis.app;
 
     afterEach(async () => {
         return new Promise((resolve) => setTimeout(resolve, 260));
