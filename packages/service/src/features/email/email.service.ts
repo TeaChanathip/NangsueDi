@@ -6,12 +6,12 @@ export class EmailService {
     constructor(private readonly mailService: MailerService) {}
 
     async sendResetUrl(email: string, resetToken: string) {
-        const message = `Forgot your password? If you didn't forget your password, please ignore this email!\nHere's your token: ${resetToken}`;
+        const message = `Forgot your password? If you didn't forget your password, please ignore this email!\n${resetToken}`;
 
         return await this.mailService.sendMail({
-            from: 'Library Management System <lms@gmail.com>',
+            from: 'Nangsue Dee <no-reply@demomailtrap.com>',
             to: email,
-            subject: `LMS reset password`,
+            subject: `Reset password`,
             text: message,
         });
     }
