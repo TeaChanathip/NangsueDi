@@ -1,10 +1,29 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { isValidObjectId } from 'mongoose';
 import { isUnix } from '../../src/common/validators/isUnix.validator';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppModule } from '../../src/app.module';
 
 describe('GET /auth/register', () => {
-    let app: INestApplication = globalThis.app;
+    let app: INestApplication;
+
+    beforeAll(async () => {
+        const moduleFixture: TestingModule = await Test.createTestingModule({
+            imports: [AppModule],
+        }).compile();
+
+        app = moduleFixture.createNestApplication();
+        app.useGlobalPipes(
+            new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
+                whitelist: true,
+                forbidNonWhitelisted: true,
+            }),
+        );
+        await app.init();
+    });
 
     afterEach(async () => {
         return new Promise((resolve) => setTimeout(resolve, 260));
