@@ -1,9 +1,9 @@
-<nav class="bg-primary-600 text-white flex flex-row items-center px-5 h-28">
+<nav class="bg-primary-600 text-white flex items-center px-5 h-28">
 	<img alt="icon" src="{{ iconUrl }}" class="h-20" />
-	<ul class="mx-10 flex flex-row w-fit">
+	<ul class="mx-10 flex flex-row">
 		@for (route of navbarRoutes; track $index) {
 			<li
-				class="flex items-center justify-center hover:bg-primary-700 rounded-md cursor-pointer">
+				class="flex items-center justify-center rounded-md size-28 hover:bg-primary-700 cursor-pointer">
 				<img
 					alt="{{ route[0] }}"
 					src="{{ route[1] }}"
@@ -11,9 +11,12 @@
 			</li>
 		}
 	</ul>
-	<img
-		alt="user"
-		src="{{ user.avartarUrl }}"
-		onerror="this.src='/images/default-profile.svg'"
-		class="w-24 rounded-full" />
+	<div class="ml-auto flex items-center gap-5">
+		<p class="text-3xl">{{ user.firstName }}</p>
+		<img
+			alt="user"
+			src="{{ user.avartarUrl }}"
+			onerror="this.src='/images/default-profile.svg'"
+			class="rounded-full bg-white w-24" />
+	</div>
 </nav>
