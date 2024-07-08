@@ -1,0 +1,19 @@
+<nav class="bg-primary-600 text-white flex flex-row items-center px-5 h-28">
+	<img alt="icon" src="{{ iconUrl }}" class="h-20" />
+	<ul class="mx-10 flex flex-row w-fit">
+		@for (route of navbarRoutes; track $index) {
+			<li
+				class="flex items-center justify-center hover:bg-primary-700 rounded-md cursor-pointer">
+				<img
+					alt="{{ route[0] }}"
+					src="{{ route[1] }}"
+					class="min-w-[72px]" />
+			</li>
+		}
+	</ul>
+	<img
+		alt="user"
+		src="{{ user.avartarUrl }}"
+		onerror="this.src='/images/default-profile.svg'"
+		class="w-24 rounded-full" />
+</nav>

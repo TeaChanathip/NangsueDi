@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: [],
+	content: [
+		"./src/**/*.{html,ts}",
+	],
 	theme: {
 		extend: {
-			color: {
+			colors: {
 				primary: {
 					10: '#F6FBFA',
 					20: '#C9E8E3',
@@ -15,11 +17,10 @@ module.exports = {
 					500: '#29685D',
 					600: '#25584F',
 					700: '#1B4039',
+					'white': '#F5F5F5',
+					'red': '#FF6961'
+
 				},
-				white: {
-					100: '#F5F5F5' ,
-				},
-				red: '#FF6961',
 			},
 		},
 	},
