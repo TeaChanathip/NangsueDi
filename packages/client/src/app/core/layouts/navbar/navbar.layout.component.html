@@ -1,22 +1,48 @@
-<nav class="bg-primary-600 text-white flex items-center px-5 h-28">
-	<img alt="icon" src="{{ iconUrl }}" class="h-20" />
-	<ul class="mx-10 flex flex-row">
+<!-- for large screen -->
+<nav
+	class="bg-primary-600 text-white font-semibold flex items-center pl-5 h-24">
+	<img alt="icon" src="{{ iconUrl }}" class="h-[70%]" />
+
+	<ul class="ml-10 flex flex-row items-center h-full">
 		@for (route of navbarRoutes; track $index) {
 			<li
-				class="flex items-center justify-center rounded-md size-28 hover:bg-primary-700 cursor-pointer">
+				routerLink="{{ route[0] }}"
+				class="flex justify-center items-center w-28 h-full relative hover:bg-primary-700 rounded-lg cursor-pointer">
 				<img
 					alt="{{ route[0] }}"
 					src="{{ route[1] }}"
-					class="min-w-[72px]" />
+					class="h-[70%]" />
+				<div
+					routerLinkActive="active"
+					class="hidden absolute bottom-0 w-full h-2 rounded-full bg-primary-200 shadow-obr-1"></div>
 			</li>
 		}
 	</ul>
-	<div class="ml-auto flex items-center gap-5">
-		<p class="text-3xl">{{ user.firstName }}</p>
-		<img
-			alt="user"
-			src="{{ user.avartarUrl }}"
-			onerror="this.src='/images/default-profile.svg'"
-			class="rounded-full bg-white w-24" />
+
+	<div class="hover:bg-primary-700 dropdown">
+		<div class="flex items-center gap-3 px-5 h-24">
+			<p>{{ user ? user.firstName : 'Login' }}</p>
+			<img
+				alt="user"
+				src="{{ user ? user.avartarUrl : '' }}"
+				onerror="this.src='/images/default-profile.svg'"
+				class="rounded-full bg-white h-[85%]" />
+		</div>
+		<div class="w-full min-w-[272px] dropdown-container">
+			<p
+				routerLink="profile"
+				class="bg-primary-10 hover:bg-primary-20 text-slate-500 hover:text-primary-400 rounded-tl-lg leading-[68px]">
+				Profile
+			</p>
+			<p
+				routerLink="change-password"
+				class="bg-primary-10 hover:bg-primary-20 text-slate-500 hover:text-primary-400 leading-[68px] shadow-iu-2">
+				Change Password
+			</p>
+			<p
+				class="bg-primary-400 hover:bg-primary-20 hover:text-primary-400 rounded-bl-lg leading-[68px] shadow-iuobr-2">
+				Logout
+			</p>
+		</div>
 	</div>
 </nav>
