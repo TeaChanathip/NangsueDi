@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserModel } from '../../models/user-interface.model';
 import { Role } from '../../../shared/enums/role.enum';
-import { Router, RouterModule } from '@angular/router';
-import { every, filter } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
 	selector: 'app-navbar',
@@ -12,12 +11,6 @@ import { every, filter } from 'rxjs';
 	styleUrl: './navbar.layout.component.scss',
 })
 export class NavbarLayout implements OnInit {
-	constructor(private router: Router) {
-		router.events.subscribe(event => {
-			console.log(event);
-		});
-	}
-
 	iconUrl = 'Icon.svg';
 
 	navbarRoutes: [string, string][] = [];
