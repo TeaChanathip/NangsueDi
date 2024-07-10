@@ -16,8 +16,21 @@ export const initialState: UserState = {
 
 export const userReducer = createReducer(
 	initialState,
-	on(UserActions.login, (state) => ({
-		...state,
-		status: 'loading',
-	})),
+
+	//
+	on(
+		UserActions.login,
+		(state): UserState => ({
+			...state,
+			status: 'loading',
+		}),
+	),
+
+	on(
+		UserActions.loginSuccess,
+		(state): UserState => ({
+			...state,
+			status: 'logged_in',
+		}),
+	),
 );
