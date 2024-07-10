@@ -1,19 +1,21 @@
 @if (kind === 'solid') {
 	<button
+		type="{{ formType }}"
 		(click)="action($event)"
 		[ngStyle]="{ width: width }"
 		[disabled]="isDisabled"
-		class="bg-primary-100 hover:bg-primary-300 disabled:bg-slate-300 border-solid border-4 border-primary-100 hover:border-primary-300 px-2 py-2 text-2xl text-white font-bold rounded-xl shadow-obr-1"
+		class="bg-primary-100 hover:bg-primary-300 disabled:bg-slate-300 border-solid border-4 border-primary-100 hover:border-primary-300 disabled:border-slate-300 px-2 py-2 text-2xl text-white font-bold rounded-xl shadow-obr-1"
 	>
-		{{ data.text }}
+		{{ text }}
 	</button>
 } @else {
 	<button
+		type="{{ formType }}"
 		(click)="action($event)"
-		[ngStyle]="{ width: data.width }"
+		[ngStyle]="{ width: width }"
 		[disabled]="isDisabled"
-		class="bg-white hover:bg-primary-300 disabled:bg-slate-300 border-solid border-4 border-primary-100 hover:border-primary-300 px-2 py-2 text-2xl text-primary-200 hover:text-white font-bold rounded-xl shadow-obr-1"
+		class="bg-white hover:bg-primary-300 disabled:bg-slate-300 border-solid border-4 border-primary-100 hover:border-primary-300 disabled:border-slate-300 px-2 py-2 text-2xl text-primary-200 hover:text-white font-bold rounded-xl shadow-obr-1"
 	>
-		{{ data.text }}
+		{{ text }}
 	</button>
 }

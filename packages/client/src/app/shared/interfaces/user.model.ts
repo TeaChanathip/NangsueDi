@@ -1,6 +1,6 @@
-import { Role } from '../../shared/enums/role.enum';
+import { Role } from '../enums/role.enum';
 
-export interface UserModel {
+export interface User {
 	_id: string;
 	email: string;
 	phone: string;

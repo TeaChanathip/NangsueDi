@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserModel } from '../../models/user-interface.model';
+import { User } from '../../../shared/interfaces/user.model';
 import { Role } from '../../../shared/enums/role.enum';
 import { RouterModule } from '@angular/router';
 
@@ -16,7 +16,7 @@ export class NavbarLayout implements OnInit {
 	navbarRoutes: [string, string][] = [];
 
 	// mockup
-	user: UserModel | undefined = {
+	user: User | undefined = {
 		_id: '1',
 		email: 'jonathan@gmail.com',
 		phone: '0621111111',

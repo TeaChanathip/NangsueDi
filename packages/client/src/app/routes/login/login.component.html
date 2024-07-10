@@ -1,34 +1,34 @@
 <div class="mt-14 w-full flex justify-center">
 	<form
+		(ngSubmit)="onSubmit($event)"
+		[formGroup]="loginForm"
 		class="w-[38%] flex flex-col items-center bg-primary-white rounded-2xl shadow-obr-2 p-2"
 	>
 		<h1 class="text-5xl text-slate-600 font-bold mt-8">Login</h1>
 
 		<app-form-input
-			[data]="{
-				label: 'Email',
-				type: 'email',
-				ph: 'example@example.com',
-			}"
+			label="Email"
+			type="email"
+			ph="example@example.com"
+			formName="email"
 			class="w-[60%] mt-16"
 		/>
 
 		<app-form-input
-			[data]="{
-				label: 'Password',
-				type: 'password',
-			}"
+			label="Password"
+			type="password"
+			formName="password"
 			class="w-[60%] mt-10"
 		/>
 
-		<h2
-			[ngClass]="{ invisible: !isShowWarning }"
-			class="text-2xl text-primary-red font-semibold mt-6"
-		>
-			Email or Password is incorrect
-		</h2>
+		<app-warning-msg
+			msg="Email or Password is incorrect"
+			[enAni]="true"
+			[isShowing]="isShowWarning"
+			class="text-2xl"
+		></app-warning-msg>
 
-		<app-button [data]="{ kind: 'solid', text: 'Login' }" class="mt-6" />
+		<app-button formType="submit" kind="solid" text="Login" class="mt-6" />
 
 		<div
 			class="flex flex-row justify-between w-full px-5 text-2xl text-primary-100 font-semibold mt-6"
