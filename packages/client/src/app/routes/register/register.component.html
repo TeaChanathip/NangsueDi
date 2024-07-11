@@ -1,0 +1,35 @@
+<div class="mt-14 w-full flex justify-center">
+	<form
+		class="w-[38%] min-w-[500px] flex flex-col items-center bg-primary-white rounded-2xl shadow-obr-2 p-2"
+	>
+		<h1 class="text-5xl text-slate-600 font-bold mt-8">Register</h1>
+		<app-progress-bar class="mt-5" />
+		@switch (currStep) {
+			@case (0) {
+				<app-form-input
+					label="Email"
+					type="email"
+					ph="example@example.com"
+					formName="email"
+					class="w-[60%] mt-16"
+				/>
+				<app-form-input
+					label="First Name"
+					type="text"
+					ph="Michael"
+					formName="firstName"
+					class="w-[60%] mt-16"
+				/>
+				<app-form-input
+					label="Last Name"
+					type="text"
+					ph="Jackson"
+					formName="lastName"
+					class="w-[60%] mt-16"
+				/>
+			}
+			@case (1) {}
+			@case (2) {}
+		}
+	</form>
+</div>
