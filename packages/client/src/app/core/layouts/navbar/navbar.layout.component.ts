@@ -6,6 +6,7 @@ import { selectAllUser } from '../../../stores/user/user.selectors';
 import { AppState } from '../../../stores/app.state';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import * as UserActions from '../../../stores/user/user.actions';
 
 @Component({
 	selector: 'app-navbar',
@@ -64,6 +65,6 @@ export class NavbarLayout implements OnInit {
 	}
 
 	logout(): void {
-		// ngrx dispatch action here
+		this.store.dispatch(UserActions.logout());
 	}
 }

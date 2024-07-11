@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { State, createReducer, on } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user.model';
 import * as UserActions from './user.actions';
 import { HttpStatusCode } from '@angular/common/http';
@@ -18,7 +18,6 @@ export const initialState: UserState = {
 export const userReducer = createReducer(
 	initialState,
 
-	//
 	on(
 		UserActions.login,
 		(state): UserState => ({
@@ -52,6 +51,16 @@ export const userReducer = createReducer(
 		(state): UserState => ({
 			...state,
 			status: 'unauthorized',
+		}),
+	),
+
+	on(
+		UserActions.logout,
+		(state): UserState => ({
+			...state,
+			user: null,
+			error: null,
+			status: 'logged_out',
 		}),
 	),
 );

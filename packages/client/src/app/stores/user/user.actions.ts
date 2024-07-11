@@ -21,4 +21,5 @@ export const loginUnauthorized = createAction(
 	'[Auth Login API] Login Unauthorized',
 );
 
+export const logout = createAction('[Navbar Component] Logout');
 // export const removeUser = createAction('');

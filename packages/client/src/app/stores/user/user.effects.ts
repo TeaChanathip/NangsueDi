@@ -49,4 +49,15 @@ export class UserEffect {
 			),
 		),
 	);
+
+	logout$ = createEffect(
+		() =>
+			this.actions$.pipe(
+				ofType(UserActions.logout),
+				map(() => {
+					localStorage.removeItem('accessToken');
+				}),
+			),
+		{ dispatch: false },
+	);
 }
