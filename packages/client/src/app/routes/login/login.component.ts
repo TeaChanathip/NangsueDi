@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { NgClass, NgStyle } from '@angular/common';
 import {
 	FormBuilder,
@@ -44,12 +44,14 @@ export class LoginComponent implements OnInit {
 		],
 	});
 
+	warningMsg = 'Empty';
 	isShowWarning = false;
 	userStatus$: Observable<any>;
 
 	constructor(
 		private fb: FormBuilder,
 		private store: Store<AppState>,
+		private router: Router,
 	) {
 		this.userStatus$ = this.store.select(selectAllUserStatus);
 	}
@@ -58,15 +60,17 @@ export class LoginComponent implements OnInit {
 		this.userStatus$.subscribe((userStatus) => {
 			switch (userStatus) {
 				case 'logged_in': {
-					console.log('logged in');
+					this.router.navigateByUrl('/search');
 					break;
 				}
 				case 'error': {
-					console.log('error');
+					this.warningMsg = 'Something went wrong';
+					this.isShowWarning = true;
 					break;
 				}
 				case 'unauthorized': {
-					console.log('unauthorized');
+					this.warningMsg = 'Email or Password is incorrect';
+					this.isShowWarning = true;
 					break;
 				}
 			}
@@ -78,6 +82,7 @@ export class LoginComponent implements OnInit {
 		event.preventDefault();
 
 		if (!this.loginForm.valid) {
+			this.warningMsg = 'Email or Password is incorrect';
 			this.isShowWarning = true;
 			return;
 		}

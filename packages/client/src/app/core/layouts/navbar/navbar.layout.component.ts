@@ -63,7 +63,7 @@ export class NavbarLayout implements OnInit {
 		});
 	}
 
-	navigateTo(route: string) {
-		this;
+	logout(): void {
+		// ngrx dispatch action here
 	}
 }

@@ -24,24 +24,29 @@
 		}
 	</ul>
 	<div class="hover:bg-primary-700 dropdown">
-		<div class="flex items-center gap-3 px-5 h-24">
-			@if (user$ | async; as user) {
+		@if (user$ | async; as user) {
+			<div
+				routerLink="/profile"
+				class="flex items-center gap-3 px-5 h-24"
+			>
 				<p>{{ user.firstName }}</p>
 				<img
 					alt="user"
 					src="{{ user.avartarUrl }}"
 					onerror="this.src='/images/default-profile.svg'"
-					class="rounded-full bg-white h-[85%]"
+					class="rounded-full h-[85%]"
 				/>
-			} @else {
+			</div>
+		} @else {
+			<div routerLink="/login" class="flex items-center gap-3 px-5 h-24">
 				<p>Login</p>
 				<img
 					alt="user"
 					src="/images/default-profile.svg"
-					class="rounded-full bg-white h-[85%]"
+					class="rounded-full h-[85%]"
 				/>
-			}
-		</div>
+			</div>
+		}
 		@if (user$ | async; as user) {
 			<div class="w-full min-w-[272px] dropdown-container">
 				<p
@@ -57,6 +62,7 @@
 					Change Password
 				</p>
 				<p
+					(click)="logout()"
 					class="bg-primary-400 hover:bg-primary-20 hover:text-primary-400 rounded-bl-lg leading-[68px] shadow-iuobr-2"
 				>
 					Logout
