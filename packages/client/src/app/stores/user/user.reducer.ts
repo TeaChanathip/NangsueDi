@@ -1,11 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user.model';
-import * as UserActions from './user.action';
+import * as UserActions from './user.actions';
+import { HttpStatusCode } from '@angular/common/http';
 
 export interface UserState {
 	user: User | null;
 	error: string | null;
-	status: 'logged_in' | 'logged_out' | 'loading' | 'error';
+	status: 'logged_in' | 'logged_out' | 'loading' | 'error' | 'unauthorized';
 }
 
 export const initialState: UserState = {
@@ -22,15 +23,35 @@ export const userReducer = createReducer(
 		UserActions.login,
 		(state): UserState => ({
 			...state,
+			error: null,
 			status: 'loading',
 		}),
 	),
 
 	on(
 		UserActions.loginSuccess,
+		(state, { user }): UserState => ({
+			...state,
+			user,
+			error: null,
+			status: 'logged_in',
+		}),
+	),
+
+	on(
+		UserActions.loginFailure,
+		(state, { error }): UserState => ({
+			...state,
+			error,
+			status: 'error',
+		}),
+	),
+
+	on(
+		UserActions.loginUnauthorized,
 		(state): UserState => ({
 			...state,
-			status: 'logged_in',
+			status: 'unauthorized',
 		}),
 	),
 );

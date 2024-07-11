@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { RouterModule } from '@angular/router';
@@ -9,10 +9,12 @@ import {
 	ReactiveFormsModule,
 	Validators,
 } from '@angular/forms';
-import { AuthService } from '../../apis/auth/auth.service';
-import { User } from '../../shared/interfaces/user.model';
 import { WarningMsgComponent } from '../../shared/components/warning-msg/warning-msg.component';
-import { HttpResponse, HttpStatusCode } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import * as UserActions from '../../stores/user/user.actions';
+import { Observable } from 'rxjs';
+import { selectAllUserStatus } from '../../stores/user/user.selectors';
+import { AppState } from '../../stores/app.state';
 
 @Component({
 	selector: 'app-login',
@@ -29,7 +31,7 @@ import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 	templateUrl: './login.component.html',
 	styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 	loginForm: FormGroup = this.fb.group({
 		email: ['', [Validators.required, Validators.email]],
 		password: [
@@ -41,15 +43,37 @@ export class LoginComponent {
 			],
 		],
 	});
-	user: User | undefined;
+
 	isShowWarning = false;
+	userStatus$: Observable<any>;
 
 	constructor(
-		private readonly fb: FormBuilder,
-		private readonly authService: AuthService,
-	) {}
+		private fb: FormBuilder,
+		private store: Store<AppState>,
+	) {
+		this.userStatus$ = this.store.select(selectAllUserStatus);
+	}
 
-	async onSubmit(event: Event) {
+	ngOnInit(): void {
+		this.userStatus$.subscribe((userStatus) => {
+			switch (userStatus) {
+				case 'logged_in': {
+					console.log('logged in');
+					break;
+				}
+				case 'error': {
+					console.log('error');
+					break;
+				}
+				case 'unauthorized': {
+					console.log('unauthorized');
+					break;
+				}
+			}
+		});
+	}
+
+	onSubmit(event: Event) {
 		// Prevent form for reloading
 		event.preventDefault();
 
@@ -58,20 +82,7 @@ export class LoginComponent {
 			return;
 		}
 
-		this.authService
-			.login(this.loginForm.value)
-			.subscribe((res: HttpResponse<loginResBody>) => {
-				if (res.status != HttpStatusCode.Created || !res.body) {
-					this.isShowWarning = true;
-					return;
-				}
-
-				localStorage.setItem('accessToken', res.body.accessToken);
-			});
+		console.log('sending....', this.loginForm.value);
+		this.store.dispatch(UserActions.login(this.loginForm.value));
 	}
-}
-
-interface loginResBody {
-	accessToken: string;
-	user: User;
 }

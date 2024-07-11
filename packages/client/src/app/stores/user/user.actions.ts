@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user.model';
+import { HttpStatusCode } from '@angular/common/http';
 
 export const login = createAction(
 	'[Login Page] Login',
@@ -8,12 +9,16 @@ export const login = createAction(
 
 export const loginSuccess = createAction(
 	'[Auth Login API] Login Success',
-	props<{ accessToken: string; user: User }>(),
+	props<{ user: User }>(),
 );
 
 export const loginFailure = createAction(
 	'[Auth Login API] Login Failure',
 	props<{ error: string }>(),
+);
+
+export const loginUnauthorized = createAction(
+	'[Auth Login API] Login Unauthorized',
 );
 
 // export const removeUser = createAction('');
