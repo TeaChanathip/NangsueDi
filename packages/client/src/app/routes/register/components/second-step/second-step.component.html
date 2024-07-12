@@ -1,1 +1,30 @@
-<p>second-step works!</p>
+<div class="flex flex-col items-center justify-center h-full">
+	<app-form-input
+		label="Phone Number"
+		type="tel"
+		ph="09xxxxxxxx"
+		formName="phoneNumber"
+		[isRequired]="true"
+		[isInvalid]="phoneNumberErrors !== null"
+		class="w-[60%]"
+	/>
+	<app-warning-msg
+		[msg]="'Test'"
+		[isShowing]="phoneNumberErrors !== null"
+		class="text-2xl mt-1"
+	/>
+
+	<app-form-input
+		label="Birth Date"
+		type="date"
+		formName="birthDate"
+		[isRequired]="true"
+		[isInvalid]="birthDateErrors !== null"
+		class="w-[60%] mt-8"
+	/>
+	<app-warning-msg
+		[msg]="'Test'"
+		[isShowing]="birthDateErrors !== null"
+		class="text-2xl mt-1"
+	/>
+</div>

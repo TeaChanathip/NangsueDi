@@ -19,7 +19,15 @@
 					class="w-full"
 				/>
 			}
-			@case (1) {}
+			@case (1) {
+				<app-second-step
+					[phoneNumberErrors]="
+						registerForm.controls.phoneNumber.errors
+					"
+					[birthDateErrors]="registerForm.controls.birthDate.errors"
+					class="w-full grow"
+				/>
+			}
 			@case (2) {}
 		}
 	</form>
