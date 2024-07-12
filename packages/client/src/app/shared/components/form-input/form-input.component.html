@@ -1,11 +1,15 @@
 <div>
-	<label class="text-3xl text-slate-600 font-semibold block">{{
-		label
-	}}</label>
+	<label class="text-3xl text-slate-600 font-semibold block">
+		{{ label }}
+		@if (isRequired) {
+			<span class="text-primary-400">*</span>
+		}
+	</label>
 	<input
 		[type]="type"
 		[placeholder]="ph"
 		[formControlName]="formName"
-		class="bg-white rounded-lg w-full text-2xl text-slate-500 py-1 px-3 shadow-obr-1"
+		[ngClass]="{ invalid: isInvalid }"
+		class="bg-white rounded-xl w-full text-2xl text-slate-500 py-1 px-2 shadow-obr-1 border-white border-solid border-2"
 	/>
 </div>

@@ -1,4 +1,4 @@
-import { NgStyle } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import {
 	ControlContainer,
@@ -9,7 +9,7 @@ import {
 @Component({
 	selector: 'app-form-input',
 	standalone: true,
-	imports: [NgStyle, ReactiveFormsModule],
+	imports: [NgStyle, NgClass, ReactiveFormsModule],
 	viewProviders: [
 		{ provide: ControlContainer, useExisting: FormGroupDirective },
 	],
@@ -17,8 +17,10 @@ import {
 	styleUrl: './form-input.component.scss',
 })
 export class FormInputComponent {
-	@Input() label: string = 'Empty';
+	@Input() label: string = 'empty';
 	@Input() type: string = 'text';
 	@Input() ph: string = '';
 	@Input() formName: string = '';
+	@Input() isRequired: boolean = false;
+	@Input() isInvalid: boolean = false;
 }

@@ -21,7 +21,7 @@ module.exports = {
 			},
 			boxShadow: {
 				'iu-2': '0px 8px 8px -6px inset rgba(0, 0, 0, 0.3)',
-				'obr-1': '2px 2px 4px 0 rgba(0,0,0,0.3)',
+				'obr-1': '3px 3px 4px 0 rgba(0,0,0,0.3)',
 				'obr-2': '5px 5px 8px 0 rgba(0,0,0,0.3)',
 				'iuobr-2':
 					'0px 8px 8px -6px inset rgba(0, 0, 0, 0.3), 5px 5px 8px 0 rgba(0,0,0,0.3)',

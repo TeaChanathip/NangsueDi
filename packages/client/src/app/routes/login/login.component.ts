@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
 		],
 	});
 
-	warningMsg = 'Empty';
+	warningMsg = 'empty';
 	isShowWarning = false;
 	userStatus$: Observable<any>;
 

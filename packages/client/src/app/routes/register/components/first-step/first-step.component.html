@@ -1,0 +1,45 @@
+<div class="flex flex-col items-center mt-6">
+	<app-form-input
+		label="Email"
+		type="email"
+		ph="example@example.com"
+		formName="email"
+		[isRequired]="true"
+		[isInvalid]="emailErrors !== null"
+		class="w-[60%]"
+	/>
+	<app-warning-msg
+		[msg]="emailErrMsg"
+		[isShowing]="emailErrors !== null"
+		class="text-2xl mt-1"
+	/>
+
+	<app-form-input
+		label="First Name"
+		type="text"
+		ph="Michael"
+		formName="firstName"
+		[isRequired]="true"
+		[isInvalid]="firstNameErrors !== null"
+		class="w-[60%] mt-3"
+	/>
+	<app-warning-msg
+		[msg]="firstNameErrMsg"
+		[isShowing]="firstNameErrors !== null"
+		class="text-2xl mt-1"
+	/>
+
+	<app-form-input
+		label="Last Name"
+		type="text"
+		ph="Jackson"
+		formName="lastName"
+		[isInvalid]="lastNameErrors !== null"
+		class="w-[60%] mt-3"
+	/>
+	<app-warning-msg
+		[msg]="lastNameErrMsg"
+		[isShowing]="lastNameErrors !== null"
+		class="text-2xl mt-1"
+	/>
+</div>

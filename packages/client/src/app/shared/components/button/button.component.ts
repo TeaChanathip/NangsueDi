@@ -12,7 +12,7 @@ export class ButtonComponent {
 	@Input() formType: string = '';
 	@Input() kind: 'solid' | 'outline' = 'solid';
 	@Input() width: string = '130px';
-	@Input() text: string = 'Empty';
+	@Input() text: string = 'empty';
 	@Input() isDisabled: boolean = false;
 	@Input() action = (event?: Event) => {};
 }

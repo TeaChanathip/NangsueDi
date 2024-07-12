@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'app-progress-bar',
@@ -9,8 +9,10 @@ import { Component, Input, OnInit } from '@angular/core';
 	styleUrl: './progress-bar.component.scss',
 })
 export class ProgressBarComponent implements OnInit {
-	@Input() currStep: number = 0;
-	@Input() totalStep: number = 3;
+	@Input() currStep = 0;
+	@Input() totalStep = 3;
+
+	@Output() toStepEmitter = new EventEmitter<number>();
 
 	steps: number[] = [];
 
@@ -21,7 +23,7 @@ export class ProgressBarComponent implements OnInit {
 		);
 	}
 
-	changeStep($index: number) {
-		this.currStep = $index;
+	toStep(step: number) {
+		this.toStepEmitter.emit(step);
 	}
 }

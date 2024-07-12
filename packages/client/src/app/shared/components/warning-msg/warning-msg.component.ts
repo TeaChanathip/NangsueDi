@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
 	styleUrl: './warning-msg.component.scss',
 })
 export class WarningMsgComponent {
-	@Input() msg?: string = 'Empty';
-	@Input() enAni?: boolean = false;
-	@Input() isShowing?: boolean = true;
+	@Input() msg: string = 'empty';
+	@Input() enAni: boolean = false;
+	@Input() isShowing: boolean = true;
 }
