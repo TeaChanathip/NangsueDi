@@ -40,4 +40,11 @@ export class AuthService {
 			{ observe: 'response' },
 		);
 	}
+
+	forgotPassword(email: string): Observable<HttpResponse<string>> {
+		return this.httpClient.get<string>(
+			`${this.url}/forgot-password/${email}`,
+			{ observe: 'response' },
+		);
+	}
 }

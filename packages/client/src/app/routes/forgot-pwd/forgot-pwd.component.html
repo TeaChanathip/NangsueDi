@@ -1,0 +1,19 @@
+<div class="mt-[15vh] w-full flex justify-center">
+	<form
+		[formGroup]="forgotPwdForm"
+		(submit)="onSubmit($event)"
+		class="w-[38%] min-w-[500px] h-[400px] flex flex-col items-center bg-primary-white rounded-2xl shadow-obr-2 p-2"
+	>
+		@switch (state) {
+			@case ('idel') {
+				<app-main-form
+					[emailErrors]="forgotPwdForm.controls['email'].errors"
+					class="w-full"
+				/>
+			}
+			@default {
+				<app-result [error]="error" [state]="state" class="size-full" />
+			}
+		}
+	</form>
+</div>

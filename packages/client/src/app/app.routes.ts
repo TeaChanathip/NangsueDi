@@ -3,6 +3,8 @@ import { SearchComponent } from './routes/search/search.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { LoginComponent } from './routes/login/login.component';
 import { RegisterComponent } from './routes/register/register.component';
+import { ForgotPwdComponent } from './routes/forgot-pwd/forgot-pwd.component';
+import { ResetPwdComponent } from './routes/reset-pwd/reset-pwd.component';
 
 export const routes: Routes = [
 	{
@@ -15,11 +17,11 @@ export const routes: Routes = [
 	},
 	{
 		path: 'forgot-password',
-		component: LoginComponent,
+		component: ForgotPwdComponent,
 	},
 	{
 		path: 'reset-password',
-		component: LoginComponent,
+		component: ResetPwdComponent,
 	},
 	{
 		path: 'search',
