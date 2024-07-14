@@ -4,7 +4,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { Router, RouterModule } from '@angular/router';
 import { NgClass, NgStyle } from '@angular/common';
 import {
-	FormBuilder,
+	FormControl,
 	FormGroup,
 	ReactiveFormsModule,
 	Validators,
@@ -32,16 +32,17 @@ import { MAX_PWD, MIN_PWD } from '../../shared/constants/min-max.constant';
 	styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {
-	loginForm: FormGroup = this.fb.group({
-		email: ['', [Validators.required, Validators.email]],
-		password: [
-			'',
-			[
+	loginForm: FormGroup = new FormGroup({
+		email: new FormControl('', {
+			validators: [Validators.required, Validators.email],
+		}),
+		password: new FormControl('', {
+			validators: [
 				Validators.required,
 				Validators.minLength(MIN_PWD),
 				Validators.maxLength(MAX_PWD),
 			],
-		],
+		}),
 	});
 
 	warningMsg = 'empty';
@@ -51,7 +52,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 	private destroy$ = new Subject<void>();
 
 	constructor(
-		private fb: FormBuilder,
 		private store: Store,
 		private router: Router,
 	) {

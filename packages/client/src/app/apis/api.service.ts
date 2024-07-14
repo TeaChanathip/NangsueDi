@@ -1,9 +1,28 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ApiService {
 	constructor(private readonly httpClient: HttpClient) {}
+
+	headers = new HttpHeaders({
+		Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+	});
+
+	get<R>(url: string): Observable<HttpResponse<R>> {
+		return this.httpClient.get<R>(url, {
+			headers: this.headers,
+			observe: 'response',
+		});
+	}
+
+	post<T, R>(url: string, body: T): Observable<HttpResponse<R>> {
+		return this.httpClient.post<R>(url, body, {
+			headers: this.headers,
+			observe: 'response',
+		});
+	}
 }

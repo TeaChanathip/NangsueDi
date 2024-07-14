@@ -19,13 +19,8 @@ import {
 import { AuthService } from '../../apis/auth/auth.service';
 import { pwdMatchValidator } from '../../shared/validators/password-match.validator';
 import { Subject, takeUntil } from 'rxjs';
-import { User } from '../../shared/interfaces/user.model';
 import { dtToUnix } from '../../shared/utils/dtToUnix';
-import {
-	HttpErrorResponse,
-	HttpResponse,
-	HttpStatusCode,
-} from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -142,8 +137,7 @@ export class RegisterComponent implements OnDestroy {
 			})
 			.pipe(takeUntil(this.destroy$))
 			.subscribe({
-				next: (res: HttpResponse<User>) => {
-					console.log(res.body);
+				next: () => {
 					this.router.navigateByUrl('/login');
 				},
 				error: (error) => {

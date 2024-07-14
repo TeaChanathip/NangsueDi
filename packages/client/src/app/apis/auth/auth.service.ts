@@ -9,7 +9,7 @@ import { User } from '../../shared/interfaces/user.model';
 	providedIn: 'root',
 })
 export class AuthService {
-	serviceUrl = `${environment.SERVICE_URL}/auth`;
+	private url = `${environment.SERVICE_URL}/auth`;
 
 	constructor(private readonly httpClient: HttpClient) {}
 
@@ -18,7 +18,7 @@ export class AuthService {
 		password: string;
 	}): Observable<HttpResponse<LoginRes>> {
 		return this.httpClient.post<LoginRes>(
-			`${this.serviceUrl}/login`,
+			`${this.url}/login`,
 			credentials,
 			{
 				observe: 'response',
@@ -35,7 +35,7 @@ export class AuthService {
 		birthTime: number; // converted to unix time
 	}): Observable<HttpResponse<User>> {
 		return this.httpClient.post<User>(
-			`${this.serviceUrl}/register`,
+			`${this.url}/register`,
 			registerData,
 			{ observe: 'response' },
 		);

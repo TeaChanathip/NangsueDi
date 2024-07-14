@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user.model';
 
+// Login
 export const login = createAction(
 	'[Login Page] Login',
 	props<{ email: string; password: string }>(),
@@ -21,4 +22,16 @@ export const loginUnauthorized = createAction(
 );
 
 export const logout = createAction('[Navbar Component] Logout');
-// export const removeUser = createAction('');
+
+// Get User API
+export const getUser = createAction('[User API] Get User');
+
+export const getUserSuccess = createAction(
+	'[User API] Get User Success',
+	props<{ user: User }>(),
+);
+
+export const getUserFailure = createAction(
+	'[User API] Get User Failure',
+	props<{ error: string }>(),
+);

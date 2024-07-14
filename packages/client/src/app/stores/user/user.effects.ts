@@ -9,12 +9,15 @@ import {
 	HttpResponse,
 	HttpStatusCode,
 } from '@angular/common/http';
+import { UserService } from '../../apis/user/user.service';
+import { User } from '../../shared/interfaces/user.model';
 
 @Injectable()
 export class UserEffect {
 	constructor(
 		private actions$: Actions,
 		private authService: AuthService,
+		private userService: UserService,
 	) {}
 
 	login$ = createEffect(() => {
@@ -61,4 +64,22 @@ export class UserEffect {
 		},
 		{ dispatch: false },
 	);
+
+	getUser$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(UserActions.getUser),
+			mergeMap(() =>
+				this.userService.getUser().pipe(
+					map((res: HttpResponse<User>) =>
+						UserActions.getUserSuccess({
+							user: res.body as User,
+						}),
+					),
+					catchError((error) =>
+						of(UserActions.getUserFailure({ error })),
+					),
+				),
+			),
+		);
+	});
 }

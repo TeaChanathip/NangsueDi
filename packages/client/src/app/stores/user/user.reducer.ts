@@ -62,4 +62,32 @@ export const userReducer = createReducer(
 			status: 'logged_out',
 		}),
 	),
+
+	on(
+		UserActions.getUser,
+		(state): UserState => ({
+			...state,
+			error: null,
+			status: 'loading',
+		}),
+	),
+
+	on(
+		UserActions.getUserSuccess,
+		(state, { user }): UserState => ({
+			...state,
+			user: user,
+			error: null,
+			status: 'logged_in',
+		}),
+	),
+
+	on(
+		UserActions.getUserFailure,
+		(state, { error }): UserState => ({
+			...state,
+			error: error,
+			status: 'logged_out',
+		}),
+	),
 );
