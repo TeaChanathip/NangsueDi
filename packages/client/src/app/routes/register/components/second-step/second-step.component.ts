@@ -12,15 +12,15 @@ import { getWarning } from '../../../../shared/utils/getWarning';
 	styleUrl: './second-step.component.scss',
 })
 export class SecondStepComponent implements OnChanges {
-	@Input() phoneNumberErrors: ValidationErrors | null = null;
+	@Input() phoneErrors: ValidationErrors | null = null;
 	@Input() birthDateErrors: ValidationErrors | null = null;
 
-	phoneNumberErrMsg: string = 'empty';
+	phoneErrMsg: string = 'empty';
 	birthDateErrMsg: string = 'empty';
 
 	ngOnChanges(): void {
-		if (this.phoneNumberErrors) {
-			this.phoneNumberErrMsg = getWarning(this.phoneNumberErrors);
+		if (this.phoneErrors) {
+			this.phoneErrMsg = getWarning(this.phoneErrors);
 		}
 		if (this.birthDateErrors) {
 			this.birthDateErrMsg = getWarning(this.birthDateErrors);

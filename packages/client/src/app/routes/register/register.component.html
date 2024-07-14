@@ -24,9 +24,7 @@
 			}
 			@case (1) {
 				<app-second-step
-					[phoneNumberErrors]="
-						registerForm.controls['phoneNumber'].errors
-					"
+					[phoneErrors]="registerForm.controls['phone'].errors"
 					[birthDateErrors]="
 						registerForm.controls['birthDate'].errors
 					"
@@ -37,7 +35,9 @@
 				<app-thrid-step
 					[isValid]="registerForm.valid"
 					[passwordErrors]="registerForm.controls['password'].errors"
-					[pwdMismatch]="registerForm.getError('pwdMismatch')"
+					[pwdMismatch]="this.registerForm.getError('pwdMismatch')"
+					[warningMsg]="warningMsg"
+					[isShowWarning]="isShowWarning"
 					class="w-full grow"
 				/>
 			}

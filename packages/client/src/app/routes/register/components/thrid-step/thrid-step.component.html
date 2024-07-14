@@ -21,7 +21,9 @@
 
 	<app-warning-msg
 		[msg]="errMsg"
-		[isShowing]="passwordErrors !== null || pwdMismatch !== null"
+		[isShowing]="
+			passwordErrors !== null || pwdMismatch !== null || isShowWarning
+		"
 		class="text-2xl mt-5"
 	/>
 

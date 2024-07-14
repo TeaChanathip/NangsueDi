@@ -3,14 +3,14 @@
 		label="Phone Number"
 		type="tel"
 		ph="09xxxxxxxx"
-		formName="phoneNumber"
+		formName="phone"
 		[isRequired]="true"
-		[isInvalid]="phoneNumberErrors !== null"
+		[isInvalid]="phoneErrors !== null"
 		class="w-[60%]"
 	/>
 	<app-warning-msg
-		[msg]="phoneNumberErrMsg"
-		[isShowing]="phoneNumberErrors !== null"
+		[msg]="phoneErrMsg"
+		[isShowing]="phoneErrors !== null"
 		class="text-2xl mt-1"
 	/>
 

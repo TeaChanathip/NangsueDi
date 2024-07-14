@@ -20,7 +20,10 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 export class ThridStepComponent implements OnChanges {
 	@Input() isValid: boolean = false;
 	@Input() passwordErrors: ValidationErrors | null = null;
-	@Input() pwdMismatch: boolean | null = null;
+	@Input() pwdMismatch: boolean | null = false;
+
+	@Input() warningMsg: string = 'empty';
+	@Input() isShowWarning: boolean = false;
 
 	errMsg: string = 'empty';
 
@@ -29,6 +32,8 @@ export class ThridStepComponent implements OnChanges {
 			this.errMsg = getWarning(this.passwordErrors);
 		} else if (this.pwdMismatch) {
 			this.errMsg = 'Password are not matching';
+		} else if (this.isShowWarning) {
+			this.errMsg = this.warningMsg;
 		}
 	}
 }

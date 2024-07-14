@@ -17,8 +17,8 @@ export class UserEffect {
 		private authService: AuthService,
 	) {}
 
-	login$ = createEffect(() =>
-		this.actions$.pipe(
+	login$ = createEffect(() => {
+		return this.actions$.pipe(
 			ofType(UserActions.login),
 			mergeMap((action) =>
 				this.authService
@@ -47,17 +47,18 @@ export class UserEffect {
 						}),
 					),
 			),
-		),
-	);
+		);
+	});
 
 	logout$ = createEffect(
-		() =>
-			this.actions$.pipe(
+		() => {
+			return this.actions$.pipe(
 				ofType(UserActions.logout),
 				map(() => {
 					localStorage.removeItem('accessToken');
 				}),
-			),
+			);
+		},
 		{ dispatch: false },
 	);
 }

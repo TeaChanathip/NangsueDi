@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../../../shared/interfaces/user.model';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectCurrUser } from '../../../stores/user/user.selectors';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import * as UserActions from '../../../stores/user/user.actions';
 
@@ -14,7 +14,7 @@ import * as UserActions from '../../../stores/user/user.actions';
 	templateUrl: './navbar.component.html',
 	styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 	iconUrl = 'Icon.svg';
 	navbarRoutes: [string, string][] = [];
 	user$: Observable<User | null>;
@@ -23,8 +23,10 @@ export class NavbarComponent implements OnInit {
 		this.user$ = this.store.select(selectCurrUser);
 	}
 
+	private destroy$ = new Subject<void>();
+
 	ngOnInit(): void {
-		this.user$.subscribe((user) => {
+		this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
 			if (!user) {
 				this.navbarRoutes = [['search', 'navbar-icons/search.svg']];
 				return;
@@ -65,5 +67,10 @@ export class NavbarComponent implements OnInit {
 
 	logout(): void {
 		this.store.dispatch(UserActions.logout());
+	}
+
+	ngOnDestroy(): void {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

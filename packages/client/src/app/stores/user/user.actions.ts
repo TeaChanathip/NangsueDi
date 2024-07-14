@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user.model';
-import { HttpStatusCode } from '@angular/common/http';
 
 export const login = createAction(
 	'[Login Page] Login',
