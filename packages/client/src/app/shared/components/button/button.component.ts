@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
 	selector: 'app-button',
@@ -9,10 +9,10 @@ import { Component, Input, OnInit } from '@angular/core';
 	styleUrl: './button.component.scss',
 })
 export class ButtonComponent {
-	@Input() formType: string = '';
+	@Input() formType: '' | 'submit' = '';
 	@Input() kind: 'solid' | 'outline' = 'solid';
 	@Input() width: string = '130px';
 	@Input() text: string = 'empty';
 	@Input() isDisabled: boolean = false;
-	@Input() action = (event?: Event) => {};
+	@Input() action = () => {};
 }

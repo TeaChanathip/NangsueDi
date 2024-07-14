@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../../shared/interfaces/user.model';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectAllUser } from '../../../stores/user/user.selectors';
-import { AppState } from '../../../stores/app.state';
+import { selectCurrUser } from '../../../stores/user/user.selectors';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import * as UserActions from '../../../stores/user/user.actions';
@@ -12,16 +11,16 @@ import * as UserActions from '../../../stores/user/user.actions';
 	selector: 'app-navbar',
 	standalone: true,
 	imports: [RouterModule, AsyncPipe],
-	templateUrl: './navbar.layout.component.html',
-	styleUrl: './navbar.layout.component.scss',
+	templateUrl: './navbar.component.html',
+	styleUrl: './navbar.component.scss',
 })
-export class NavbarLayout implements OnInit {
+export class NavbarComponent implements OnInit {
 	iconUrl = 'Icon.svg';
 	navbarRoutes: [string, string][] = [];
 	user$: Observable<User | null>;
 
-	constructor(private store: Store<AppState>) {
-		this.user$ = this.store.select(selectAllUser);
+	constructor(private store: Store) {
+		this.user$ = this.store.select(selectCurrUser);
 	}
 
 	ngOnInit(): void {

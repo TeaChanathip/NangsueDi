@@ -1,3 +1,3 @@
 export const environment = {
-	SERVICE_URL: 'localhost:3000',
+	SERVICE_URL: 'http://localhost:3000',
 };

@@ -17,10 +17,10 @@ export function getWarning(validationErrors: ValidationErrors | null): string {
 			return 'Must be an email';
 		}
 		case 'minlength': {
-			return `Must not exceed ${value?.requiredLength} characters`;
+			return `Must be at least ${value?.requiredLength} characters`;
 		}
 		case 'maxlength': {
-			return `Must be at least ${value?.requiredLength} characters`;
+			return `Must not exceed ${value?.requiredLength} characters`;
 		}
 		case 'pattern': {
 			const requiredPattern: string = value?.requiredPattern;
@@ -28,10 +28,16 @@ export function getWarning(validationErrors: ValidationErrors | null): string {
 				case '^[A-Za-z]+$': {
 					return 'Must contain only alphabets';
 				}
+				case '^0\\d{9}$': {
+					return 'Must be a Thai phone number';
+				}
 				default: {
 					return 'empty';
 				}
 			}
+		}
+		case 'ageLimit': {
+			return `Must be at least ${value} years old`;
 		}
 		default: {
 			return 'empty';

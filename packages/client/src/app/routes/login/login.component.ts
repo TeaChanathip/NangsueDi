@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgClass, NgStyle } from '@angular/common';
 import {
 	FormBuilder,
@@ -13,8 +13,8 @@ import { WarningMsgComponent } from '../../shared/components/warning-msg/warning
 import { Store } from '@ngrx/store';
 import * as UserActions from '../../stores/user/user.actions';
 import { Observable } from 'rxjs';
-import { selectAllUserStatus } from '../../stores/user/user.selectors';
-import { AppState } from '../../stores/app.state';
+import { selectUserStatus } from '../../stores/user/user.selectors';
+import { MAX_PWD, MIN_PWD } from '../../shared/constants/min-max.constant';
 
 @Component({
 	selector: 'app-login',
@@ -38,22 +38,22 @@ export class LoginComponent implements OnInit {
 			'',
 			[
 				Validators.required,
-				Validators.minLength(6),
-				Validators.maxLength(100),
+				Validators.minLength(MIN_PWD),
+				Validators.maxLength(MAX_PWD),
 			],
 		],
 	});
 
 	warningMsg = 'empty';
 	isShowWarning = false;
-	userStatus$: Observable<any>;
+	userStatus$: Observable<string>;
 
 	constructor(
 		private fb: FormBuilder,
-		private store: Store<AppState>,
+		private store: Store,
 		private router: Router,
 	) {
-		this.userStatus$ = this.store.select(selectAllUserStatus);
+		this.userStatus$ = this.store.select(selectUserStatus);
 	}
 
 	ngOnInit(): void {
@@ -87,7 +87,6 @@ export class LoginComponent implements OnInit {
 			return;
 		}
 
-		console.log('sending....', this.loginForm.value);
 		this.store.dispatch(UserActions.login(this.loginForm.value));
 	}
 }

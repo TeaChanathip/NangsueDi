@@ -20,12 +20,10 @@ export class SecondStepComponent implements OnChanges {
 
 	ngOnChanges(): void {
 		if (this.phoneNumberErrors) {
-			console.log(this.phoneNumberErrors);
-			// this.phoneNumberErrMsg = getWarning(this.phoneNumberErrors);
+			this.phoneNumberErrMsg = getWarning(this.phoneNumberErrors);
 		}
 		if (this.birthDateErrors) {
-			console.log(this.birthDateErrors);
-			// this.birthDateErrMsg = getWarning(this.birthDateErrors);
+			this.birthDateErrMsg = getWarning(this.birthDateErrors);
 		}
 	}
 }

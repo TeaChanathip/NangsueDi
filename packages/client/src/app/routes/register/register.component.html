@@ -1,6 +1,7 @@
 <div class="mt-14 w-full flex justify-center">
 	<form
 		[formGroup]="registerForm"
+		(submit)="onSubmit($event)"
 		class="w-[38%] min-w-[500px] h-[560px] flex flex-col items-center bg-primary-white rounded-2xl shadow-obr-2 p-2"
 	>
 		<h1 class="text-5xl text-slate-600 font-bold mt-8">Register</h1>
@@ -13,22 +14,33 @@
 		@switch (currStep) {
 			@case (0) {
 				<app-first-step
-					[emailErrors]="registerForm.controls.email.errors"
-					[firstNameErrors]="registerForm.controls.firstName.errors"
-					[lastNameErrors]="registerForm.controls.lastName.errors"
+					[emailErrors]="registerForm.controls['email'].errors"
+					[firstNameErrors]="
+						registerForm.controls['firstName'].errors
+					"
+					[lastNameErrors]="registerForm.controls['lastName'].errors"
 					class="w-full"
 				/>
 			}
 			@case (1) {
 				<app-second-step
 					[phoneNumberErrors]="
-						registerForm.controls.phoneNumber.errors
+						registerForm.controls['phoneNumber'].errors
 					"
-					[birthDateErrors]="registerForm.controls.birthDate.errors"
+					[birthDateErrors]="
+						registerForm.controls['birthDate'].errors
+					"
 					class="w-full grow"
 				/>
 			}
-			@case (2) {}
+			@case (2) {
+				<app-thrid-step
+					[isValid]="registerForm.valid"
+					[passwordErrors]="registerForm.controls['password'].errors"
+					[pwdMismatch]="registerForm.getError('pwdMismatch')"
+					class="w-full grow"
+				/>
+			}
 		}
 	</form>
 </div>

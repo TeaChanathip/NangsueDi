@@ -1,5 +1,8 @@
 <div>
-	<label class="text-3xl text-slate-600 font-semibold block">
+	<label
+		class="text-3xl text-slate-600 font-semibold block"
+		for="{{ formName }}"
+	>
 		{{ label }}
 		@if (isRequired) {
 			<span class="text-primary-400">*</span>

@@ -1,7 +1,6 @@
-import { State, createReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user.model';
 import * as UserActions from './user.actions';
-import { HttpStatusCode } from '@angular/common/http';
 
 export interface UserState {
 	user: User | null;
