@@ -20,7 +20,7 @@ export const routes: Routes = [
 		component: ForgotPwdComponent,
 	},
 	{
-		path: 'reset-password',
+		path: 'reset-password/:resetToken',
 		component: ResetPwdComponent,
 	},
 	{
