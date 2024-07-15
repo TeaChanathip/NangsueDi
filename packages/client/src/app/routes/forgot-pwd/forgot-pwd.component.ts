@@ -9,12 +9,12 @@ import { AuthService } from '../../apis/auth/auth.service';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { MainFormComponent } from './components/main-form/main-form.component';
-import { ResultComponent } from './components/result/result.component';
+import { FormResultComponent } from '../../shared/components/form-result/form-result.component';
 
 @Component({
 	selector: 'app-forgot-pwd',
 	standalone: true,
-	imports: [ReactiveFormsModule, MainFormComponent, ResultComponent],
+	imports: [ReactiveFormsModule, MainFormComponent, FormResultComponent],
 	templateUrl: './forgot-pwd.component.html',
 	styleUrl: './forgot-pwd.component.scss',
 })

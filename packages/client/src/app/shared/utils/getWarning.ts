@@ -39,6 +39,9 @@ export function getWarning(validationErrors: ValidationErrors | null): string {
 		case 'ageLimit': {
 			return `Must be at least ${value} years old`;
 		}
+		case 'pwdMismatch': {
+			return 'Password are not matching';
+		}
 		default: {
 			return 'empty';
 		}

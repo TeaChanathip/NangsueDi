@@ -26,7 +26,7 @@ export class AuthService {
 		);
 	}
 
-	register(registerData: {
+	register(registerBody: {
 		email: string;
 		phone: string;
 		password: string;
@@ -36,7 +36,7 @@ export class AuthService {
 	}): Observable<HttpResponse<User>> {
 		return this.httpClient.post<User>(
 			`${this.url}/register`,
-			registerData,
+			registerBody,
 			{ observe: 'response' },
 		);
 	}
@@ -44,6 +44,17 @@ export class AuthService {
 	forgotPassword(email: string): Observable<HttpResponse<string>> {
 		return this.httpClient.get<string>(
 			`${this.url}/forgot-password/${email}`,
+			{ observe: 'response' },
+		);
+	}
+
+	resetPassword(resetPasswordBody: {
+		resetToken: string;
+		newPassword: string;
+	}): Observable<HttpResponse<string>> {
+		return this.httpClient.post<string>(
+			`${this.url}/reset-password`,
+			resetPasswordBody,
 			{ observe: 'response' },
 		);
 	}
