@@ -1,8 +1,5 @@
 <div>
-	<label
-		class="text-3xl text-slate-600 font-semibold block"
-		for="{{ formName }}"
-	>
+	<label class="text-3xl text-slate-600 font-semibold block" [for]="formName">
 		{{ label }}
 		@if (isRequired) {
 			<span class="text-primary-400">*</span>
@@ -12,6 +9,7 @@
 		[type]="type"
 		[placeholder]="ph"
 		[formControlName]="formName"
+		[id]="formName"
 		[ngClass]="{ invalid: isInvalid }"
 		class="bg-white rounded-xl w-full text-2xl text-slate-500 py-1 px-2 shadow-obr-1 border-white border-solid border-2"
 	/>

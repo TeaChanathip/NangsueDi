@@ -16,4 +16,14 @@ export class UserService {
 	getUser(): Observable<HttpResponse<User>> {
 		return this.apiService.get<User>(`${this.url}/profile`);
 	}
+
+	changePassword(changePwdBody: {
+		password: string;
+		newPassword: string;
+	}): Observable<HttpResponse<string>> {
+		return this.apiService.patch<
+			{ password: string; newPassword: string },
+			string
+		>(`${this.url}/password`, changePwdBody);
+	}
 }

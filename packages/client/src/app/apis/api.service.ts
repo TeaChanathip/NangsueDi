@@ -19,8 +19,15 @@ export class ApiService {
 		});
 	}
 
-	post<T, R>(url: string, body: T): Observable<HttpResponse<R>> {
+	post<T, R>(url: string, body?: T): Observable<HttpResponse<R>> {
 		return this.httpClient.post<R>(url, body, {
+			headers: this.headers,
+			observe: 'response',
+		});
+	}
+
+	patch<T, R>(url: string, body?: T): Observable<HttpResponse<R>> {
+		return this.httpClient.patch<R>(url, body, {
 			headers: this.headers,
 			observe: 'response',
 		});

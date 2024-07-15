@@ -12,6 +12,8 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { userReducer } from './stores/user/user.reducer';
 import { UserEffect } from './stores/user/user.effects';
+import { booksReducer } from './stores/books/books.reducer';
+import { BooksEffect } from './stores/books/books.effects';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -20,7 +22,8 @@ export const appConfig: ApplicationConfig = {
 		provideHttpClient(withFetch()),
 		provideStore(),
 		provideState({ name: 'user', reducer: userReducer }),
-		provideEffects(UserEffect),
+		provideState({ name: 'books', reducer: booksReducer }),
+		provideEffects(UserEffect, BooksEffect),
 		provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
 	],
 };

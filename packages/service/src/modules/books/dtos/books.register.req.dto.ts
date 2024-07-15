@@ -14,7 +14,7 @@ import {
 import { SortArray } from '../../../common/transformers/sort-array.transformer';
 import { Trim } from '../../../common/transformers/trim.transformer';
 import { IsUnix } from '../../../common/validators/isUnix.validator';
-import { MIN_GENRE, MAX_GENRE } from '../../../shared/consts/genre.map';
+import { MIN_GENRE, MAX_GENRE } from '../../../shared/consts/genre.const';
 import {
     MAX_NAME,
     MAX_TEXT,

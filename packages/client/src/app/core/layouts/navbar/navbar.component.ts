@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../../../shared/interfaces/user.model';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectCurrUser } from '../../../stores/user/user.selectors';
 import { Observable, Subject, takeUntil } from 'rxjs';
@@ -19,7 +19,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	navbarRoutes: [string, string][] = [];
 	user$: Observable<User | null>;
 
-	constructor(private store: Store) {
+	constructor(
+		private store: Store,
+		private router: Router,
+	) {
 		this.user$ = this.store.select(selectCurrUser);
 	}
 
@@ -67,6 +70,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 	logout(): void {
 		this.store.dispatch(UserActions.logout());
+		this.router.navigateByUrl('/login');
 	}
 
 	ngOnDestroy(): void {

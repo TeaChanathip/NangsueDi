@@ -126,7 +126,7 @@ export class UsersProfilesService {
     async changePassword(
         userId: Types.ObjectId,
         usersChangePasswordReqDto: UsersChangePasswordReqDto,
-    ): Promise<UserFiltered> {
+    ) {
         await this.comparePassword(
             userId,
             usersChangePasswordReqDto.password,
@@ -152,7 +152,9 @@ export class UsersProfilesService {
             throw new InternalServerErrorException();
         }
 
-        return await this.usersCollService.getUserFiltered(userId);
+        return {
+            message: 'Password changed successfully',
+        };
     }
 
     private async comparePassword(

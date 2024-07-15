@@ -1,1 +1,18 @@
-<p>search works!</p>
+<div class="mt-14 flex flex-col items-center justify-center gap-5">
+	<!-- <app-search-bar /> -->
+	@for (book of books; track $index) {
+		<div class="bg-primary-20 flex flex-col items-center text-sm">
+			<p>{{ book._id }}</p>
+			<p>{{ book.title }}</p>
+			<p>{{ book.author }}</p>
+			<p>{{ book.description }}</p>
+			<p>{{ book.publishedAt }}</p>
+			<p>{{ book.registeredAt }}</p>
+			<p>{{ book.updatedAt }}</p>
+			<p>{{ book.total }}</p>
+			<p>{{ book.borrowed }}</p>
+			<p>{{ book.genres }}</p>
+			<p>{{ book.coverUrl }}</p>
+		</div>
+	}
+</div>

@@ -10,7 +10,7 @@ import {
 import { ToArray } from '../../../common/transformers/to-array.transformer';
 import { Trim } from '../../../common/transformers/trim.transformer';
 import { IsUnix } from '../../../common/validators/isUnix.validator';
-import { MAX_GENRE, MIN_GENRE } from '../../../shared/consts/genre.map';
+import { MAX_GENRE, MIN_GENRE } from '../../../shared/consts/genre.const';
 import { MAX_TITLE } from '../../../shared/consts/min-max.const';
 
 export class BooksSearchReqDto {
@@ -54,25 +54,25 @@ export class BooksSearchReqDto {
     @IsOptional()
     @IsInt()
     @Min(1)
-    totalLB: number;
+    totalLB?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsInt()
     @Min(1)
-    totalUB: number;
+    totalUB?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsInt()
     @Min(0)
-    borrowedLB: number;
+    borrowedLB?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
     @IsInt()
     @Min(0)
-    borrowedUB: number;
+    borrowedUB?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()

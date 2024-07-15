@@ -5,6 +5,7 @@ import { LoginComponent } from './routes/login/login.component';
 import { RegisterComponent } from './routes/register/register.component';
 import { ForgotPwdComponent } from './routes/forgot-pwd/forgot-pwd.component';
 import { ResetPwdComponent } from './routes/reset-pwd/reset-pwd.component';
+import { ChangePwdComponent } from './routes/change-pwd/change-pwd.component';
 
 export const routes: Routes = [
 	{
@@ -53,6 +54,6 @@ export const routes: Routes = [
 	},
 	{
 		path: 'change-password',
-		component: SearchComponent,
+		component: ChangePwdComponent,
 	},
 ];

@@ -57,6 +57,8 @@ export class ResetPwdComponent implements OnDestroy {
 	onSubmit(event: Event) {
 		event.preventDefault();
 
+		this.state = 'loading';
+
 		if (!this.resetPwdForm.valid) {
 			this.error = 'Invalid Form Format';
 			this.state = 'failure';
