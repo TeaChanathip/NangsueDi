@@ -1,0 +1,36 @@
+<!-- <label class="container">
+	<input type="checkbox" checked="checked" />
+	<span class="checkmark"></span>
+</label> -->
+
+<div
+	[ngStyle]="{ width: size, height: size }"
+	class="size-full flex items-center justify-center relative shadow-obr-1 rounded-lg cursor-pointer bg-slate-300"
+	id="container"
+>
+	@if (formName) {
+		<input
+			type="checkbox"
+			[formControlName]="formName"
+			[value]="value"
+			class="absolute opacity-0 size-full cursor-pointer"
+			[checked]="isChecked"
+			id="checkbox"
+		/>
+	} @else {
+		<input
+			type="checkbox"
+			[value]="value"
+			class="absolute opacity-0 size-full cursor-pointer"
+			[checked]="isChecked"
+			id="checkbox"
+		/>
+	}
+	<span
+		[ngStyle]="{ 'font-size': markSize }"
+		class="material-symbols-rounded rounded-lg"
+		id="checkmark"
+	>
+		check
+	</span>
+</div>

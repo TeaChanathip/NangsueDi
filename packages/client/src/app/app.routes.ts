@@ -56,4 +56,5 @@ export const routes: Routes = [
 		path: 'change-password',
 		component: ChangePwdComponent,
 	},
+	{ path: '**', redirectTo: '/search', pathMatch: 'full' },
 ];

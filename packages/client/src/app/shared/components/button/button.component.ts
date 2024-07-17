@@ -11,8 +11,8 @@ import { Component, Input } from '@angular/core';
 export class ButtonComponent {
 	@Input() formType: '' | 'submit' = '';
 	@Input() kind: 'solid' | 'outline' = 'solid';
-	@Input() width: string = '130px';
 	@Input() text: string = 'empty';
+	@Input() width: string = '130px';
 	@Input() isDisabled: boolean = false;
 	@Input() action = () => {};
 }

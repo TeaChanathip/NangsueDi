@@ -1,4 +1,4 @@
-export const Genre: ReadonlyArray<string> = [
+export const genreOptions: ReadonlyArray<string> = [
 	'Action',
 	'Adventure',
 	'Anthology',
