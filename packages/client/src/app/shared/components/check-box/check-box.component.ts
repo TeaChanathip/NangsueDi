@@ -24,19 +24,18 @@ import {
 	styleUrl: './check-box.component.scss',
 })
 export class CheckBoxComponent implements OnChanges {
-	@Input() formName: string | null = null;
+	@Input() formName: string | null = null; // when using with form
+	@Input() uniqueId!: string | number; // must
 	@Input() isChecked: boolean = false;
-	@Input() value: string | number | boolean = '';
 	@Input() size: string = '20px';
 
-	@Output() checked = new EventEmitter();
+	@Output() checkEvent = new EventEmitter(); // when not using with form
 
 	markSize: string = '0';
 
-	// emitEvent($event) {
-
-	// 	this.checked.emit()
-	// }
+	emitEvent() {
+		this.checkEvent.emit();
+	}
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes['isChecked']) {

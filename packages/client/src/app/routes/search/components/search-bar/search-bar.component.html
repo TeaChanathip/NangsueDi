@@ -9,17 +9,26 @@
 			<span
 				matTooltip="Apply search keyword"
 				matTooltipShowDelay="500"
+				(click)="submit($event)"
+				(keyup.enter)="submit($event)"
+				tabindex="1"
 				class="material-symbols-rounded hover:text-primary-300 cursor-pointer text-4xl absolute self-center ml-3"
 			>
 				search
 			</span>
 			<input
 				placeholder="Search with title or author"
+				formControlName="bookKeyword"
+				[maxlength]="200"
+				(keyup.enter)="submit($event)"
 				class="w-full bg-primary-white rounded-full text-2xl px-14 py-2 shadow-obr-1 placeholder:text-slate-300 text-slate-500"
 			/>
 			<span
 				matTooltip="Clear search keyword"
 				matTooltipShowDelay="500"
+				(click)="clearBookKeyword($event)"
+				(keyup.enter)="clearBookKeyword($event)"
+				tabindex="1"
 				class="material-symbols-rounded hover:text-primary-300 cursor-pointer text-4xl absolute self-center right-0 mr-3"
 			>
 				close
@@ -29,7 +38,7 @@
 		<span
 			(click)="toggleFilter()"
 			(keyup.enter)="toggleFilter()"
-			tabindex="0"
+			tabindex="2"
 			[matTooltip]="isFilterOn ? 'Turn filter off' : 'Turn filter on'"
 			matTooltipShowDelay="500"
 			class="material-symbols-rounded hover:text-primary-300 cursor-pointer text-4xl"
@@ -94,6 +103,7 @@
 					</h2>
 					<app-check-box
 						formName="isAvailable"
+						uniqueId="isAvailable"
 						[isChecked]="
 							searchBooksForm.controls['isAvailable'].value
 						"
@@ -117,15 +127,23 @@
 					<span class="text-3xl text-slate-600 my-font font-semibold">
 						Genres
 					</span>
-					<app-clear-button (clicked)="clearGenresFilter($event)" />
+					<app-clear-button
+						(clicked)="clearGenresFilter($event)"
+						[disabled]="sumGenres === 0"
+					/>
 				</mat-panel-title>
 			</mat-expansion-panel-header>
 
 			<!-- Content -->
 			<div class="mt-4 ml-8 my-2 flex flex-wrap gap-y-10">
 				@for (genre of genreOptions; track $index) {
-					<span class="w-1/5 flex flex-row gap-4">
-						<app-check-box [value]="$index" size="28px" />
+					<span class="md:w-1/3 xl:w-1/5 flex flex-row gap-4">
+						<app-check-box
+							[uniqueId]="$index"
+							[isChecked]="checkedGenres[$index]"
+							(checkEvent)="toggleGenre($index)"
+							size="28px"
+						/>
 						<p class="text-xl font-medium">{{ genre }}</p>
 					</span>
 				}
