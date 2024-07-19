@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 	styleUrl: './clear-button.component.scss',
 })
 export class ClearButtonComponent {
-	@Input() disabled: boolean = false;
+	@Input() disabled: boolean = true;
 	@Output() clicked = new EventEmitter();
 
 	emitEvent(event: Event) {

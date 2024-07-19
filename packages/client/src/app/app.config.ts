@@ -26,6 +26,7 @@ export const appConfig: ApplicationConfig = {
 		provideState({ name: 'books', reducer: booksReducer }),
 		provideEffects(UserEffect, BooksEffect),
 		provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-		provideAnimationsAsync(), provideAnimationsAsync(),
+		provideAnimationsAsync(),
+		provideAnimationsAsync(),
 	],
 };

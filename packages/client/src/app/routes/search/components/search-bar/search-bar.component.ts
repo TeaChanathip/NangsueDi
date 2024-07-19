@@ -63,7 +63,7 @@ export class SearchBarComponent {
 	);
 	sumGenres: number = 0; // for checking if there any genre filter applied
 
-	isFilterOn: boolean = true;
+	isFilterOn: boolean = false;
 
 	readonly generalPanelState = signal(false);
 	readonly genresPanelState = signal(false);

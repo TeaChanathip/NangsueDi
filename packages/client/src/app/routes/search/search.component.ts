@@ -4,35 +4,95 @@ import { Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as BooksAction from '../../stores/books/books.actions';
 import { Book } from '../../shared/interfaces/book.model';
-import { selectAllBooks } from '../../stores/books/books.selectors';
+import { selectBookState } from '../../stores/books/books.selectors';
+import { ActivatedRoute } from '@angular/router';
+import { ScrollNearEndDirective } from '../../shared/directives/scroll-near-end.directive';
 
 @Component({
 	selector: 'app-search',
 	standalone: true,
-	imports: [SearchBarComponent],
+	imports: [SearchBarComponent, ScrollNearEndDirective],
 	templateUrl: './search.component.html',
 	styleUrl: './search.component.scss',
 })
 export class SearchComponent implements OnInit, OnDestroy {
-	limit: number = 40;
-	page: number = 1;
+	// for store the query param from url
+	props: {
+		bookKeyword?: string;
+		publishedBegin?: number;
+		publishedEnd?: number;
+		isAvailable?: boolean;
+		genres?: number[];
+		limit: number;
+		page: number;
+	} = {
+		limit: 24,
+		page: 1,
+	};
 
+	// for contain the books from ngrx selector
 	books: Book[] | null = null;
+	booksStatus: 'pending' | 'loading' | 'error' | 'success' | 'no_more' =
+		'pending';
+
+	// for debouncing
+	timer: ReturnType<typeof setTimeout> | undefined = undefined;
 
 	private destroy$ = new Subject<void>();
 
-	constructor(private store: Store) {}
+	constructor(
+		private store: Store,
+		private route: ActivatedRoute,
+	) {}
+
+	searchMoreBook() {
+		this.props.page++;
+		this.store.dispatch(BooksAction.searchMoreBooks(this.props));
+	}
+
+	debSeachMoreBook() {
+		// skip if there are no more book in the db
+		if (this.booksStatus === 'no_more') return;
+
+		clearTimeout(this.timer);
+		this.timer = setTimeout(() => this.searchMoreBook(), 1000);
+	}
 
 	ngOnInit(): void {
-		this.store.dispatch(
-			BooksAction.searchBooks({ limit: this.limit, page: this.page }),
-		);
+		this.route.queryParams
+			.pipe(takeUntil(this.destroy$))
+			.subscribe((params) => {
+				if (params['bookKeyword']) {
+					this.props['bookKeyword'] = params['bookKeyword'];
+				}
+
+				if (params['publishedBegin']) {
+					this.props['publishedBegin'] = params['publishedBegin'];
+				}
+
+				if (params['publishedEnd']) {
+					this.props['publishedEnd'] = params['publishedEnd'];
+				}
+
+				if (params['isAvailable']) {
+					this.props['isAvailable'] = params['isAvailable'];
+				}
+
+				if (params['genres']) {
+					this.props['genres'] = params['genres'];
+				}
+
+				// console.log(this.props);
+
+				this.store.dispatch(BooksAction.searchBooks(this.props));
+			});
 
 		this.store
-			.select(selectAllBooks)
+			.select(selectBookState)
 			.pipe(takeUntil(this.destroy$))
-			.subscribe((books) => {
-				this.books = books;
+			.subscribe((state) => {
+				this.books = state.books;
+				this.booksStatus = state.status;
 			});
 	}
 

@@ -3,21 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ClearButtonComponent } from './clear-button.component';
 
 describe('ClearButtonComponent', () => {
-  let component: ClearButtonComponent;
-  let fixture: ComponentFixture<ClearButtonComponent>;
+	let component: ClearButtonComponent;
+	let fixture: ComponentFixture<ClearButtonComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ClearButtonComponent]
-    })
-    .compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [ClearButtonComponent],
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(ClearButtonComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(ClearButtonComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

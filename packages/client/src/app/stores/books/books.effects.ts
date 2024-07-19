@@ -30,4 +30,26 @@ export class BooksEffect {
 			),
 		);
 	});
+
+	searchMoreBooks$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(BooksActions.searchMoreBooks),
+			mergeMap((action) =>
+				this.bookService.search(action).pipe(
+					map((res: HttpResponse<Book[]>) => {
+						const books = res.body as Book[];
+						if (books.length < 1) {
+							return BooksActions.searchNoMoreBooks();
+						}
+						return BooksActions.searchMoreBooksSuccess({
+							books,
+						});
+					}),
+					catchError((error) => {
+						return of(BooksActions.searchMoreBooksFailure(error));
+					}),
+				),
+			),
+		);
+	});
 }

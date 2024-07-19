@@ -5,7 +5,7 @@ import * as BooksActions from './books.actions';
 export interface BooksState {
 	books: Book[] | null;
 	error: string | null;
-	status: 'pending' | 'loading' | 'error' | 'success';
+	status: 'pending' | 'loading' | 'error' | 'success' | 'no_more';
 }
 
 export const initialState: BooksState = {
@@ -42,6 +42,33 @@ export const booksReducer = createReducer(
 			...state,
 			error,
 			status: 'error',
+		}),
+	),
+
+	on(
+		BooksActions.searchMoreBooks,
+		(state): BooksState => ({
+			...state,
+			error: null,
+			status: 'loading',
+		}),
+	),
+
+	on(
+		BooksActions.searchMoreBooksSuccess,
+		(state, { books }): BooksState => ({
+			...state,
+			books: state.books!.concat(books),
+			error: null,
+			status: 'success',
+		}),
+	),
+
+	on(
+		BooksActions.searchNoMoreBooks,
+		(state): BooksState => ({
+			...state,
+			status: 'no_more',
 		}),
 	),
 );
