@@ -62,6 +62,11 @@ export class SearchComponent implements OnInit, OnDestroy {
 		this.route.queryParams
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((params) => {
+				this.props = {
+					limit: 24,
+					page: 1,
+				};
+
 				if (params['bookKeyword']) {
 					this.props['bookKeyword'] = params['bookKeyword'];
 				}
@@ -81,8 +86,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 				if (params['genres']) {
 					this.props['genres'] = params['genres'];
 				}
-
-				// console.log(this.props);
 
 				this.store.dispatch(BooksAction.searchBooks(this.props));
 			});
