@@ -14,4 +14,3 @@ export const selectBookStatus = createSelector(
 	selectBooks,
 	(state) => state.status,
 );
-export const selectBookState = createSelector(selectBooks, (state) => state);

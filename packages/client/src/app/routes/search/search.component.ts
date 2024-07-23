@@ -4,9 +4,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as BooksAction from '../../stores/books/books.actions';
 import { Book } from '../../shared/interfaces/book.model';
-import { selectBookState } from '../../stores/books/books.selectors';
 import { ActivatedRoute } from '@angular/router';
 import { ScrollNearEndDirective } from '../../shared/directives/scroll-near-end.directive';
+import { selectBooks } from '../../stores/books/books.selectors';
 
 @Component({
 	selector: 'app-search',
@@ -91,7 +91,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 			});
 
 		this.store
-			.select(selectBookState)
+			.select(selectBooks)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((state) => {
 				this.books = state.books;

@@ -15,6 +15,8 @@ import { UserEffect } from './stores/user/user.effects';
 import { booksReducer } from './stores/books/books.reducer';
 import { BooksEffect } from './stores/books/books.effects';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { UserAddrsEffect } from './stores/user-addresses/user-addresses.effects';
+import { userAddrsReducer } from './stores/user-addresses/user-addresses.reducer';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -24,9 +26,9 @@ export const appConfig: ApplicationConfig = {
 		provideStore(),
 		provideState({ name: 'user', reducer: userReducer }),
 		provideState({ name: 'books', reducer: booksReducer }),
-		provideEffects(UserEffect, BooksEffect),
+		provideState({ name: 'userAddrs', reducer: userAddrsReducer }),
+		provideEffects(UserEffect, BooksEffect, UserAddrsEffect),
 		provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-		provideAnimationsAsync(),
 		provideAnimationsAsync(),
 	],
 };
