@@ -29,7 +29,7 @@ export function getWarning(validationErrors: ValidationErrors | null): string {
 					return 'Must contain only alphabets';
 				}
 				case '^0\\d{9}$': {
-					return 'Must be a Thai phone number';
+					return 'Must be a phone number';
 				}
 				default: {
 					return 'empty';

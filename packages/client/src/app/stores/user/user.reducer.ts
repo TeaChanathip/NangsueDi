@@ -2,10 +2,18 @@ import { createReducer, on } from '@ngrx/store';
 import { User } from '../../shared/interfaces/user.model';
 import * as UserActions from './user.actions';
 
+export type UserStatus =
+	| 'logged_in'
+	| 'logged_out'
+	| 'loading'
+	| 'error'
+	| 'unauthorized'
+	| 'updated';
+
 export interface UserState {
 	user: User | null;
 	error: string | null;
-	status: 'logged_in' | 'logged_out' | 'loading' | 'error' | 'unauthorized';
+	status: UserStatus;
 }
 
 export const initialState: UserState = {
@@ -76,7 +84,7 @@ export const userReducer = createReducer(
 		UserActions.getUserSuccess,
 		(state, { user }): UserState => ({
 			...state,
-			user: user,
+			user,
 			error: null,
 			status: 'logged_in',
 		}),
@@ -86,8 +94,36 @@ export const userReducer = createReducer(
 		UserActions.getUserFailure,
 		(state, { error }): UserState => ({
 			...state,
-			error: error,
+			error,
 			status: 'logged_out',
+		}),
+	),
+
+	on(
+		UserActions.updateProfile,
+		(state): UserState => ({
+			...state,
+			error: null,
+			status: 'loading',
+		}),
+	),
+
+	on(
+		UserActions.updateProfileSuccess,
+		(state, { user }): UserState => ({
+			...state,
+			user,
+			error: null,
+			status: 'updated',
+		}),
+	),
+
+	on(
+		UserActions.updateProfileFailure,
+		(state, { error }): UserState => ({
+			...state,
+			error: error,
+			status: 'error',
 		}),
 	),
 );

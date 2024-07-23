@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './core/layouts/navbar/navbar.component';
 import { Store } from '@ngrx/store';
 import * as UserActions from './stores/user/user.actions';
+import { AlertComponent } from './shared/components/alert/alert.component';
 
 @Component({
 	selector: 'app-root',
 	standalone: true,
-	imports: [RouterOutlet, NavbarComponent],
+	imports: [RouterOutlet, NavbarComponent, AlertComponent],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss',
 })

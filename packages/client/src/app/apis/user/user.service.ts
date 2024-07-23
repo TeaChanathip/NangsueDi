@@ -39,6 +39,10 @@ export class UserService {
 		birthTime?: number;
 		avartarUrl?: string;
 	}): Observable<HttpResponse<User>> {
-		return this.apiService.patch('${this.url}/profile', props);
+		console.log(props);
+		return this.apiService.patch<typeof props, User>(
+			`${this.url}/profile`,
+			props,
+		);
 	}
 }

@@ -1,63 +1,75 @@
 @if (user$ | async; as user) {
-	<div
-		class="grid grid-cols-2 grid-rows-4 gap-x-10 gap-y-4 bg-primary-white rounded-2xl shadow-obr-2 px-14 py-8"
-	>
-		<img
-			alt="user"
-			src="{{ user.avartarUrl }}"
-			onerror="this.src='/images/default-profile.svg'"
-			class="rounded-full h-[90%] shadow-obr-1 place-self-center col-start-1 col-end-2 row-start-1 row-end-3 cursor-pointer"
-		/>
+	<div class="bg-primary-white rounded-2xl shadow-obr-2 px-14 py-8">
+		<div class="grid grid-cols-2 grid-rows-3 gap-x-10 gap-y-4">
+			<img
+				alt="user"
+				src="{{ user.avartarUrl }}"
+				onerror="this.src='/images/default-profile.svg'"
+				class="rounded-full h-[90%] shadow-obr-1 place-self-center col-start-1 col-end-2 row-start-1 row-end-3 cursor-pointer"
+			/>
 
-		<span class="col-start-2 col-end-3 row-start-1 row-end-2">
-			<app-form-input
-				label="First Name"
-				type="text"
-				formName="firstName"
-			/>
-			<app-warning-msg
-				msg="Empty"
-				[isShowing]="true"
-				class="text-center text-2xl"
-			/>
-		</span>
+			<span class="col-start-2 col-end-3 row-start-1 row-end-2">
+				<app-form-input
+					label="First Name"
+					type="text"
+					formName="firstName"
+					[isInvalid]="firstNameErrors !== null"
+				/>
+				<app-warning-msg
+					[msg]="firstNameErrMsg"
+					[isShowing]="firstNameErrors !== null"
+					class="text-center text-2xl"
+				/>
+			</span>
 
-		<span class="col-start-2 col-end-3 row-start-2 row-end-3">
-			<app-form-input label="Last Name" type="text" formName="lastName" />
-			<app-warning-msg
-				msg="Empty"
-				[isShowing]="true"
-				class="text-center text-2xl"
-			/>
-		</span>
+			<span class="col-start-2 col-end-3 row-start-2 row-end-3">
+				<app-form-input
+					label="Last Name"
+					type="text"
+					formName="lastName"
+					[isInvalid]="lastNameErrors !== null"
+				/>
+				<app-warning-msg
+					[msg]="lastNameErrMsg"
+					[isShowing]="lastNameErrors !== null"
+					class="text-center text-2xl"
+				/>
+			</span>
 
-		<span class="col-start-1 col-end-2 row-start-3 row-end-4">
-			<app-form-input label="Phone Number" type="tel" formName="phone" />
-			<app-warning-msg
-				msg="Empty"
-				[isShowing]="true"
-				class="text-center text-2xl"
-			/>
-		</span>
+			<span class="col-start-1 col-end-2 row-start-3 row-end-4">
+				<app-form-input
+					label="Phone Number"
+					type="tel"
+					formName="phone"
+					[isInvalid]="phoneErrors !== null"
+				/>
+				<app-warning-msg
+					[msg]="phoneErrMsg"
+					[isShowing]="phoneErrors !== null"
+					class="text-center text-2xl"
+				/>
+			</span>
 
-		<span class="col-start-2 col-end-3 row-start-3 row-end-4">
-			<app-form-input
-				label="Birth Date"
-				type="date"
-				formName="birthDate"
-				class="col-start-2 col-end-3 row-start-3 row-end-4"
-			/>
-			<app-warning-msg
-				msg="Empty"
-				[isShowing]="true"
-				class="text-center text-2xl"
-			/>
-		</span>
+			<span class="col-start-2 col-end-3 row-start-3 row-end-4">
+				<app-form-input
+					label="Birth Date"
+					type="date"
+					formName="birthDate"
+					[isInvalid]="birthDateErrors !== null"
+				/>
+				<app-warning-msg
+					[msg]="birthDateErrMsg"
+					[isShowing]="birthDateErrors !== null"
+					class="text-center text-2xl"
+				/>
+			</span>
+		</div>
 
 		<app-form-text
 			label="Email"
 			[text]="user.email"
-			class="col-start-1 col-end-3 row-start-4 row-end-5 w-3/5 bg-blue-300"
+			width="60%"
+			class="bg-blue-300"
 		/>
 	</div>
 }

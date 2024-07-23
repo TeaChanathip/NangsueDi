@@ -35,3 +35,24 @@ export const getUserFailure = createAction(
 	'[User API] Get User Failure',
 	props<{ error: string }>(),
 );
+
+// Update User API
+export const updateProfile = createAction(
+	'[Profile Page] Update Profile',
+	props<{
+		firstName?: string;
+		lastName?: string;
+		phone?: string;
+		birthTime?: number;
+	}>(),
+);
+
+export const updateProfileSuccess = createAction(
+	'[User API] Update Profile Success',
+	props<{ user: User }>(),
+);
+
+export const updateProfileFailure = createAction(
+	'[User API] Update Profile Failure',
+	props<{ error: string }>(),
+);

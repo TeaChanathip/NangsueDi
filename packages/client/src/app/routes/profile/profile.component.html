@@ -1,11 +1,37 @@
-<div class="">
-	<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">Profile</h1>
-	<div class="flex flex-wrap">
-		@if (updateProfileForm) {
+@if (updateProfileForm) {
+	<div class="">
+		<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">
+			Profile
+		</h1>
+		<div class="mt-8 flex flex-wrap justify-center">
 			<form [formGroup]="updateProfileForm">
-				<app-left-panel [user$]="user$" />
+				<app-left-panel
+					[user$]="user$"
+					[firstNameErrors]="
+						updateProfileForm.controls['firstName'].errors
+					"
+					[lastNameErrors]="
+						updateProfileForm.controls['lastName'].errors
+					"
+					[phoneErrors]="updateProfileForm.controls['phone'].errors"
+					[birthDateErrors]="
+						updateProfileForm.controls['birthDate'].errors
+					"
+				/>
 			</form>
-		}
-		<!-- <app-right-panel [userAddrs$]="userAddr$" /> -->
+			<!-- <app-right-panel [userAddrs$]="userAddr$" /> -->
+		</div>
+		<div class="mt-8 flex flex-row justify-center gap-10">
+			<app-button
+				text="Dismiss"
+				kind="outline"
+				[isDisabled]="!isFormEdited || !updateProfileForm.valid"
+			/>
+			<app-button
+				text="Confirm"
+				[isDisabled]="!isFormEdited || !updateProfileForm.valid"
+				(click)="onSubmit()"
+			/>
+		</div>
 	</div>
-</div>
+}

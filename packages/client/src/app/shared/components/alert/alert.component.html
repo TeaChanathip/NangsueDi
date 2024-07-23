@@ -1,0 +1,41 @@
+<div class="flex flex-col items-end gap-2 p-5">
+	@for (alert of alerts$ | async; track $index) {
+		<div
+			[ngClass]="alert.kind"
+			class="p-4 rounded-lg opacity-90 flex flex-row items-center gap-4 w-fit max-w-[40vw]"
+		>
+			<div class="grow">
+				<h1 class="text-2xl font-bold">
+					@switch (alert.kind) {
+						@case ('success') {
+							<span>Success</span>
+						}
+						@case ('fail') {
+							<span>Fail</span>
+						}
+						@case ('warning') {
+							<span>Warning</span>
+						}
+					}
+
+					@if (alert.header) {
+						<span>: {{ alert.header }} </span>
+					}
+				</h1>
+				@if (alert.msg) {
+					<p class="text-xl font-semibold break-all">
+						{{ alert.msg }}
+					</p>
+				}
+			</div>
+			<span
+				class="material-symbols-rounded close-btn text-2xl cursor-pointer"
+				tabindex="100"
+				(click)="close($index)"
+				(keyup.enter)="close($index)"
+			>
+				close
+			</span>
+		</div>
+	}
+</div>

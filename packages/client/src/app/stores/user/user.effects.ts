@@ -82,4 +82,29 @@ export class UserEffect {
 			),
 		);
 	});
+
+	updateProfile$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(UserActions.updateProfile),
+			mergeMap((action) =>
+				this.userService
+					.updateProfile({
+						firstName: action.firstName,
+						lastName: action.lastName,
+						phone: action.phone,
+						birthTime: action.birthTime,
+					})
+					.pipe(
+						map((res: HttpResponse<User>) =>
+							UserActions.updateProfileSuccess({
+								user: res.body as User,
+							}),
+						),
+						catchError((error) =>
+							of(UserActions.updateProfileFailure(error)),
+						),
+					),
+			),
+		);
+	});
 }
