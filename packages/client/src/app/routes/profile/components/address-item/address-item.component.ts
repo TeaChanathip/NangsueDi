@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import {
 	FormControl,
@@ -9,7 +10,7 @@ import {
 @Component({
 	selector: 'app-address-item',
 	standalone: true,
-	imports: [ReactiveFormsModule],
+	imports: [ReactiveFormsModule, NgClass],
 	templateUrl: './address-item.component.html',
 	styleUrl: './address-item.component.scss',
 })

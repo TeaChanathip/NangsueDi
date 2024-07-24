@@ -1,12 +1,50 @@
 <form
 	[formGroup]="addressForm"
-	class="grid grid-cols-6 grid-rows-5 bg-white rounded-2xl shadow-obr-1 py-4 px-6 gap-y-2"
+	class="grid grid-cols-[min-content_1fr] grid-rows-5 bg-white rounded-2xl shadow-obr-1 py-4 px-6 gap-y-4 gap-x-2 text-2xl items-center"
 >
 	<h2 class="col-start-1 col-span-2 row-start-1 row-span-1">Address</h2>
-	<input class="col-start-3 col-span-4 row-start-1 row-span-1" />
+	<input
+		class="col-start-3 col-span-4 row-start-1 row-span-1"
+		formControlName="address"
+		[ngClass]="{ invalid: addressForm.controls['address'].errors }"
+	/>
 
 	<h2 class="col-start-1 col-span-2 row-start-2 row-span-1">Sub district</h2>
+	<input
+		class="col-start-3 col-span-4 row-start-2 row-span-1"
+		formControlName="subDistrict"
+		[ngClass]="{ invalid: addressForm.controls['subDistrict'].errors }"
+	/>
+
 	<h2 class="col-start-1 col-span-2 row-start-3 row-span-1">District</h2>
+	<input
+		class="col-start-3 col-span-4 row-start-3 row-span-1"
+		formControlName="district"
+		[ngClass]="{ invalid: addressForm.controls['district'].errors }"
+	/>
+
 	<h2 class="col-start-1 col-span-2 row-start-4 row-span-1">Province</h2>
+	<input
+		class="col-start-3 col-span-4 row-start-4 row-span-1"
+		formControlName="province"
+		[ngClass]="{ invalid: addressForm.controls['province'].errors }"
+	/>
+
 	<h2 class="col-start-1 col-span-2 row-start-5 row-span-1">Postal code</h2>
+	<input
+		class="col-start-3 col-span-2 row-start-5 row-span-1 w-[200px]"
+		formControlName="postalCode"
+		[ngClass]="{ invalid: addressForm.controls['postalCode'].errors }"
+	/>
+
+	<button
+		class="col-start-5 col-span-1 row-start-5 row-span-1 material-symbols-rounded bg-primary-red"
+	>
+		close
+	</button>
+	<button
+		class="col-start-6 col-span-1 row-start-5 row-span-1 material-symbols-rounded bg-primary-100"
+	>
+		save
+	</button>
 </form>
