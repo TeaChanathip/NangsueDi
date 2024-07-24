@@ -4,13 +4,13 @@ import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectCurrUser } from '../../../stores/user/user.selectors';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass, NgStyle } from '@angular/common';
 import * as UserActions from '../../../stores/user/user.actions';
 
 @Component({
 	selector: 'app-navbar',
 	standalone: true,
-	imports: [RouterModule, AsyncPipe],
+	imports: [RouterModule, AsyncPipe, NgStyle, NgClass],
 	templateUrl: './navbar.component.html',
 	styleUrl: './navbar.component.scss',
 })
@@ -26,7 +26,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		this.user$ = this.store.select(selectCurrUser);
 	}
 
+	isMenusOpen: boolean = false;
+
 	private destroy$ = new Subject<void>();
+
+	logout(): void {
+		this.store.dispatch(UserActions.logout());
+		this.router.navigateByUrl('/login');
+	}
+
+	toggleMenus() {
+		this.isMenusOpen = !this.isMenusOpen;
+	}
 
 	ngOnInit(): void {
 		this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
@@ -66,11 +77,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 				}
 			}
 		});
-	}
-
-	logout(): void {
-		this.store.dispatch(UserActions.logout());
-		this.router.navigateByUrl('/login');
 	}
 
 	ngOnDestroy(): void {
