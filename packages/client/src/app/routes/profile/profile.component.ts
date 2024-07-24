@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+} from '@angular/core';
 import {
 	FormControl,
 	FormGroup,
@@ -28,6 +34,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { dtToUnix } from '../../shared/utils/dtToUnix';
 import { UserStatus } from '../../stores/user/user.reducer';
 import { AlertMsg } from '../../shared/components/alert/alert.component';
+import { NgStyle } from '@angular/common';
 
 @Component({
 	selector: 'app-profile',
@@ -39,6 +46,7 @@ import { AlertMsg } from '../../shared/components/alert/alert.component';
 		LeftPanelComponent,
 		RightPanelComponent,
 		ButtonComponent,
+		NgStyle,
 	],
 	templateUrl: './profile.component.html',
 	styleUrl: './profile.component.scss',
@@ -82,6 +90,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	} | null = null;
 
 	isFormEdited: boolean = false;
+
+	@ViewChild('left', { read: ElementRef, static: false }) leftPanelView:
+		| ElementRef
+		| undefined; // use to set the height of left panel
 
 	private destroy$ = new Subject<void>();
 

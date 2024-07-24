@@ -3,8 +3,11 @@
 		<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">
 			Profile
 		</h1>
-		<div class="mt-8 flex flex-wrap justify-center">
-			<form [formGroup]="updateProfileForm">
+
+		<!-- form panel -->
+		<div class="mt-8 flex flex-wrap justify-center items-stretch gap-8">
+			<!-- left panel -->
+			<form [formGroup]="updateProfileForm" #left>
 				<app-left-panel
 					[user$]="user$"
 					[firstNameErrors]="
@@ -19,8 +22,18 @@
 					"
 				/>
 			</form>
-			<!-- <app-right-panel [userAddrs$]="userAddr$" /> -->
+
+			<!-- right panel -->
+			<app-right-panel
+				[userAddrs$]="userAddr$"
+				[ngStyle]="{
+					height: leftPanelView?.nativeElement.offsetHeight + 'px',
+				}"
+				#right
+			/>
 		</div>
+
+		<!-- button panel -->
 		<div class="mt-8 flex flex-row justify-center gap-10">
 			<app-button
 				text="Dismiss"

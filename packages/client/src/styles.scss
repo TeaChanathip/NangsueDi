@@ -63,7 +63,9 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-	background-color: theme('colors.slate.300');
+	background-color: theme('colors.slate.200');
+	opacity: 0.5;
+	border-radius: 10px;
 }
 
 /* Handle */
