@@ -1,44 +1,50 @@
 @if (user$ | async; as user) {
-	<div class="bg-primary-white rounded-2xl shadow-obr-2 px-14 py-8">
-		<div class="grid grid-cols-2 grid-rows-3 gap-x-10 gap-y-4">
+	<div
+		class="bg-primary-white rounded-2xl shadow-obr-2 px-14 py-8 max-w-[800px]"
+	>
+		<div
+			class="flex justify-center lg:justify-between items-center flex-wrap gap-x-5 gap-y-4"
+		>
 			<img
 				alt="user"
 				src="{{ user.avartarUrl }}"
 				onerror="this.src='/images/default-profile.svg'"
-				class="rounded-full h-[90%] shadow-obr-1 place-self-center col-start-1 col-end-2 row-start-1 row-end-3 cursor-pointer"
+				class="rounded-full w-[80%] lg:w-[40%] h-fit cursor-pointer"
 			/>
 
-			<span class="col-start-2 col-end-3 row-start-1 row-end-2">
-				<app-form-input
-					label="First Name"
-					type="text"
-					formName="firstName"
-					[isInvalid]="firstNameErrors !== null"
-				/>
-				<app-warning-msg
-					[msg]="firstNameErrMsg"
-					[isShowing]="firstNameErrors !== null"
-					class="text-center text-2xl"
-				/>
-			</span>
+			<div class="flex flex-col gap-y-4 w-[100%] lg:w-[48%]">
+				<span>
+					<app-form-input
+						label="First Name"
+						type="text"
+						formName="firstName"
+						[isInvalid]="firstNameErrors !== null"
+					/>
+					<app-warning-msg
+						[msg]="firstNameErrMsg"
+						[isShowing]="firstNameErrors !== null"
+						class="text-center text-2xl"
+					/>
+				</span>
 
-			<span class="col-start-2 col-end-3 row-start-2 row-end-3">
-				<app-form-input
-					label="Last Name"
-					type="text"
-					formName="lastName"
-					[isInvalid]="lastNameErrors !== null"
-				/>
-				<app-warning-msg
-					[msg]="lastNameErrMsg"
-					[isShowing]="lastNameErrors !== null"
-					class="text-center text-2xl"
-				/>
-			</span>
+				<span>
+					<app-form-input
+						label="Last Name"
+						type="text"
+						formName="lastName"
+						[isInvalid]="lastNameErrors !== null"
+					/>
+					<app-warning-msg
+						[msg]="lastNameErrMsg"
+						[isShowing]="lastNameErrors !== null"
+						class="text-center text-2xl"
+					/>
+				</span>
+			</div>
 
-			<span class="col-start-1 col-end-2 row-start-3 row-end-4">
+			<span class="w-full lg:w-[48%] h-fit">
 				<app-form-input
-					label="Phone Number"
+					label="Phone"
 					type="tel"
 					formName="phone"
 					[isInvalid]="phoneErrors !== null"
@@ -50,7 +56,7 @@
 				/>
 			</span>
 
-			<span class="col-start-2 col-end-3 row-start-3 row-end-4">
+			<span class="w-full lg:w-[48%] h-fit">
 				<app-form-input
 					label="Birth Date"
 					type="date"
@@ -63,13 +69,11 @@
 					class="text-center text-2xl"
 				/>
 			</span>
+			<app-form-text
+				label="Email"
+				[text]="user.email"
+				class="w-full lg:w-[60%]"
+			/>
 		</div>
-
-		<app-form-text
-			label="Email"
-			[text]="user.email"
-			width="60%"
-			class="bg-blue-300"
-		/>
 	</div>
 }

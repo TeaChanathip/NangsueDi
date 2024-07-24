@@ -28,10 +28,6 @@ export class UserService {
 		>(`${this.url}/password`, props);
 	}
 
-	getUserAddrs(): Observable<HttpResponse<UserAddr[]>> {
-		return this.apiService.get<UserAddr[]>(`${this.url}/address`);
-	}
-
 	updateProfile(props: {
 		phone?: string;
 		firstName?: string;
@@ -43,5 +39,42 @@ export class UserService {
 			`${this.url}/profile`,
 			props,
 		);
+	}
+
+	getUserAddrs(): Observable<HttpResponse<UserAddr[]>> {
+		return this.apiService.get<UserAddr[]>(`${this.url}/address`);
+	}
+
+	addNewUserAddr(props: {
+		address: string;
+		subDistrict: string;
+		district: string;
+		province: string;
+		postalCode: string;
+	}): Observable<HttpResponse<UserAddr>> {
+		return this.apiService.post<typeof props, UserAddr>(
+			`${this.url}/address`,
+			props,
+		);
+	}
+
+	updateUserAddr(
+		_id: string,
+		props: {
+			address?: string;
+			subDistrict?: string;
+			district?: string;
+			province?: string;
+			postalCode?: string;
+		},
+	): Observable<HttpResponse<UserAddr>> {
+		return this.apiService.patch<typeof props, UserAddr>(
+			`${this.url}/address/${_id}`,
+			props,
+		);
+	}
+
+	deleteUserAddr(_id: string): Observable<HttpResponse<UserAddr>> {
+		return this.apiService.delete<UserAddr>(`${this.url}/address/${_id}`);
 	}
 }

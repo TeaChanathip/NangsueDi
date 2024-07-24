@@ -32,4 +32,11 @@ export class ApiService {
 			observe: 'response',
 		});
 	}
+
+	delete<R>(url: string): Observable<HttpResponse<R>> {
+		return this.httpClient.delete<R>(url, {
+			headers: this.headers,
+			observe: 'response',
+		});
+	}
 }

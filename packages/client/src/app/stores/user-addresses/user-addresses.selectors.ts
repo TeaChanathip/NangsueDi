@@ -10,3 +10,7 @@ export const selectAllUserAddrs = createSelector(
 	selectUserAddrs,
 	(state) => state.userAddrs,
 );
+export const selectUserAddrsStatus = createSelector(
+	selectUserAddrs,
+	(state) => state.status,
+);

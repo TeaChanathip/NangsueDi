@@ -7,7 +7,7 @@
 		<!-- form panel -->
 		<div class="mt-8 flex flex-wrap justify-center items-stretch gap-8">
 			<!-- left panel -->
-			<form [formGroup]="updateProfileForm" #left>
+			<form [formGroup]="updateProfileForm" class="px-5 lg:px-0" #left>
 				<app-left-panel
 					[user$]="user$"
 					[firstNameErrors]="
@@ -26,9 +26,7 @@
 			<!-- right panel -->
 			<app-right-panel
 				[userAddrs$]="userAddr$"
-				[ngStyle]="{
-					height: leftPanelView?.nativeElement.offsetHeight + 'px',
-				}"
+				class="px-5 lg:px-0"
 				#right
 			/>
 		</div>
@@ -38,7 +36,8 @@
 			<app-button
 				text="Dismiss"
 				kind="outline"
-				[isDisabled]="!isFormEdited || !updateProfileForm.valid"
+				[isDisabled]="!isFormEdited"
+				(click)="dimissChange()"
 			/>
 			<app-button
 				text="Confirm"

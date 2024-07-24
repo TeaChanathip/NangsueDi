@@ -1,50 +1,81 @@
 <form
 	[formGroup]="addressForm"
-	class="grid grid-cols-[min-content_1fr] grid-rows-5 bg-white rounded-2xl shadow-obr-1 py-4 px-6 gap-y-4 gap-x-2 text-2xl items-center"
+	class="flex flex-wrap md:gap-y-4 bg-white rounded-2xl shadow-obr-1 py-4 px-6 text-2xl items-center"
 >
-	<h2 class="col-start-1 col-span-2 row-start-1 row-span-1">Address</h2>
+	<h2>Address</h2>
 	<input
-		class="col-start-3 col-span-4 row-start-1 row-span-1"
+		class="w-full md:w-[70%]"
 		formControlName="address"
+		[readOnly]="!isEditting"
 		[ngClass]="{ invalid: addressForm.controls['address'].errors }"
 	/>
 
-	<h2 class="col-start-1 col-span-2 row-start-2 row-span-1">Sub district</h2>
+	<h2>Sub district</h2>
 	<input
-		class="col-start-3 col-span-4 row-start-2 row-span-1"
+		class="w-full md:w-[70%]"
 		formControlName="subDistrict"
+		[readOnly]="!isEditting"
 		[ngClass]="{ invalid: addressForm.controls['subDistrict'].errors }"
 	/>
 
-	<h2 class="col-start-1 col-span-2 row-start-3 row-span-1">District</h2>
+	<h2>District</h2>
 	<input
-		class="col-start-3 col-span-4 row-start-3 row-span-1"
+		class="w-full md:w-[70%]"
 		formControlName="district"
+		[readOnly]="!isEditting"
 		[ngClass]="{ invalid: addressForm.controls['district'].errors }"
 	/>
 
-	<h2 class="col-start-1 col-span-2 row-start-4 row-span-1">Province</h2>
+	<h2>Province</h2>
 	<input
-		class="col-start-3 col-span-4 row-start-4 row-span-1"
+		class="w-full md:w-[70%]"
 		formControlName="province"
+		[readOnly]="!isEditting"
 		[ngClass]="{ invalid: addressForm.controls['province'].errors }"
 	/>
 
-	<h2 class="col-start-1 col-span-2 row-start-5 row-span-1">Postal code</h2>
+	<h2>Postal code</h2>
 	<input
-		class="col-start-3 col-span-2 row-start-5 row-span-1 w-[200px]"
+		class="w-full md:w-[40%]"
 		formControlName="postalCode"
+		[readOnly]="!isEditting"
 		[ngClass]="{ invalid: addressForm.controls['postalCode'].errors }"
 	/>
-
-	<button
-		class="col-start-5 col-span-1 row-start-5 row-span-1 material-symbols-rounded bg-primary-red"
-	>
-		close
-	</button>
-	<button
-		class="col-start-6 col-span-1 row-start-5 row-span-1 material-symbols-rounded bg-primary-100"
-	>
-		save
-	</button>
+	<div class="ml-auto flex flex-row gap-3">
+		@if (addrData && !isEditting) {
+			<button
+				matTooltip="Delete"
+				matTooltipShowDelay="500"
+				(click)="deleteAddr()"
+				class="material-symbols-rounded bg-primary-red hover:bg-red-800"
+			>
+				delete_forever
+			</button>
+			<button
+				matTooltip="Edit"
+				matTooltipShowDelay="500"
+				(click)="editAddr()"
+				class="material-symbols-rounded bg-yellow-400 hover:bg-yellow-800"
+			>
+				edit
+			</button>
+		} @else {
+			<button
+				matTooltip="Dismiss"
+				matTooltipShowDelay="500"
+				(click)="dismissEdit()"
+				class="material-symbols-rounded bg-primary-red hover:bg-red-800"
+			>
+				close
+			</button>
+			<button
+				matTooltip="Save"
+				matTooltipShowDelay="500"
+				(click)="saveAddr()"
+				class="material-symbols-rounded bg-primary-100 hover:bg-primary-300"
+			>
+				save
+			</button>
+		}
+	</div>
 </form>
