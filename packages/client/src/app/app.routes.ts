@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
-import { SearchComponent } from './routes/search/search.component';
-import { ProfileComponent } from './routes/profile/profile.component';
-import { LoginComponent } from './routes/login/login.component';
-import { RegisterComponent } from './routes/register/register.component';
-import { ForgotPwdComponent } from './routes/forgot-pwd/forgot-pwd.component';
-import { ResetPwdComponent } from './routes/reset-pwd/reset-pwd.component';
-import { ChangePwdComponent } from './routes/change-pwd/change-pwd.component';
+import { SearchComponent } from './routes/public/search/search.component';
+import { ProfileComponent } from './routes/user/profile/profile.component';
+import { LoginComponent } from './routes/auth/login/login.component';
+import { RegisterComponent } from './routes/auth/register/register.component';
+import { ForgotPwdComponent } from './routes/auth/forgot-pwd/forgot-pwd.component';
+import { ResetPwdComponent } from './routes/auth/reset-pwd/reset-pwd.component';
+import { ChangePwdComponent } from './routes/user/change-pwd/change-pwd.component';
+import { ManageUsersComponent } from './routes/admin/manage-users/manage-users.component';
 
 export const routes: Routes = [
 	{
@@ -42,7 +43,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'manage-users',
-		component: SearchComponent,
+		component: ManageUsersComponent,
 	},
 	{
 		path: 'dashboard',
