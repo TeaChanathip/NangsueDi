@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 						this.router.navigateByUrl('/search');
 						break;
 					}
-					case 'error': {
+					case 'logged_in_error': {
 						this.warningMsg = 'Something went wrong';
 						this.isShowWarning = true;
 						break;

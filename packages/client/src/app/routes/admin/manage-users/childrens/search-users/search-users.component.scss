@@ -1,0 +1,26 @@
+.my-font {
+	font-family: 'Nunito', 'IBM Plex Sans Thai', sans-serif;
+}
+
+#ex-body label {
+	font-weight: theme('fontWeight.medium');
+	color: theme('colors.slate.600');
+}
+
+#ex-body h2 {
+	font-weight: theme('fontWeight.medium');
+	color: theme('colors.slate.600');
+}
+
+#ex-body input {
+	padding: 1px 8px;
+	box-shadow: theme('boxShadow.obr-1');
+	border-radius: 12px;
+	// background-color: theme('colors.primary.white');
+	border: white 2px solid;
+	color: theme('colors.slate.500');
+}
+
+#ex-body .invalid {
+	border: theme('colors.primary.red') 2px solid;
+}

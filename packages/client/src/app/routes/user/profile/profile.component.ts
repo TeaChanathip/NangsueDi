@@ -150,7 +150,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					};
 					break;
 				}
-				case 'error': {
+				case 'updated_error': {
 					alert = {
 						kind: 'fail',
 						header: 'cannot update profile',

@@ -1,0 +1,23 @@
+<div
+	[ngStyle]="{ width: size, height: size }"
+	tabindex="10"
+	(click)="onClick()"
+	(keyup.enter)="onClick()"
+	class="size-full flex items-center justify-center relative shadow-obr-1 rounded-lg cursor-pointer"
+>
+	<span
+		[ngStyle]="{ 'font-size': checkSize }"
+		class="material-symbols-rounded absolute rounded-lg bg-primary-200 hover:bg-primary-300"
+		id="icon"
+	>
+		check
+	</span>
+	<span
+		[ngStyle]="{ 'font-size': removeSize }"
+		class="material-symbols-rounded absolute rounded-lg bg-primary-red hover:bg-red-800"
+		id="icon"
+	>
+		remove
+	</span>
+	<span class="size-full rounded-lg bg-slate-300 hover:bg-slate-400"></span>
+</div>

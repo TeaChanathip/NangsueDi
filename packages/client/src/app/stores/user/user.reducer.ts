@@ -6,9 +6,10 @@ export type UserStatus =
 	| 'logged_in'
 	| 'logged_out'
 	| 'loading'
-	| 'error'
+	| 'logged_in_error'
 	| 'unauthorized'
-	| 'updated';
+	| 'updated'
+	| 'updated_error';
 
 export interface UserState {
 	user: User | null;
@@ -49,7 +50,7 @@ export const userReducer = createReducer(
 		(state, { error }): UserState => ({
 			...state,
 			error,
-			status: 'error',
+			status: 'logged_in_error',
 		}),
 	),
 
@@ -123,7 +124,7 @@ export const userReducer = createReducer(
 		(state, { error }): UserState => ({
 			...state,
 			error: error,
-			status: 'error',
+			status: 'updated_error',
 		}),
 	),
 );

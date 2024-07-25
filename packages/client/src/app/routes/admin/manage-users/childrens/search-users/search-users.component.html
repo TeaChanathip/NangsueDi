@@ -3,6 +3,142 @@
 		Search Users
 	</h1>
 
+	<form [formGroup]="searchUsersForm" class="mt-8 flex justify-center">
+		<mat-expansion-panel class="w-1/2">
+			<!-- expansion header -->
+			<mat-expansion-panel-header>
+				<mat-panel-title
+					class="flex flex-row justify-between items-center"
+				>
+					<span class="text-3xl text-slate-600 my-font font-semibold">
+						Options
+					</span>
+					<app-clear-button
+						[disabled]="(isFormChange$ | async) ?? true"
+						(clicked)="resetForm($event)"
+					/>
+				</mat-panel-title>
+			</mat-expansion-panel-header>
+
+			<!-- expansion body -->
+			<div
+				class="w-full flex flex-wrap justify-between p-5 text-2xl my-font gap-y-10"
+				id="ex-body"
+			>
+				<span class="w-[45%] flex flex-col">
+					<label for="firstName">First Name</label>
+					<input
+						formControlName="firstName"
+						id="firstName"
+						class="w-full"
+						maxlength="100"
+						[ngClass]="{
+							invalid:
+								searchUsersForm.controls['firstName'].errors !==
+								null,
+						}"
+					/>
+				</span>
+				<span class="w-[45%] flex flex-col">
+					<label for="lastName">Last Name</label>
+					<input
+						formControlName="lastName"
+						id="lastName"
+						class="w-full"
+						maxlength="100"
+						[ngClass]="{
+							invalid:
+								searchUsersForm.controls['lastName'].errors !==
+								null,
+						}"
+					/>
+				</span>
+				<span class="w-[45%] flex flex-col">
+					<label for="email">Email</label>
+					<input
+						formControlName="email"
+						id="email"
+						class="w-full"
+						maxlength="64"
+						[ngClass]="{
+							invalid:
+								searchUsersForm.controls['email'].errors !==
+								null,
+						}"
+					/>
+				</span>
+				<span class="w-[45%] flex flex-col">
+					<label for="phone">Phone</label>
+					<input
+						formControlName="phone"
+						id="phone"
+						class="w-full"
+						pattern="[0-9\s]"
+						maxlength="10"
+						[ngClass]="{
+							invalid:
+								searchUsersForm.controls['phone'].errors !==
+								null,
+						}"
+					/>
+				</span>
+				<span class="w-[45%] flex flex-row gap-2">
+					<h2>Verified</h2>
+					<app-state-check-box
+						[state]="isVerified"
+						size="28px"
+						(toNextState)="changeIsVerifiedState()"
+					/>
+				</span>
+				<span class="w-[45%] flex flex-row gap-2">
+					<h2>Suspended</h2>
+					<app-state-check-box
+						[state]="isSuspended"
+						size="28px"
+						(toNextState)="changeIsSuspendedState()"
+					/>
+				</span>
+				<span class="w-[45%] flex flex-col gap-2">
+					<h2>Roles</h2>
+					<div class="flex flex-row gap-10 text-xl">
+						<span class="flex flex-row gap-2">
+							<h3 class="text-slate-500">User</h3>
+							<app-check-box
+								[isChecked]="roles[0]"
+								size="28px"
+								uniqueId="user"
+								(checkEvent)="toggleRoles(0)"
+							/>
+						</span>
+						<span class="flex flex-row gap-2">
+							<h3 class="text-slate-500">Manager</h3>
+							<app-check-box
+								[isChecked]="roles[1]"
+								size="28px"
+								uniqueId="manager"
+								(checkEvent)="toggleRoles(1)"
+							/>
+						</span>
+						<span class="flex flex-row gap-2">
+							<h3 class="text-slate-500">Admin</h3>
+							<app-check-box
+								[isChecked]="roles[2]"
+								size="28px"
+								uniqueId="admin"
+								(checkEvent)="toggleRoles(2)"
+							/>
+						</span>
+					</div>
+				</span>
+				<app-button
+					text="Submit"
+					class="justify-self-end"
+					[action]="onSubmitForm()"
+				/>
+			</div>
+		</mat-expansion-panel>
+	</form>
+
 	@for (user of users$ | async; track $index) {
 		<p>{{ user.firstName }}</p>
 	}

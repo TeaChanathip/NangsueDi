@@ -14,7 +14,7 @@ import { dtDurationValidator } from '../../../../../shared/validators/datetime-d
 import { CheckBoxComponent } from '../../../../../shared/components/check-box/check-box.component';
 import { ChangePwdComponent } from '../../../../user/change-pwd/change-pwd.component';
 import { NgClass } from '@angular/common';
-import { ClearButtonComponent } from '../clear-button/clear-button.component';
+import { ClearButtonComponent } from '../../../../../shared/components/clear-button/clear-button.component';
 import { Params, Router } from '@angular/router';
 import { dtToUnix } from '../../../../../shared/utils/dtToUnix';
 

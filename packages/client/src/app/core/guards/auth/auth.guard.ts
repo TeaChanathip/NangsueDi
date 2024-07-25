@@ -1,37 +1,47 @@
-import { CanActivateFn, Router, UrlTree } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { Role } from '../../../shared/enums/role.enum';
-import { map, Observable } from 'rxjs';
+import { catchError, filter, map, of, switchMap } from 'rxjs';
 import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../../../stores/user/user.selectors';
 
 export function authGuard(...roles: Role[]): CanActivateFn {
-	return (): boolean | UrlTree | Observable<boolean | UrlTree> => {
-		const accessToken = localStorage.getItem('accessToken');
-
+	return () => {
 		const router = inject(Router);
-
-		// User have not been logged in
-		if (!accessToken) return router.createUrlTree(['/login']);
-
-		// get user state from ngrx
 		const userState$ = inject(Store).select(selectUser);
 
-		// check status, if 'user' is available
-		return userState$.pipe(
-			map((userState) => {
-				if (!userState.user) {
-					return router.createUrlTree(['/login']);
+		return of(localStorage.getItem('accessToken')).pipe(
+			switchMap((token) => {
+				if (!token) {
+					// No token found, redirect to login
+					return of(router.createUrlTree(['/login']));
 				}
+				// Token exists, now check for user state validity
+				return userState$.pipe(
+					filter((userState) => userState.status !== 'loading'),
+					map((userState) => {
+						// maybe 'logged_out' or 'unauthorized'
+						if (userState.status !== 'logged_in') {
+							return router.createUrlTree(['/login']);
+						}
 
-				if (roles.length === 0) {
-					return true;
-				}
+						// User's status is 'logged_in', proceed with original logic
+						// check if roles empty?
+						if (roles.length === 0) {
+							return true;
+						}
 
-				const userRole = userState.user.role;
-				return (
-					roles.includes(userRole) ||
-					router.createUrlTree(['/search'])
+						// if user's role is not allowed go to book-search page
+						const userRole = userState.user!.role;
+						return (
+							roles.includes(userRole) ||
+							router.createUrlTree(['/search'])
+						);
+					}),
+					catchError(() => {
+						// Handle any errors, such as token refresh failures, by redirecting to login
+						return of(router.createUrlTree(['/login']));
+					}),
 				);
 			}),
 		);
