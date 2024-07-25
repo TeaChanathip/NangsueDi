@@ -7,6 +7,8 @@ import { ForgotPwdComponent } from './routes/auth/forgot-pwd/forgot-pwd.componen
 import { ResetPwdComponent } from './routes/auth/reset-pwd/reset-pwd.component';
 import { ChangePwdComponent } from './routes/user/change-pwd/change-pwd.component';
 import { ManageUsersComponent } from './routes/admin/manage-users/manage-users.component';
+import { authGuard } from './core/guards/auth/auth.guard';
+import { Role } from './shared/enums/role.enum';
 
 export const routes: Routes = [
 	{
@@ -26,36 +28,43 @@ export const routes: Routes = [
 		component: ResetPwdComponent,
 	},
 	{
+		path: 'profile',
+		component: ProfileComponent,
+		canActivate: [authGuard()],
+	},
+	{
+		path: 'change-password',
+		component: ChangePwdComponent,
+		canActivate: [authGuard()],
+	},
+	{
 		path: 'search',
 		component: SearchComponent,
 	},
 	{
 		path: 'my-shelf',
 		component: SearchComponent,
+		canActivate: [authGuard(Role.USER)],
 	},
 	{
 		path: 'requests',
 		component: SearchComponent,
+		canActivate: [authGuard(Role.MANAGER, Role.ADMIN)],
 	},
 	{
 		path: 'manage-books',
 		component: SearchComponent,
+		canActivate: [authGuard(Role.MANAGER, Role.ADMIN)],
 	},
 	{
 		path: 'manage-users',
 		component: ManageUsersComponent,
+		canActivate: [authGuard(Role.ADMIN)],
 	},
 	{
 		path: 'dashboard',
 		component: SearchComponent,
-	},
-	{
-		path: 'profile',
-		component: ProfileComponent,
-	},
-	{
-		path: 'change-password',
-		component: ChangePwdComponent,
+		canActivate: [authGuard(Role.ADMIN)],
 	},
 	{ path: '**', redirectTo: '/search', pathMatch: 'full' },
 ];
