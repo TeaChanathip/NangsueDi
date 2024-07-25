@@ -9,6 +9,7 @@ import { ChangePwdComponent } from './routes/user/change-pwd/change-pwd.componen
 import { ManageUsersComponent } from './routes/admin/manage-users/manage-users.component';
 import { authGuard } from './core/guards/auth/auth.guard';
 import { Role } from './shared/enums/role.enum';
+import { SearchUsersComponent } from './routes/admin/manage-users/childrens/search-users/search-users.component';
 
 export const routes: Routes = [
 	{
@@ -60,6 +61,17 @@ export const routes: Routes = [
 		path: 'manage-users',
 		component: ManageUsersComponent,
 		canActivate: [authGuard(Role.ADMIN)],
+		children: [
+			{
+				path: 'search-users',
+				component: SearchUsersComponent,
+			},
+			{
+				path: '**',
+				redirectTo: 'search-users',
+				pathMatch: 'full',
+			},
+		],
 	},
 	{
 		path: 'dashboard',

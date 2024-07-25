@@ -27,7 +27,7 @@ import { unixToYMD } from '../../../shared/utils/unixToYMD';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { dtToUnix } from '../../../shared/utils/dtToUnix';
 import { UserStatus } from '../../../stores/user/user.reducer';
-import { AlertMsg } from '../../../shared/components/alert/alert.component';
+import { AlertMsg } from '../../../core/layouts/alert/alert.component';
 
 @Component({
 	selector: 'app-profile',

@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { AlertMsg } from '../../shared/components/alert/alert.component';
+import { AlertMsg } from '../../core/layouts/alert/alert.component';
 import * as AlertsActions from './alerts.actions';
 
 export interface AlertsState {

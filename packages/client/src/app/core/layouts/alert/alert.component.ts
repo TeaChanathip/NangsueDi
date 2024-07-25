@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import * as AlertsActions from '../../../stores/alerts/alerts.actions';
 import { selectAllAlerts } from '../../../stores/alerts/alerts.selectors';
-import { sleep } from '../../utils/sleep';
+import { sleep } from '../../../shared/utils/sleep';
 
 @Component({
 	selector: 'app-alert',

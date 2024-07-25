@@ -1,4 +1,9 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import {
+	HttpClient,
+	HttpHeaders,
+	HttpParams,
+	HttpResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -12,10 +17,11 @@ export class ApiService {
 		Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 	});
 
-	get<R>(url: string): Observable<HttpResponse<R>> {
+	get<R>(url: string, params?: HttpParams): Observable<HttpResponse<R>> {
 		return this.httpClient.get<R>(url, {
 			headers: this.headers,
 			observe: 'response',
+			params,
 		});
 	}
 

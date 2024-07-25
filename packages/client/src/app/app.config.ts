@@ -18,6 +18,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { UserAddrsEffect } from './stores/user-addresses/user-addresses.effects';
 import { userAddrsReducer } from './stores/user-addresses/user-addresses.reducer';
 import { alertsReducer } from './stores/alerts/alerts.reducer';
+import { adminUsersReducer } from './stores/admin-users/admin-users.reducer';
+import { AdminUsersEffect } from './stores/admin-users/admin-users.effects';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -29,7 +31,13 @@ export const appConfig: ApplicationConfig = {
 		provideState({ name: 'books', reducer: booksReducer }),
 		provideState({ name: 'userAddrs', reducer: userAddrsReducer }),
 		provideState({ name: 'alerts', reducer: alertsReducer }),
-		provideEffects(UserEffect, BooksEffect, UserAddrsEffect),
+		provideState({ name: 'adminUsers', reducer: adminUsersReducer }),
+		provideEffects(
+			UserEffect,
+			BooksEffect,
+			UserAddrsEffect,
+			AdminUsersEffect,
+		),
 		provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
 		provideAnimationsAsync(),
 	],
