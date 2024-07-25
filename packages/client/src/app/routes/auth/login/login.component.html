@@ -1,0 +1,47 @@
+<div class="mt-14 w-full flex justify-center">
+	<form
+		(ngSubmit)="onSubmit($event)"
+		[formGroup]="loginForm"
+		class="w-[38%] min-w-[500px] flex flex-col items-center bg-primary-white rounded-2xl shadow-obr-2 p-2"
+	>
+		<h1 class="text-5xl text-slate-600 font-bold mt-8">Login</h1>
+
+		<app-form-input
+			label="Email"
+			type="email"
+			ph="example@example.com"
+			formName="email"
+			class="w-[60%] mt-16"
+		/>
+
+		<app-form-input
+			label="Password"
+			type="password"
+			ph="password"
+			formName="password"
+			class="w-[60%] mt-10"
+		/>
+
+		<app-warning-msg
+			[msg]="warningMsg"
+			[enAni]="true"
+			[isShowing]="isShowWarning"
+			class="text-2xl mt-6"
+		></app-warning-msg>
+
+		<app-button
+			formType="submit"
+			kind="solid"
+			text="Login"
+			textSize="9xl"
+			class="mt-6"
+		/>
+
+		<div
+			class="flex flex-row justify-between w-full px-5 text-2xl text-primary-100 font-semibold mt-6"
+		>
+			<a class="" routerLink="/forgot-password">Forgot password?</a>
+			<a class="" routerLink="/register">New user?</a>
+		</div>
+	</form>
+</div>

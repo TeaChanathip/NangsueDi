@@ -1,0 +1,14 @@
+<div class="size-full flex flex-col gap-2 items-center justify-center">
+	@switch (state) {
+		@case ('loading') {
+			<p class="text-5xl text-slate-600 font-semibold">Loading...</p>
+		}
+		@case ('success') {
+			<p class="text-5xl text-primary-400 font-semibold">Success</p>
+		}
+		@case ('failure') {
+			<p class="text-5xl text-primary-red font-semibold">Failure</p>
+			<p class="text-xl text-slate-600 font-medium">{{ error }}</p>
+		}
+	}
+</div>

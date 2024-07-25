@@ -1,0 +1,16 @@
+<div class="flex flex-row items-center justify-center relative">
+	@for (step of steps; track $index) {
+		@if ($index !== 0) {
+			<span
+				[ngClass]="{ pass: $index <= currStep }"
+				class="w-14 h-1 bg-slate-300"
+			></span>
+		}
+		<span
+			(click)="toStep($index)"
+			[ngClass]="{ pass: $index <= currStep }"
+			class="size-10 rounded-full bg-slate-300 flex items-center justify-center font-semibold text-2xl text-white cursor-pointer"
+			>{{ step }}
+		</span>
+	}
+</div>

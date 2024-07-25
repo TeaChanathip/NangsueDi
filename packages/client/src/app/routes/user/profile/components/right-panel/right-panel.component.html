@@ -1,0 +1,44 @@
+@if (userAddrs$ | async; as userAddr) {
+	<div
+		class="bg-primary-white rounded-2xl shadow-obr-2 px-7 h-full flex flex-col md:overflow-y-auto max-w-[600px] md:h-[562px]"
+	>
+		<!-- header -->
+		<div class="top-0 sticky bg-primary-white">
+			<div class="mt-8 flex flex-row items-center">
+				<h1
+					class="ml-[62px] grow justify-self-center text-3xl font-bold text-slate-600 text-center"
+				>
+					Addresses
+				</h1>
+				<button
+					class="justify-self-end font-semibold text-2xl text-white bg-primary-100 hover:bg-primary-300 disabled:bg-slate-300 px-6 py-1 rounded-xl shadow-obr-1"
+					(click)="toggleNewForm(true)"
+					[disabled]="isNewFormShowing || userAddr.length >= 5"
+					[matTooltip]="
+						userAddr.length >= 5
+							? 'Can save at most 5 addresses'
+							: 'Add a new address'
+					"
+					matTooltipShowDelay="500"
+				>
+					+
+				</button>
+			</div>
+			<hr class="mt-4 w-full bg-slate-300 h-[2px] rounded-full" />
+		</div>
+
+		<!-- addresses -->
+		@if (userAddr.length > 0) {
+			<div class="py-4 flex flex-col-reverse gap-4 px-2 rounded-xl">
+				@for (addr of userAddr; track $index) {
+					<app-address-item [addrData]="addr" />
+				}
+				@if (isNewFormShowing) {
+					<app-address-item
+						(closeNewFormEvent)="toggleNewForm(false)"
+					/>
+				}
+			</div>
+		}
+	</div>
+}

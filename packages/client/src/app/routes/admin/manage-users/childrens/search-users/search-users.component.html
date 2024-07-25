@@ -1,0 +1,9 @@
+<div appScrollNearEnd [threshold]="10">
+	<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">
+		Search Users
+	</h1>
+
+	@for (user of users$ | async; track $index) {
+		<p>{{ user.firstName }}</p>
+	}
+</div>

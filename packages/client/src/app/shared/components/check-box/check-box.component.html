@@ -1,0 +1,28 @@
+<div
+	[ngStyle]="{ width: size, height: size }"
+	class="size-full flex items-center justify-center relative shadow-obr-1 rounded-lg cursor-pointer bg-slate-300 container"
+>
+	@if (formName) {
+		<input
+			type="checkbox"
+			[formControlName]="formName"
+			[id]="uniqueId"
+			[checked]="isChecked"
+			class="absolute opacity-0 size-full cursor-pointer checkbox"
+		/>
+	} @else {
+		<input
+			type="checkbox"
+			[id]="uniqueId"
+			[checked]="isChecked"
+			(change)="emitEvent()"
+			class="absolute opacity-0 size-full cursor-pointer checkbox"
+		/>
+	}
+	<span
+		[ngStyle]="{ 'font-size': markSize }"
+		class="material-symbols-rounded rounded-lg checkmark"
+	>
+		check
+	</span>
+</div>

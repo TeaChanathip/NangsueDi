@@ -1,0 +1,40 @@
+h2 {
+	font-weight: theme('fontWeight.medium');
+	color: theme('colors.slate.600');
+	width: 100%;
+}
+
+input {
+	background-color: theme('colors.primary.white');
+	color: theme('colors.slate.500');
+	box-shadow: theme('boxShadow.obr-1');
+	border-radius: 12px;
+	padding: 1px 12px;
+	border: theme('colors.primary.white') 2px solid;
+	margin-bottom: 1rem;
+}
+
+input.invalid {
+	border: theme('colors.primary.red') 2px solid;
+}
+
+button {
+	height: 100%;
+	width: fit-content;
+	padding: 1px 15px;
+	border-radius: 12px;
+	box-shadow: theme('boxShadow.obr-1');
+	color: white;
+	font-weight: theme('fontWeight.bold');
+	font-size: 30px;
+	line-height: 36px;
+}
+
+@media (min-width: 768px) {
+	h2 {
+		width: 30%;
+	}
+	input {
+		margin-bottom: 0;
+	}
+}

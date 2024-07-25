@@ -1,0 +1,47 @@
+.success {
+	background: theme('colors.primary.20');
+}
+.success h1 {
+	color: theme('colors.primary.600');
+}
+.success p {
+	color: theme('colors.primary.500');
+}
+.success .close-btn {
+	color: theme('colors.primary.400');
+}
+.success .close-btn:hover {
+	color: theme('colors.primary.600');
+}
+
+.fail {
+	background: theme('colors.primary.red');
+}
+.fail h1 {
+	color: theme('colors.red.950');
+}
+.fail p {
+	color: theme('colors.red.900');
+}
+.fail .close-btn {
+	color: theme('colors.red.700');
+}
+.fail .close-btn:hover {
+	color: theme('colors.red.950');
+}
+
+.warning {
+	background: theme('colors.yellow.200');
+}
+.warning h1 {
+	color: theme('colors.yellow.800');
+}
+.warning p {
+	color: theme('colors.yellow.700');
+}
+.warning .close-btn {
+	color: theme('colors.yellow.600');
+}
+.warning .close-btn:hover {
+	color: theme('colors.yellow.900');
+}

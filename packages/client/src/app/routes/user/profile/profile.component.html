@@ -1,0 +1,49 @@
+@if (updateProfileForm) {
+	<div>
+		<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">
+			Profile
+		</h1>
+
+		<!-- form panel -->
+		<div class="mt-8 flex flex-wrap justify-center items-stretch gap-8">
+			<!-- left panel -->
+			<form [formGroup]="updateProfileForm" class="px-5 lg:px-0" #left>
+				<app-left-panel
+					[user$]="user$"
+					[firstNameErrors]="
+						updateProfileForm.controls['firstName'].errors
+					"
+					[lastNameErrors]="
+						updateProfileForm.controls['lastName'].errors
+					"
+					[phoneErrors]="updateProfileForm.controls['phone'].errors"
+					[birthDateErrors]="
+						updateProfileForm.controls['birthDate'].errors
+					"
+				/>
+			</form>
+
+			<!-- right panel -->
+			<app-right-panel
+				[userAddrs$]="userAddr$"
+				class="px-5 lg:px-0"
+				#right
+			/>
+		</div>
+
+		<!-- button panel -->
+		<div class="py-8 flex flex-row justify-center gap-10">
+			<app-button
+				text="Dismiss"
+				kind="outline"
+				[isDisabled]="!isFormEdited"
+				(click)="dimissChange()"
+			/>
+			<app-button
+				text="Confirm"
+				[isDisabled]="!isFormEdited || !updateProfileForm.valid"
+				(click)="onSubmit()"
+			/>
+		</div>
+	</div>
+}

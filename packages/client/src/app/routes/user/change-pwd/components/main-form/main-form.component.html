@@ -1,0 +1,41 @@
+<div class="flex flex-col items-center">
+	<h1 class="text-5xl text-slate-600 font-bold mt-8">Change Password</h1>
+
+	<app-form-input
+		label="Password"
+		type="password"
+		ph="password"
+		formName="password"
+		[isRequired]="true"
+		[isInvalid]="pwdErrors !== null"
+		class="w-[60%] mt-6"
+	/>
+	<app-warning-msg
+		[msg]="pwdErrMsg"
+		[isShowing]="pwdErrors !== null"
+		class="text-2xl mt-1"
+	/>
+
+	<app-form-input
+		label="New Password"
+		type="password"
+		ph="password"
+		formName="newPwd"
+		[isRequired]="true"
+		[isInvalid]="newPwdErrors !== null"
+		class="w-[60%] mt-3"
+	/>
+	<app-warning-msg
+		[msg]="newPwdErrMsg"
+		[isShowing]="newPwdErrors !== null"
+		class="text-2xl mt-1"
+	/>
+
+	<app-button
+		formType="submit"
+		kind="solid"
+		text="Confirm"
+		[isDisabled]="pwdErrors !== null || newPwdErrors !== null"
+		class="mt-8"
+	/>
+</div>

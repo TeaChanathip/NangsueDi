@@ -1,0 +1,12 @@
+button {
+	background-color: theme('colors.primary.100');
+	transition: 100ms ease-in-out;
+}
+
+button:hover {
+	background-color: theme('colors.primary.300');
+}
+
+button:disabled {
+	background-color: theme('colors.slate.300');
+}

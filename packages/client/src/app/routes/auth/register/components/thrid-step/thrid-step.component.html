@@ -1,0 +1,37 @@
+<div class="flex flex-col items-center justify-center h-full">
+	<app-form-input
+		label="Password"
+		type="password"
+		ph="password"
+		formName="password"
+		[isRequired]="true"
+		[isInvalid]="passwordErrors !== null || pwdMismatch !== null"
+		class="w-[60%]"
+	/>
+
+	<app-form-input
+		label="Confirm Password"
+		type="password"
+		ph="password"
+		formName="confirmPwd"
+		[isRequired]="true"
+		[isInvalid]="pwdMismatch !== null"
+		class="w-[60%] mt-10"
+	/>
+
+	<app-warning-msg
+		[msg]="errMsg"
+		[isShowing]="
+			passwordErrors !== null || pwdMismatch !== null || isShowWarning
+		"
+		class="text-2xl mt-5"
+	/>
+
+	<app-button
+		formType="submit"
+		kind="solid"
+		text="Confirm"
+		[isDisabled]="!isValid"
+		class="mt-8"
+	/>
+</div>

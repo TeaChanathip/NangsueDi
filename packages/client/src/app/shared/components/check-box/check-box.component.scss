@@ -1,0 +1,17 @@
+.container:hover {
+	background-color: theme('colors.slate.400');
+}
+
+.checkmark {
+	color: white;
+	transition: font-size 100ms ease-in 0s;
+	font-size: 100%;
+}
+
+.checkbox:checked ~ .checkmark {
+	background-color: theme('colors.primary.200');
+}
+
+.container:hover .checkbox:checked ~ .checkmark {
+	background-color: theme('colors.primary.300');
+}

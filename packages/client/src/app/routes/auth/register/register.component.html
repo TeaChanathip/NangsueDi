@@ -1,0 +1,46 @@
+<div class="mt-14 w-full flex justify-center">
+	<form
+		[formGroup]="registerForm"
+		(submit)="onSubmit($event)"
+		class="w-[38%] min-w-[500px] h-[560px] flex flex-col items-center bg-primary-white rounded-2xl shadow-obr-2 p-2"
+	>
+		<h1 class="text-5xl text-slate-600 font-bold mt-8">Register</h1>
+		<app-progress-bar
+			[currStep]="currStep"
+			[totalStep]="3"
+			(toStepEmitter)="changeCurrStep($event)"
+			class="mt-5"
+		/>
+		@switch (currStep) {
+			@case (0) {
+				<app-first-step
+					[emailErrors]="registerForm.controls['email'].errors"
+					[firstNameErrors]="
+						registerForm.controls['firstName'].errors
+					"
+					[lastNameErrors]="registerForm.controls['lastName'].errors"
+					class="w-full"
+				/>
+			}
+			@case (1) {
+				<app-second-step
+					[phoneErrors]="registerForm.controls['phone'].errors"
+					[birthDateErrors]="
+						registerForm.controls['birthDate'].errors
+					"
+					class="w-full grow"
+				/>
+			}
+			@case (2) {
+				<app-thrid-step
+					[isValid]="registerForm.valid"
+					[passwordErrors]="registerForm.controls['password'].errors"
+					[pwdMismatch]="this.registerForm.getError('pwdMismatch')"
+					[warningMsg]="warningMsg"
+					[isShowWarning]="isShowWarning"
+					class="w-full grow"
+				/>
+			}
+		}
+	</form>
+</div>

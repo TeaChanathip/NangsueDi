@@ -38,9 +38,10 @@ export class UserUpdateReqDto {
         default: 'lupdatedone',
     })
     @IsOptional()
-    @IsAlpha()
     @Trim()
-    @MinLength(1, { message: 'The lastName cannot be whitespace' })
+    @Matches(/^$|^[A-Za-z]+$/, {
+        message: 'The lastName must contain only alphabets or be empty.',
+    })
     @MaxLength(MAX_NAME)
     lastName?: string;
 

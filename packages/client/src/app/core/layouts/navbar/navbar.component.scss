@@ -1,0 +1,35 @@
+.dropdown {
+	position: relative;
+	display: block;
+	margin-left: auto;
+	font-size: 30px;
+	line-height: 36px;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	cursor: pointer;
+}
+
+.dropdown-container {
+	display: none;
+	position: absolute;
+	text-align: center;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	right: 0;
+}
+
+.dropdown:hover .dropdown-container {
+	display: block;
+}
+
+.active {
+	display: block;
+}
+
+.menu-btn {
+	color: white;
+}
+
+.menu-btn-en {
+	background-color: theme('colors.primary.700');
+}

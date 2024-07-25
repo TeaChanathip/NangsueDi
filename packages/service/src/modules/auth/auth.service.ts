@@ -157,7 +157,7 @@ export class AuthService {
             // Sending reset-password url to user's email
             const sendedEmail = await this.emailService.sendResetUrl(
                 email,
-                resetToken,
+                `${process.env.CLIENT_URL}/reset-password/${resetToken}`,
             );
             if (!sendedEmail) {
                 throw new InternalServerErrorException();
