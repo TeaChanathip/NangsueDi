@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ScrollNearEndDirective } from '../../../../../shared/directives/scroll-near-end.directive';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, merge, Observable } from 'rxjs';
 import { User } from '../../../../../shared/interfaces/user.model';
 import { selectAllAdminUsers } from '../../../../../stores/admin-users/admin-users.selectors';
 import * as AdminUsersActions from '../../../../../stores/admin-users/admin-users.actions';
@@ -46,7 +46,10 @@ export class SearchUsersComponent implements OnInit {
 		}),
 		phone: new FormControl<string>('', {
 			nonNullable: true,
-			validators: [Validators.pattern('^0\\d{9}$')],
+			validators: [
+				Validators.pattern('^[0-9]+$'),
+				Validators.maxLength(10),
+			],
 		}),
 		firstName: new FormControl<string>('', {
 			nonNullable: true,
@@ -57,78 +60,104 @@ export class SearchUsersComponent implements OnInit {
 			validators: [Validators.pattern('^[A-Za-z]+$')],
 		}),
 	});
-	isVerified: boolean | undefined = undefined;
-	isSuspended: boolean | undefined = undefined;
-	roles: boolean[] = new Array<boolean>(false);
+	isVerified$ = new BehaviorSubject<boolean | undefined>(undefined);
+	isSuspended$ = new BehaviorSubject<boolean | undefined>(undefined);
+	roles$ = new BehaviorSubject<boolean[]>(new Array<boolean>(3).fill(false));
 
 	limit: number = 20;
 	page: number = 1;
 
-	isFormChange$: Observable<boolean>;
+	disableBtn$: Observable<boolean>;
 
 	constructor(private store: Store) {
 		this.users$ = this.store.select(selectAllAdminUsers);
 
-		this.isFormChange$ = this.searchUsersForm.valueChanges.pipe(
-			map(
-				({ email, firstName, lastName, phone }) =>
-					!(email || firstName || lastName || phone),
-			),
+		this.disableBtn$ = merge(
+			this.searchUsersForm.valueChanges,
+			this.isVerified$,
+			this.isSuspended$,
+			this.roles$,
+		).pipe(
+			map(() => {
+				const { email, firstName, lastName, phone } =
+					this.searchUsersForm.value;
+				const isVerified = this.isVerified$.getValue();
+				const isSuspended = this.isSuspended$.getValue();
+				const roles = this.roles$.getValue();
+
+				return (
+					email == '' &&
+					firstName == '' &&
+					lastName == '' &&
+					phone == '' &&
+					isVerified == undefined &&
+					isSuspended == undefined &&
+					roles.every((item) => !item)
+				);
+			}),
 		);
 	}
 
 	resetForm(event: Event) {
 		event.stopPropagation();
 		this.searchUsersForm.reset();
+
+		this.isVerified$.next(undefined);
+		this.isSuspended$.next(undefined);
+		this.roles$.next(new Array<boolean>(3).fill(false));
 	}
 
 	toggleRoles(index: number) {
-		this.roles[index] = !this.roles[index];
+		const next = this.roles$.getValue();
+		next[index] = !next[index];
+
+		this.roles$.next(next);
 	}
 
 	changeIsVerifiedState() {
-		switch (this.isVerified) {
+		switch (this.isVerified$.getValue()) {
 			case undefined: {
-				this.isVerified = true;
+				this.isVerified$.next(true);
 				break;
 			}
 			case true: {
-				this.isVerified = false;
+				this.isVerified$.next(false);
 				break;
 			}
 			case false: {
-				this.isVerified = undefined;
+				this.isVerified$.next(undefined);
 				break;
 			}
 		}
 	}
 
 	changeIsSuspendedState() {
-		switch (this.isSuspended) {
+		switch (this.isSuspended$.getValue()) {
 			case undefined: {
-				this.isSuspended = true;
+				this.isSuspended$.next(true);
 				break;
 			}
 			case true: {
-				this.isSuspended = false;
+				this.isSuspended$.next(false);
 				break;
 			}
 			case false: {
-				this.isSuspended = undefined;
+				this.isSuspended$.next(undefined);
 				break;
 			}
 		}
 	}
 
 	onSubmitForm() {
-		return () =>
-			this.store.dispatch(
-				AdminUsersActions.searchUsers({
-					...this.searchUsersForm.getRawValue(),
-					limit: this.limit,
-					page: this.page,
-				}),
-			);
+		if (!this.searchUsersForm.valid) return;
+
+		this.store.dispatch(
+			AdminUsersActions.searchUsers({
+				...this.searchUsersForm.getRawValue(),
+				limit: this.limit,
+				page: this.page,
+			}),
+		);
 	}
 
 	ngOnInit(): void {

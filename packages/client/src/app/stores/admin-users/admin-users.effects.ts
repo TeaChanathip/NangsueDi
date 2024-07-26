@@ -21,6 +21,7 @@ export class AdminUsersEffect {
 				this.adminService
 					.searchUsers({
 						email: action.email,
+						phone: action.phone,
 						firstName: action.firstName,
 						lastName: action.lastName,
 						roles: action.roles,

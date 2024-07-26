@@ -48,6 +48,7 @@ export class AdminService {
 				...(page && { page }),
 			},
 		});
+		console.log(queryParams);
 
 		return this.apiService.get<User[]>(
 			`${this.url}/search-users`,

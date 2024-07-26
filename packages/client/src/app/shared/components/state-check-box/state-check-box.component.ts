@@ -31,11 +31,13 @@ export class StateCheckBoxComponent implements OnChanges {
 		if (changes['state']) {
 			switch (this.state) {
 				case undefined: {
+					this.checkSize = '0';
 					this.removeSize = '0';
 					break;
 				}
 				case true: {
 					this.checkSize = this.size;
+					this.removeSize = '0';
 					break;
 				}
 				case false: {
