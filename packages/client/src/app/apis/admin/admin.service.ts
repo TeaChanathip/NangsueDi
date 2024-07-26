@@ -20,8 +20,8 @@ export class AdminService {
 		firstName?: string;
 		lastName?: string;
 		roles?: Role[];
-		canBorrow?: boolean;
-		// canReview?: boolean;
+		isVerified: boolean | undefined;
+		isSuspended: boolean | undefined;
 		limit: number;
 		page: number;
 	}): Observable<HttpResponse<User[]>> {
@@ -31,7 +31,8 @@ export class AdminService {
 			firstName,
 			lastName,
 			roles,
-			canBorrow,
+			isVerified,
+			isSuspended,
 			limit,
 			page,
 		} = props;
@@ -43,7 +44,10 @@ export class AdminService {
 				...(firstName && { firstName }),
 				...(lastName && { lastName }),
 				...(roles && { roles }),
-				...(canBorrow && { canBorrow }),
+				...(isVerified !== undefined && { isVerified }),
+				...(isSuspended === undefined && { suspendedBegin: 0 }),
+				...(isSuspended === true && { suspendedBegin: 0 }),
+				...(isSuspended === false && { suspendedEnd: 0 }),
 				...(limit && { limit }),
 				...(page && { page }),
 			},

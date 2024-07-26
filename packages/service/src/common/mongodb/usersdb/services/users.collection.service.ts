@@ -187,20 +187,24 @@ export class UsersCollService {
             firstName,
             lastName,
             roles,
-            isVerified,
-            canBorrow,
-            canReview,
+            isVerified: isVerifiedNum,
+            canBorrow: canBorrowNum,
+            canReview: canReviewNum,
             registeredBegin,
             registeredEnd,
             updatedBegin,
             updatedEnd,
+            isSuspended: isSuspendedNum,
             suspendedBegin,
             suspendedEnd,
             limit,
             page,
         } = adminsGetUsersReqDto;
 
-        // console.log(isVerified);
+        const isVerified = numToBool(isVerifiedNum);
+        const canBorrow = numToBool(canBorrowNum);
+        const canReview = numToBool(canReviewNum);
+        const isSuspended = numToBool(isSuspendedNum);
 
         const pipeline: PipelineStage[] = [
             {
@@ -230,6 +234,9 @@ export class UsersCollService {
                     }),
                     ...(updatedEnd && {
                         updatedAt: { $lte: updatedEnd },
+                    }),
+                    ...(isSuspended !== undefined && {
+                        suspendedAt: { $exists: isSuspended },
                     }),
                     ...(suspendedBegin && {
                         suspendedAt: { $gte: suspendedBegin },
@@ -377,4 +384,9 @@ export class UsersCollService {
             .findByIdAndUpdate(userId, { resetTokenVer: token }, { new: true })
             .session(session);
     }
+}
+
+function numToBool(num: number | undefined): boolean | undefined {
+    if (num === undefined) return undefined;
+    return num !== 0;
 }

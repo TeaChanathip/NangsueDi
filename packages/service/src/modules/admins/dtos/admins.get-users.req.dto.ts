@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
     ArrayUnique,
-    IsBoolean,
     IsEnum,
     IsInt,
     IsOptional,
     IsString,
+    Max,
     MaxLength,
     Min,
     Validate,
@@ -19,7 +19,6 @@ import {
     MAX_PHONE,
 } from '../../../shared/consts/min-max.const';
 import { Role } from '../../../shared/enums/role.enum';
-import { Transform } from 'class-transformer';
 
 export class AdminsGetUsersReqDto {
     @ApiProperty({
@@ -79,32 +78,35 @@ export class AdminsGetUsersReqDto {
     roles?: Role[];
 
     @ApiProperty({
-        type: Boolean,
+        type: Number,
         required: false,
     })
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
-    @IsBoolean()
-    isVerified?: boolean;
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    isVerified?: number;
 
     // Permissions
     @ApiProperty({
-        type: Boolean,
+        type: Number,
         required: false,
     })
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
-    @IsBoolean()
-    canBorrow?: boolean;
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    canBorrow?: number;
 
     @ApiProperty({
-        type: Boolean,
+        type: Number,
         required: false,
     })
     @IsOptional()
-    @Transform(({ value }) => value === 'true')
-    @IsBoolean()
-    canReview?: boolean;
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    canReview?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
@@ -125,6 +127,16 @@ export class AdminsGetUsersReqDto {
     @IsOptional()
     @Validate(IsUnix)
     updatedEnd?: number;
+
+    @ApiProperty({
+        type: Number,
+        required: false,
+    })
+    @IsOptional()
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    isSuspended?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
