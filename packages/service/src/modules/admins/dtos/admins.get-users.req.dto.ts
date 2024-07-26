@@ -19,6 +19,7 @@ import {
     MAX_PHONE,
 } from '../../../shared/consts/min-max.const';
 import { Role } from '../../../shared/enums/role.enum';
+import { Transform } from 'class-transformer';
 
 export class AdminsGetUsersReqDto {
     @ApiProperty({
@@ -77,12 +78,22 @@ export class AdminsGetUsersReqDto {
     @ToArray({ type: 'string' })
     roles?: Role[];
 
+    @ApiProperty({
+        type: Boolean,
+        required: false,
+    })
+    @IsOptional()
+    @Transform(({ value }) => value === 'true')
+    @IsBoolean()
+    isVerified?: boolean;
+
     // Permissions
     @ApiProperty({
         type: Boolean,
         required: false,
     })
     @IsOptional()
+    @Transform(({ value }) => value === 'true')
     @IsBoolean()
     canBorrow?: boolean;
 
@@ -91,6 +102,7 @@ export class AdminsGetUsersReqDto {
         required: false,
     })
     @IsOptional()
+    @Transform(({ value }) => value === 'true')
     @IsBoolean()
     canReview?: boolean;
 

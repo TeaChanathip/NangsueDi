@@ -187,6 +187,7 @@ export class UsersCollService {
             firstName,
             lastName,
             roles,
+            isVerified,
             canBorrow,
             canReview,
             registeredBegin,
@@ -198,6 +199,8 @@ export class UsersCollService {
             limit,
             page,
         } = adminsGetUsersReqDto;
+
+        // console.log(isVerified);
 
         const pipeline: PipelineStage[] = [
             {
@@ -215,6 +218,9 @@ export class UsersCollService {
                     ...(roles && { role: { $in: roles } }),
                     ...(registeredBegin && {
                         registeredAt: { $gte: registeredBegin },
+                    }),
+                    ...(isVerified !== undefined && {
+                        permissions: { $exists: isVerified },
                     }),
                     ...(registeredEnd && {
                         registeredAt: { $lte: registeredEnd },
