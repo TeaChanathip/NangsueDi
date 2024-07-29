@@ -42,11 +42,11 @@ export class AdminsController {
     @Patch('suspend-user/:userId')
     async suspendUser(
         @Param('userId') userId: string,
-        @Body() adminsSusUserReqDto: AdminsSusUserReqDto,
+        // @Body() adminsSusUserReqDto: AdminsSusUserReqDto,
     ) {
         return await this.adminsService.suspendUser(
             userId,
-            adminsSusUserReqDto,
+            // adminsSusUserReqDto,
         );
     }
 
@@ -58,11 +58,11 @@ export class AdminsController {
     @Delete('delete-user/:userId')
     async deleteUser(
         @Param('userId') userId: string,
-        @Body() adminsDeleteUserReqDto: AdminsDeleteUserReqDto,
+        // @Body() adminsDeleteUserReqDto: AdminsDeleteUserReqDto,
     ) {
         return await this.adminsService.deleteUser(
             userId,
-            adminsDeleteUserReqDto,
+            // adminsDeleteUserReqDto,
         );
     }
 

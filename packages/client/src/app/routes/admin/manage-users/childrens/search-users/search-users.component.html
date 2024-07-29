@@ -139,7 +139,11 @@
 		</mat-expansion-panel>
 	</form>
 
-	@for (user of users$ | async; track $index) {
-		<p>{{ user.firstName }}</p>
+	@if (users$ | async; as users) {
+		<div class="mt-14 flex flex-wrap justify-center gap-5">
+			@for (user of users; track $index) {
+				<app-user-item [user]="user" class="md:w-[45%] lg:w-[30%]" />
+			}
+		</div>
 	}
 </div>

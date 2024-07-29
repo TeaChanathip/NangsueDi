@@ -78,5 +78,5 @@ export const routes: Routes = [
 		component: SearchComponent,
 		canActivate: [authGuard(Role.ADMIN)],
 	},
-	// { path: '**', redirectTo: '/search', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/search', pathMatch: 'full' },
 ];

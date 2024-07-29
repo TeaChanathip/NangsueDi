@@ -56,4 +56,28 @@ export class AdminService {
 			queryParams,
 		);
 	}
+
+	verifyUser(userId: string): Observable<HttpResponse<User>> {
+		return this.apiService.patch<unknown, User>(
+			`${this.url}/verify-user/${userId}`,
+		);
+	}
+
+	deleteUser(userId: string): Observable<HttpResponse<User>> {
+		return this.apiService.delete<User>(
+			`${this.url}/delete-user/${userId}`,
+		);
+	}
+
+	suspendUser(userId: string): Observable<HttpResponse<User>> {
+		return this.apiService.patch<unknown, User>(
+			`${this.url}/suspend-user/${userId}`,
+		);
+	}
+
+	unsuspendUser(userId: string): Observable<HttpResponse<User>> {
+		return this.apiService.patch<unknown, User>(
+			`${this.url}/unsuspend-user/${userId}`,
+		);
+	}
 }

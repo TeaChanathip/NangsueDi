@@ -52,4 +52,144 @@ export class AdminUsersEffect {
 			),
 		);
 	});
+
+	verifyUser$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(AdminUsersActions.verifyUser),
+			mergeMap((action) =>
+				this.adminService.verifyUser(action.userId).pipe(
+					mergeMap((res: HttpResponse<User>) =>
+						of(
+							AdminUsersActions.verifyUserSuccess({
+								user: res.body as User,
+							}),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'user was verified',
+								},
+							}),
+						),
+					),
+					catchError((error) =>
+						of(
+							AdminUsersActions.verifyUserFailure({ error }),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'something went wrong',
+									msg: 'Pleas try again later.',
+								},
+							}),
+						),
+					),
+				),
+			),
+		);
+	});
+
+	deleteUser$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(AdminUsersActions.deleteUser),
+			mergeMap((action) =>
+				this.adminService.deleteUser(action.userId).pipe(
+					mergeMap((res: HttpResponse<User>) =>
+						of(
+							AdminUsersActions.deleteUserSuccess({
+								user: res.body as User,
+							}),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'user was verified',
+								},
+							}),
+						),
+					),
+					catchError((error) =>
+						of(
+							AdminUsersActions.deleteUserFailure({ error }),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'something went wrong',
+									msg: 'Pleas try again later.',
+								},
+							}),
+						),
+					),
+				),
+			),
+		);
+	});
+
+	suspendUser$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(AdminUsersActions.suspendUser),
+			mergeMap((action) =>
+				this.adminService.suspendUser(action.userId).pipe(
+					mergeMap((res: HttpResponse<User>) =>
+						of(
+							AdminUsersActions.suspendUserSuccess({
+								user: res.body as User,
+							}),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'user was suspended',
+								},
+							}),
+						),
+					),
+					catchError((error) =>
+						of(
+							AdminUsersActions.suspendUserFailure({ error }),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'something went wrong',
+									msg: JSON.stringify(error),
+								},
+							}),
+						),
+					),
+				),
+			),
+		);
+	});
+
+	unsuspendUser$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(AdminUsersActions.unsuspendUser),
+			mergeMap((action) =>
+				this.adminService.unsuspendUser(action.userId).pipe(
+					mergeMap((res: HttpResponse<User>) =>
+						of(
+							AdminUsersActions.unsuspendUserSuccess({
+								user: res.body as User,
+							}),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'user was unsuspended',
+								},
+							}),
+						),
+					),
+					catchError((error) =>
+						of(
+							AdminUsersActions.unsuspendUserFailure({ error }),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'something went wrong',
+									msg: 'Pleas try again later.',
+								},
+							}),
+						),
+					),
+				),
+			),
+		);
+	});
 }

@@ -19,6 +19,7 @@ import { StateCheckBoxComponent } from '../../../../../shared/components/state-c
 import { MAX_EMAIL } from '../../../../../shared/constants/min-max.constant';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 import { Role } from '../../../../../shared/enums/role.enum';
+import { UserItemComponent } from '../../components/user-item/user-item.component';
 
 @Component({
 	selector: 'app-search-users',
@@ -33,6 +34,7 @@ import { Role } from '../../../../../shared/enums/role.enum';
 		StateCheckBoxComponent,
 		NgClass,
 		ButtonComponent,
+		UserItemComponent,
 	],
 	templateUrl: './search-users.component.html',
 	styleUrl: './search-users.component.scss',
@@ -75,7 +77,7 @@ export class SearchUsersComponent implements OnInit {
 		roles?: Role[];
 	} = {};
 
-	limit: number = 20;
+	limit: number = 50;
 	page: number = 1;
 
 	disableBtn$: Observable<boolean>;

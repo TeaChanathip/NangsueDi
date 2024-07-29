@@ -1,0 +1,11 @@
+button {
+	padding: 10px 20px;
+	border-radius: theme('borderRadius.lg');
+	font-weight: theme('fontWeight.semibold');
+	color: white;
+	box-shadow: theme('boxShadow.obr-1');
+}
+
+.hide {
+	visibility: hidden;
+}

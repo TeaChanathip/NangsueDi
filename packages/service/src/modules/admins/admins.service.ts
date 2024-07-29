@@ -92,7 +92,7 @@ export class AdminsService {
 
     async suspendUser(
         userId: string,
-        adminsSusUserReqDto: AdminsSusUserReqDto,
+        // adminsSusUserReqDto: AdminsSusUserReqDto,
     ): Promise<UserFiltered> {
         const userObjId = cvtToObjectId(userId, 'userId');
         const user = await this.getUserAndCheckRole(userObjId, [
@@ -143,7 +143,7 @@ export class AdminsService {
 
     async deleteUser(
         userId: string,
-        adminsDeleteUserReqDto: AdminsDeleteUserReqDto,
+        // adminsDeleteUserReqDto: AdminsDeleteUserReqDto,
     ) {
         const userObjId = cvtToObjectId(userId, 'userId');
         const user = await this.getUserAndCheckRole(userObjId, [
