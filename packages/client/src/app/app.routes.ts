@@ -40,7 +40,7 @@ export const routes: Routes = [
 		canActivate: [authGuard()],
 	},
 	{
-		path: 'search',
+		path: 'search-books',
 		component: SearchBooksComponent,
 	},
 	{
@@ -79,5 +79,5 @@ export const routes: Routes = [
 		component: SearchBooksComponent,
 		canActivate: [authGuard(Role.ADMIN)],
 	},
-	{ path: '**', redirectTo: '/search', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/login', pathMatch: 'full' },
 ];

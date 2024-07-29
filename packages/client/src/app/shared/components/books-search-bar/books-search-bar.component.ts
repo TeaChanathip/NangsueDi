@@ -81,7 +81,10 @@ export class BooksSearchBarComponent {
 		};
 
 		if (!this.isFilterOn) {
-			this.router.navigate(['/search'], { queryParams: myQueryParams });
+			this.router.navigate([this.router.url.split('?')[0]], {
+				queryParams: myQueryParams,
+				queryParamsHandling: 'merge',
+			});
 			return;
 		}
 
@@ -113,7 +116,9 @@ export class BooksSearchBarComponent {
 			myQueryParams['genres'] = genres;
 		}
 
-		this.router.navigate(['/search'], { queryParams: myQueryParams });
+		this.router.navigate([this.router.url.split('?')[0]], {
+			queryParams: myQueryParams,
+		});
 	}
 
 	toggleFilter() {

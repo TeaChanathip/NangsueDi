@@ -7,6 +7,7 @@ import { Book } from '../../../shared/interfaces/book.model';
 import { ActivatedRoute } from '@angular/router';
 import { ScrollNearEndDirective } from '../../../shared/directives/scroll-near-end.directive';
 import { selectBooks } from '../../../stores/books/books.selectors';
+import { BookStatus } from '../../../stores/books/books.reducer';
 
 @Component({
 	selector: 'app-search',
@@ -32,8 +33,7 @@ export class SearchBooksComponent implements OnInit, OnDestroy {
 
 	// for contain the books from ngrx selector
 	books: Book[] | null = null;
-	booksStatus: 'pending' | 'loading' | 'error' | 'success' | 'no_more' =
-		'pending';
+	booksStatus: BookStatus = 'pending';
 
 	// for debouncing
 	timer: ReturnType<typeof setTimeout> | undefined = undefined;

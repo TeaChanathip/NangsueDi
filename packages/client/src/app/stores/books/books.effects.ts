@@ -2,6 +2,7 @@ import { BookService } from '../../apis/book/book.service';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as BooksActions from './books.actions';
+import * as AlertsActions from '../alerts/alerts.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { Book } from '../../shared/interfaces/book.model';
@@ -50,6 +51,60 @@ export class BooksEffect {
 					}),
 				),
 			),
+		);
+	});
+
+	register$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(BooksActions.registerBook),
+			mergeMap((action) => {
+				const {
+					title,
+					author,
+					description,
+					publishedAt,
+					total,
+					genres,
+					coverUrl,
+				} = action;
+				return this.bookService
+					.register({
+						title,
+						...(author && { author }),
+						...(description && { description }),
+						...(publishedAt !== undefined && { publishedAt }),
+						total,
+						...(genres && { genres }),
+						...(coverUrl && { coverUrl }),
+					})
+					.pipe(
+						mergeMap((res: HttpResponse<Book>) =>
+							of(
+								BooksActions.registerBookSuccess({
+									book: res.body as Book,
+								}),
+								AlertsActions.pushAlert({
+									alert: {
+										kind: 'success',
+										header: 'registerd book',
+									},
+								}),
+							),
+						),
+						catchError((error) =>
+							of(
+								BooksActions.registerBookFailure({ error }),
+								AlertsActions.pushAlert({
+									alert: {
+										kind: 'fail',
+										header: 'something went wrong',
+										msg: 'Please try again later.',
+									},
+								}),
+							),
+						),
+					);
+			}),
 		);
 	});
 }

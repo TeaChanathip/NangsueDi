@@ -46,3 +46,26 @@ export const searchMoreBooksFailure = createAction(
 );
 
 export const searchNoMoreBooks = createAction('[Search API] Search No More');
+
+export const registerBook = createAction(
+	'[Manage Books Page] Register Book',
+	props<{
+		title: string;
+		author?: string;
+		description?: string;
+		publishedAt?: number;
+		total: number;
+		genres?: number[];
+		coverUrl?: string;
+	}>(),
+);
+
+export const registerBookSuccess = createAction(
+	'[Manage Books Page] Register Book Success',
+	props<{ book: Book }>(),
+);
+
+export const registerBookFailure = createAction(
+	'[Manage Books Page] Register Book Failure',
+	props<{ error: string }>(),
+);

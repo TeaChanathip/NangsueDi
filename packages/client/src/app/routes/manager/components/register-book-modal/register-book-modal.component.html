@@ -1,0 +1,123 @@
+<div
+	class="fixed top-0 left-0 w-screen h-screen bg-[rgb(0,0,0,0.7)]"
+	tabindex="1"
+	(click)="emitToggleModal()"
+	(keydown.escape)="emitToggleModal()"
+></div>
+
+<form
+	[formGroup]="registerBookForm"
+	(submit)="onSubmit()"
+	class="bg-primary-white p-10 rounded-2xl flex flex-wrap gap-x-10 gap-y-5 justify-between"
+>
+	<div class="w-[45%]">
+		<app-form-input
+			label="Title"
+			formName="title"
+			[isRequired]="true"
+			[isInvalid]="registerBookForm.controls['title'].errors !== null"
+		/>
+		<app-warning-msg
+			[msg]="titleErrMsg"
+			[isShowing]="registerBookForm.controls['title'].errors !== null"
+			class="text-center text-2xl"
+		/>
+	</div>
+
+	<app-form-input
+		label="Author"
+		formName="author"
+		[maxLength]="200"
+		class="w-[45%]"
+	/>
+
+	<div class="w-[45%]">
+		<app-form-input
+			label="Published Date"
+			formName="publishedDate"
+			type="date"
+			[isInvalid]="
+				registerBookForm.controls['publishedDate'].errors !== null
+			"
+		/>
+		<app-warning-msg
+			[msg]="pubDateErrMsg"
+			[isShowing]="
+				registerBookForm.controls['publishedDate'].errors !== null
+			"
+			class="text-center text-2xl"
+		/>
+	</div>
+
+	<div class="w-[45%]">
+		<app-form-input
+			label="Total"
+			formName="total"
+			type="number"
+			[isRequired]="true"
+			[isInvalid]="registerBookForm.controls['total'].errors !== null"
+		/>
+		<app-warning-msg
+			[msg]="totalErrMsg"
+			[isShowing]="registerBookForm.controls['total'].errors !== null"
+			class="text-center text-2xl"
+		/>
+	</div>
+
+	<app-form-input-box
+		label="Description"
+		formName="description"
+		[maxLength]="400"
+		height="200px"
+		class="w-[45%]"
+	/>
+
+	<div class="w-[45%]">
+		<label class="text-3xl text-slate-600 font-semibold block" for="genres">
+			Genre
+		</label>
+		<select
+			formControlName="genres"
+			multiple
+			class="w-full shadow-obr-1 rounded-xl h-[200px]"
+		>
+			@for (genre of genreOptions; track $index) {
+				<option
+					[value]="$index"
+					class="text-xl text-slate-500 px-4 py-2 border-b-slate-100 border-solid border-[1px]"
+				>
+					{{ genre }}
+				</option>
+			}
+		</select>
+	</div>
+
+	<div class="w-[80%]">
+		<app-form-input
+			label="Cover URL"
+			formName="coverUrl"
+			[maxLength]="400"
+			[isInvalid]="registerBookForm.controls['coverUrl'].errors !== null"
+		/>
+		<app-warning-msg
+			[msg]="coverUrlErrMsg"
+			[isShowing]="registerBookForm.controls['coverUrl'].errors !== null"
+			class="text-center text-2xl"
+		/>
+	</div>
+
+	<div class="w-full flex flex-wrap justify-center gap-5">
+		<app-button
+			type="submit"
+			kind="solid"
+			text="Submit"
+			[isDisabled]="!registerBookForm.valid"
+		/>
+		<app-button
+			type="button"
+			kind="outline"
+			(click)="emitToggleModal()"
+			text="Cancel"
+		/>
+	</div>
+</form>

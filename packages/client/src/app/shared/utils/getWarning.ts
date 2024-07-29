@@ -42,6 +42,18 @@ export function getWarning(validationErrors: ValidationErrors | null): string {
 		case 'pwdMismatch': {
 			return 'Password are not matching';
 		}
+		case 'dtBefore': {
+			return 'Invalid date';
+		}
+		case 'invalidUrl': {
+			return 'Invalid URL';
+		}
+		case 'min': {
+			return `Must be at least ${value.min}`;
+		}
+		case 'max': {
+			return `Must not exceed ${value.max}`;
+		}
 		default: {
 			return 'empty';
 		}

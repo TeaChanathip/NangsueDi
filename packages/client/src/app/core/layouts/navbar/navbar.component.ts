@@ -56,7 +56,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 				}
 				case 'MANAGER': {
 					this.navbarRoutes = [
-						['search', 'navbar-icons/search.svg'],
 						['requests', 'navbar-icons/requests.svg'],
 						['manage-books', 'navbar-icons/manage-books.svg'],
 					];
@@ -64,7 +63,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 				}
 				case 'ADMIN': {
 					this.navbarRoutes = [
-						['search', 'navbar-icons/search.svg'],
 						['requests', 'navbar-icons/requests.svg'],
 						['manage-books', 'navbar-icons/manage-books.svg'],
 						['manage-users', 'navbar-icons/manage-users.svg'],

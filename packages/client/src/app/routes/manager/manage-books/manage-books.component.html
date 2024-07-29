@@ -1,5 +1,33 @@
-<div>
-	<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">
-		Manage Books
-	</h1>
+<div
+	appScrollNearEnd
+	[threshold]="10"
+	(nearEnd)="debSeachMoreBook()"
+	class="mt-10 flex flex-col items-center justify-center gap-5"
+>
+	<app-books-search-bar class="w-full" />
+	<div class="mt-10 w-[90%] flex flex-wrap gap-10">
+		<button
+			class="w-[calc(50%-20px)] lg:w-[calc(25%-30px)] bg-primary-white hover:bg-[#808080] shadow-obr-2 rounded-2xl"
+			id="add-new"
+			(click)="toggleRegModal()"
+		>
+			<span class="material-symbols-rounded">add_circle</span>
+			<p class="text-4xl font-bold text-slate-600">Register Book</p>
+		</button>
+		@for (book of books; track $index) {
+			<button class="w-[calc(50%-20px)] lg:w-[calc(25%-30px)]">
+				<img
+					alt="{{ book.title }}"
+					src="{{ book.coverUrl }}"
+					onerror="this.src='/images/default-book.jpg'"
+					draggable="false"
+					class="size-full rounded-2xl shadow-obr-2 hover:brightness-50 hover:blur-[2px]"
+				/>
+			</button>
+		}
+	</div>
 </div>
+
+@if (isRegModalOpen) {
+	<app-register-book-modal (toggleModal)="toggleRegModal()" />
+}

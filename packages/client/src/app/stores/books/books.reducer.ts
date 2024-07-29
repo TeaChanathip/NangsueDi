@@ -2,10 +2,20 @@ import { createReducer, on } from '@ngrx/store';
 import { Book } from '../../shared/interfaces/book.model';
 import * as BooksActions from './books.actions';
 
+export type BookStatus =
+	| 'pending'
+	| 'loading'
+	| 'error'
+	| 'success'
+	| 'no_more'
+	| 'reg_waiting'
+	| 'reg_success'
+	| 'reg_error';
+
 export interface BooksState {
 	books: Book[] | null;
 	error: string | null;
-	status: 'pending' | 'loading' | 'error' | 'success' | 'no_more';
+	status: BookStatus;
 }
 
 export const initialState: BooksState = {
@@ -69,6 +79,32 @@ export const booksReducer = createReducer(
 		(state): BooksState => ({
 			...state,
 			status: 'no_more',
+		}),
+	),
+
+	// register book
+	on(
+		BooksActions.registerBook,
+		(state): BooksState => ({
+			...state,
+			error: null,
+			status: 'reg_waiting',
+		}),
+	),
+	on(
+		BooksActions.registerBookSuccess,
+		(state, { book }): BooksState => ({
+			...state,
+			books: state.books!.concat(book),
+			status: 'reg_success',
+		}),
+	),
+	on(
+		BooksActions.registerBookFailure,
+		(state, { error }): BooksState => ({
+			...state,
+			error,
+			status: 'reg_error',
 		}),
 	),
 );

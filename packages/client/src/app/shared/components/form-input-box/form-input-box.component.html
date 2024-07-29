@@ -5,14 +5,14 @@
 			<span class="text-primary-400">*</span>
 		}
 	</label>
-	<input
-		[type]="type"
+	<textarea
 		[placeholder]="ph"
 		[formControlName]="formName"
 		[id]="formName"
 		[ngClass]="{ invalid: isInvalid }"
 		[attr.required]="isRequired"
 		[maxlength]="maxLength"
-		class="bg-white rounded-xl w-full text-2xl text-slate-500 py-1 px-2 shadow-obr-1 border-white border-solid border-2"
-	/>
+		[ngStyle]="{ height }"
+		class="bg-white rounded-xl w-full text-2xl text-slate-500 py-1 px-2 shadow-obr-1 border-white border-solid border-2 h-[200px] resize-none"
+	></textarea>
 </div>

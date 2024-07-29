@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { Book } from '../../shared/interfaces/book.model';
+import { ApiService } from '../api.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -10,7 +11,10 @@ import { Book } from '../../shared/interfaces/book.model';
 export class BookService {
 	private url = `${environment.SERVICE_URL}/books`;
 
-	constructor(private readonly httpClient: HttpClient) {}
+	constructor(
+		private readonly httpClient: HttpClient,
+		private readonly apiService: ApiService,
+	) {}
 
 	search(searchParams: {
 		bookKeyword?: string;
@@ -47,5 +51,17 @@ export class BookService {
 			params: queryParams,
 			observe: 'response',
 		});
+	}
+
+	register(props: {
+		title: string;
+		author?: string;
+		description?: string;
+		publishedAt?: number;
+		total: number;
+		genres?: number[];
+		coverUrl?: string;
+	}): Observable<HttpResponse<Book>> {
+		return this.apiService.post<typeof props, Book>(this.url, props);
 	}
 }
