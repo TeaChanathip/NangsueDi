@@ -7,19 +7,19 @@ import {
 } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MAX_TITLE } from '../../../../../shared/constants/min-max.constant';
-import { dtBeforeValidator } from '../../../../../shared/validators/datetime-before.validator';
-import { genreOptions } from '../../../../../shared/constants/genre.constant';
-import { dtDurationValidator } from '../../../../../shared/validators/datetime-duration.validator';
-import { CheckBoxComponent } from '../../../../../shared/components/check-box/check-box.component';
-import { ChangePwdComponent } from '../../../../user/change-pwd/change-pwd.component';
+import { MAX_TITLE } from '../../constants/min-max.constant';
+import { dtBeforeValidator } from '../../validators/datetime-before.validator';
+import { genreOptions } from '../../constants/genre.constant';
+import { dtDurationValidator } from '../../validators/datetime-duration.validator';
+import { CheckBoxComponent } from '../check-box/check-box.component';
+import { ChangePwdComponent } from '../../../routes/user/change-pwd/change-pwd.component';
 import { NgClass } from '@angular/common';
-import { ClearButtonComponent } from '../../../../../shared/components/clear-button/clear-button.component';
+import { ClearButtonComponent } from '../clear-button/clear-button.component';
 import { Params, Router } from '@angular/router';
-import { dtToUnix } from '../../../../../shared/utils/dtToUnix';
+import { dtToUnix } from '../../utils/dtToUnix';
 
 @Component({
-	selector: 'app-search-bar',
+	selector: 'app-books-search-bar',
 	standalone: true,
 	imports: [
 		ReactiveFormsModule,
@@ -30,10 +30,10 @@ import { dtToUnix } from '../../../../../shared/utils/dtToUnix';
 		ClearButtonComponent,
 		NgClass,
 	],
-	templateUrl: './search-bar.component.html',
-	styleUrl: './search-bar.component.scss',
+	templateUrl: './books-search-bar.component.html',
+	styleUrl: './books-search-bar.component.scss',
 })
-export class SearchBarComponent {
+export class BooksSearchBarComponent {
 	today = new Date();
 	genreOptions = genreOptions;
 

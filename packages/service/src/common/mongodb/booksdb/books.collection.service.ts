@@ -86,44 +86,41 @@ export class BooksCollService {
                             { author: { $regex: bookKeyword, $options: 'i' } },
                         ],
                     }),
-                    ...(publishedBegin && {
-                        publishedAt: { $gte: publishedBegin },
+                    ...((publishedBegin || publishedEnd) && {
+                        publishedAt: {
+                            ...(publishedBegin && { $gte: publishedBegin }),
+                            ...(publishedEnd && { $lte: publishedEnd }),
+                        },
                     }),
-                    ...(publishedEnd && {
-                        publishedAt: { $lte: publishedEnd },
+                    ...((registeredBegin || registeredEnd) && {
+                        registeredAt: {
+                            ...(registeredBegin && { $gte: registeredBegin }),
+                            ...(registeredEnd && { $lte: registeredEnd }),
+                        },
                     }),
-                    ...(registeredBegin && {
-                        registeredAt: { $gte: registeredBegin },
+                    ...((updatedBegin || updatedEnd) && {
+                        updatedAt: {
+                            ...(updatedBegin && { $gte: updatedBegin }),
+                            ...(updatedEnd && { $lte: updatedEnd }),
+                        },
                     }),
-                    ...(registeredEnd && {
-                        registeredAt: { $lte: registeredEnd },
+                    ...((totalLB || totalUB) && {
+                        total: {
+                            ...(totalLB && { $gte: totalLB }),
+                            ...(totalUB && { $lte: totalUB }),
+                        },
                     }),
-                    ...(updatedBegin && {
-                        updatedAt: { $gte: updatedBegin },
-                    }),
-                    ...(updatedEnd && {
-                        updatedAt: { $lte: updatedEnd },
-                    }),
-                    ...(totalLB && {
-                        total: { $gte: totalLB },
-                    }),
-                    ...(totalUB && {
-                        total: { $lte: totalUB },
-                    }),
-                    ...(borrowedLB && {
-                        borrowed: { $gte: borrowedLB },
-                    }),
-                    ...(borrowedUB && {
-                        borrowed: { $lte: borrowedUB },
+                    ...((borrowedLB || borrowedUB) && {
+                        borrowed: {
+                            ...(borrowedLB && { $gte: borrowedLB }),
+                            ...(borrowedUB && { $lte: borrowedUB }),
+                        },
                     }),
                     ...(remainLB && {
                         $expr: {
                             $gte: [
                                 {
-                                    $subtract: [
-                                        '$totalNumber',
-                                        '$borrowedNumber',
-                                    ],
+                                    $subtract: ['$total', '$borrowed'],
                                 },
                                 remainLB,
                             ],

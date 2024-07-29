@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { BooksSearchBarComponent } from '../../../shared/components/books-search-bar/books-search-bar.component';
 import { Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as BooksAction from '../../../stores/books/books.actions';
@@ -11,11 +11,11 @@ import { selectBooks } from '../../../stores/books/books.selectors';
 @Component({
 	selector: 'app-search',
 	standalone: true,
-	imports: [SearchBarComponent, ScrollNearEndDirective],
-	templateUrl: './search.component.html',
-	styleUrl: './search.component.scss',
+	imports: [BooksSearchBarComponent, ScrollNearEndDirective],
+	templateUrl: './search-books.component.html',
+	styleUrl: './search-books.component.scss',
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class SearchBooksComponent implements OnInit, OnDestroy {
 	// for store the query param from url
 	props: {
 		bookKeyword?: string;

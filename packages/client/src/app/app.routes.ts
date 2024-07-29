@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { SearchComponent } from './routes/public/search/search.component';
+import { SearchBooksComponent } from './routes/public/search/search-books.component';
 import { ProfileComponent } from './routes/user/profile/profile.component';
 import { LoginComponent } from './routes/auth/login/login.component';
 import { RegisterComponent } from './routes/auth/register/register.component';
@@ -10,6 +10,7 @@ import { ManageUsersComponent } from './routes/admin/manage-users/manage-users.c
 import { authGuard } from './core/guards/auth/auth.guard';
 import { Role } from './shared/enums/role.enum';
 import { SearchUsersComponent } from './routes/admin/manage-users/childrens/search-users/search-users.component';
+import { ManageBooksComponent } from './routes/manager/manage-books/manage-books.component';
 
 export const routes: Routes = [
 	{
@@ -40,21 +41,21 @@ export const routes: Routes = [
 	},
 	{
 		path: 'search',
-		component: SearchComponent,
+		component: SearchBooksComponent,
 	},
 	{
 		path: 'my-shelf',
-		component: SearchComponent,
+		component: SearchBooksComponent,
 		canActivate: [authGuard(Role.USER)],
 	},
 	{
 		path: 'requests',
-		component: SearchComponent,
+		component: SearchBooksComponent,
 		canActivate: [authGuard(Role.MANAGER, Role.ADMIN)],
 	},
 	{
 		path: 'manage-books',
-		component: SearchComponent,
+		component: ManageBooksComponent,
 		canActivate: [authGuard(Role.MANAGER, Role.ADMIN)],
 	},
 	{
@@ -75,7 +76,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'dashboard',
-		component: SearchComponent,
+		component: SearchBooksComponent,
 		canActivate: [authGuard(Role.ADMIN)],
 	},
 	{ path: '**', redirectTo: '/search', pathMatch: 'full' },

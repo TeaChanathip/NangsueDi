@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AdminService } from '../../apis/admin/admin.service';
 import * as AdminUsersActions from './admin-users.actions';
 import * as AlertsActions from '../alerts/alerts.actions';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, mergeMap, of } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { User } from '../../shared/interfaces/user.model';
 
@@ -31,10 +31,18 @@ export class AdminUsersEffect {
 						page: action.page,
 					})
 					.pipe(
-						map((res: HttpResponse<User[]>) =>
-							AdminUsersActions.searchUsersSuccess({
-								users: res.body as User[],
-							}),
+						mergeMap((res: HttpResponse<User[]>) =>
+							of(
+								AdminUsersActions.searchUsersSuccess({
+									users: res.body as User[],
+								}),
+								AlertsActions.pushAlert({
+									alert: {
+										kind: 'success',
+										header: 'search users',
+									},
+								}),
+							),
 						),
 						catchError((error) =>
 							of(
