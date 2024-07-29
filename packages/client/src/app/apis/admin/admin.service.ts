@@ -20,8 +20,8 @@ export class AdminService {
 		firstName?: string;
 		lastName?: string;
 		roles?: Role[];
-		isVerified: boolean | undefined;
-		isSuspended: boolean | undefined;
+		isVerified?: number;
+		isSuspended?: number;
 		limit: number;
 		page: number;
 	}): Observable<HttpResponse<User[]>> {
@@ -45,14 +45,11 @@ export class AdminService {
 				...(lastName && { lastName }),
 				...(roles && { roles }),
 				...(isVerified !== undefined && { isVerified }),
-				...(isSuspended === undefined && { suspendedBegin: 0 }),
-				...(isSuspended === true && { suspendedBegin: 0 }),
-				...(isSuspended === false && { suspendedEnd: 0 }),
+				...(isSuspended !== undefined && { isSuspended }),
 				...(limit && { limit }),
 				...(page && { page }),
 			},
 		});
-		console.log(queryParams);
 
 		return this.apiService.get<User[]>(
 			`${this.url}/search-users`,

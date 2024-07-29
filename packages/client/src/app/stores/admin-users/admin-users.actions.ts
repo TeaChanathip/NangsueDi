@@ -10,7 +10,8 @@ export const searchUsers = createAction(
 		firstName?: string;
 		lastName?: string;
 		roles?: Role[];
-		canBorrow?: boolean;
+		isVerified?: number;
+		isSuspended?: number;
 		limit: number;
 		page: number;
 	}>(),

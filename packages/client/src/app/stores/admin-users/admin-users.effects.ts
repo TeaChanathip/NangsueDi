@@ -24,8 +24,9 @@ export class AdminUsersEffect {
 						phone: action.phone,
 						firstName: action.firstName,
 						lastName: action.lastName,
+						isVerified: action.isVerified,
+						isSuspended: action.isSuspended,
 						roles: action.roles,
-						canBorrow: action.canBorrow,
 						limit: action.limit,
 						page: action.page,
 					})

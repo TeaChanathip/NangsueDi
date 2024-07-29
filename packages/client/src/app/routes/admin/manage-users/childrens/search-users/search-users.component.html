@@ -15,7 +15,7 @@
 					</span>
 					<app-clear-button
 						[disabled]="(disableBtn$ | async) ?? true"
-						(clicked)="resetForm($event)"
+						(clicked)="clearFilter($event)"
 					/>
 				</mat-panel-title>
 			</mat-expansion-panel-header>
@@ -131,11 +131,8 @@
 				</span>
 				<app-button
 					text="Submit"
-					[isDisabled]="
-						!searchUsersForm.valid ||
-						((disableBtn$ | async) ?? true)
-					"
-					(click)="onSubmitForm()"
+					[isDisabled]="!searchUsersForm.valid"
+					(click)="performSearch()"
 					class="justify-self-end"
 				/>
 			</div>

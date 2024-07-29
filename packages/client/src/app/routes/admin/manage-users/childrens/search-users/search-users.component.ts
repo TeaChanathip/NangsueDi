@@ -18,6 +18,7 @@ import { CheckBoxComponent } from '../../../../../shared/components/check-box/ch
 import { StateCheckBoxComponent } from '../../../../../shared/components/state-check-box/state-check-box.component';
 import { MAX_EMAIL } from '../../../../../shared/constants/min-max.constant';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+import { Role } from '../../../../../shared/enums/role.enum';
 
 @Component({
 	selector: 'app-search-users',
@@ -64,6 +65,16 @@ export class SearchUsersComponent implements OnInit {
 	isSuspended$ = new BehaviorSubject<boolean | undefined>(undefined);
 	roles$ = new BehaviorSubject<boolean[]>(new Array<boolean>(3).fill(false));
 
+	initialValue: {
+		email?: string;
+		phone?: string;
+		firstName?: string;
+		lastName?: string;
+		isVerified?: boolean;
+		isSuspended?: boolean;
+		roles?: Role[];
+	} = {};
+
 	limit: number = 20;
 	page: number = 1;
 
@@ -98,13 +109,15 @@ export class SearchUsersComponent implements OnInit {
 		);
 	}
 
-	resetForm(event: Event) {
+	clearFilter(event: Event) {
 		event.stopPropagation();
-		this.searchUsersForm.reset();
 
+		this.searchUsersForm.reset();
 		this.isVerified$.next(undefined);
 		this.isSuspended$.next(undefined);
-		this.roles$.next(new Array<boolean>(3).fill(false));
+		this.roles$.next(new Array<boolean>(3));
+
+		this.performSearch();
 	}
 
 	toggleRoles(index: number) {
@@ -148,12 +161,47 @@ export class SearchUsersComponent implements OnInit {
 		}
 	}
 
-	onSubmitForm() {
+	performSearch() {
 		if (!this.searchUsersForm.valid) return;
+
+		const { email, phone, firstName, lastName } =
+			this.searchUsersForm.getRawValue();
+
+		const isVerified = this.isVerified$.getValue();
+		const isSuspended = this.isSuspended$.getValue();
+		const roles: Role[] = [];
+		this.roles$.getValue().forEach((value, index) => {
+			if (!value) return;
+
+			switch (index) {
+				case 0: {
+					roles.push(Role.USER);
+					break;
+				}
+				case 1: {
+					roles.push(Role.MANAGER);
+					break;
+				}
+				case 2: {
+					roles.push(Role.ADMIN);
+					break;
+				}
+			}
+		});
 
 		this.store.dispatch(
 			AdminUsersActions.searchUsers({
-				...this.searchUsersForm.getRawValue(),
+				...(email && { email }),
+				...(phone && { phone }),
+				...(firstName && { firstName }),
+				...(lastName && { lastName }),
+				...(roles.length > 0 && { roles }),
+				...(isVerified !== undefined && {
+					isVerified: isVerified ? 1 : 0,
+				}),
+				...(isSuspended !== undefined && {
+					isSuspended: isSuspended ? 1 : 0,
+				}),
 				limit: this.limit,
 				page: this.page,
 			}),
@@ -161,11 +209,6 @@ export class SearchUsersComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.store.dispatch(
-			AdminUsersActions.searchUsers({
-				limit: this.limit,
-				page: this.page,
-			}),
-		);
+		this.performSearch();
 	}
 }
