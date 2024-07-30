@@ -14,12 +14,14 @@ export type BookStatus =
 
 export interface BooksState {
 	books: Book[] | null;
+	currBook: Book | null;
 	error: string | null;
 	status: BookStatus;
 }
 
 export const initialState: BooksState = {
 	books: null,
+	currBook: null,
 	error: null,
 	status: 'pending',
 };
@@ -105,6 +107,33 @@ export const booksReducer = createReducer(
 			...state,
 			error,
 			status: 'reg_error',
+		}),
+	),
+
+	// Get a Book
+	on(
+		BooksActions.getBook,
+		(state): BooksState => ({
+			...state,
+			currBook: null,
+			error: null,
+			status: 'loading',
+		}),
+	),
+	on(
+		BooksActions.getBookSuccess,
+		(state, { book }): BooksState => ({
+			...state,
+			currBook: book,
+			status: 'success',
+		}),
+	),
+	on(
+		BooksActions.getBookFailure,
+		(state, { error }): BooksState => ({
+			...state,
+			error,
+			status: 'error',
 		}),
 	),
 );

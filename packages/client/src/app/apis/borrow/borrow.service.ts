@@ -24,7 +24,10 @@ export class BorrowService {
 			},
 		});
 
-		return this.apiService.get<Borrow[]>(this.url, params);
+		return this.apiService.get<Borrow[]>(
+			`${this.url}/non-returned`,
+			params,
+		);
 	}
 
 	borrowBook(

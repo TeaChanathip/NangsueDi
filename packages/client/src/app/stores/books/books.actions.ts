@@ -69,3 +69,23 @@ export const registerBookFailure = createAction(
 	'[Manage Books Page] Register Book Failure',
 	props<{ error: string }>(),
 );
+
+// Get a Book
+export const getBook = createAction(
+	'[Book Route] Get a Book',
+	props<{ bookId: string }>(),
+);
+export const getBookSuccess = createAction(
+	'[Book Route] Get a Book Success',
+	props<{ book: Book }>(),
+);
+export const getBookFailure = createAction(
+	'[Book Route] Get a Book Failure',
+	props<{ error: string }>(),
+);
+
+// Get a Book and Non-Returned Borrows
+export const getBookAndNonRetBrrws = createAction(
+	'[Book Route] Get a Book and Non-Returend Borrows',
+	props<{ bookId: string }>(),
+);

@@ -3,14 +3,8 @@ import { BookService } from '../../../apis/book/book.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, EMPTY, map, Observable, Subject, takeUntil } from 'rxjs';
 import { Book } from '../../../shared/interfaces/book.model';
-import {
-	HttpErrorResponse,
-	HttpResponse,
-	HttpStatusCode,
-} from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import * as AlertsActions from '../../../stores/alerts/alerts.actions';
-import { AlertMsg } from '../../../core/layouts/alert/alert.component';
 import { AsyncPipe } from '@angular/common';
 import { FormInputComponent } from '../../../shared/components/form-input/form-input.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +19,8 @@ import { Borrow } from '../../../shared/interfaces/borrow.model';
 import { selectNonRetBrrws } from '../../../stores/borrows/borrows.selectors';
 import * as BorrowsActions from '../../../stores/borrows/borrows.actions';
 import { BorrowModalComponent } from './components/borrow-modal/borrow-modal.component';
+import { selectCurrBook } from '../../../stores/books/books.selectors';
+import * as BooksActions from '../../../stores/books/books.actions';
 
 @Component({
 	selector: 'app-book',
@@ -83,29 +79,7 @@ export class BookComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private store: Store,
 	) {
-		this.book$ = this.bookService.getBook(this.bookId).pipe(
-			map((res: HttpResponse<Book>) => {
-				return res.body as Book;
-			}),
-			catchError((error: HttpErrorResponse) => {
-				const alert: AlertMsg = {
-					kind: 'fail',
-				};
-
-				if (error.status === HttpStatusCode.NotFound) {
-					alert.header = 'not found';
-				} else {
-					alert.header = 'something went wrong';
-					alert.msg = 'Please try again later.';
-				}
-
-				this.store.dispatch(AlertsActions.pushAlert({ alert }));
-
-				this.router.navigate(['login']);
-
-				return EMPTY;
-			}),
-		);
+		this.book$ = this.store.select(selectCurrBook);
 
 		this.user$ = this.store.select(selectCurrUser);
 
@@ -152,6 +126,8 @@ export class BookComponent implements OnInit, OnDestroy {
 		this.store.dispatch(
 			BorrowsActions.borrowBook({ bookId: this.bookId, addrId }),
 		);
+
+		this.isBorrowModalOpen = false;
 	}
 
 	toggleBrrwModal() {
@@ -159,6 +135,10 @@ export class BookComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.store.dispatch(
+			BooksActions.getBookAndNonRetBrrws({ bookId: this.bookId }),
+		);
+
 		this.book$.pipe(takeUntil(this.destroy$)).subscribe((book) => {
 			if (!book) return;
 

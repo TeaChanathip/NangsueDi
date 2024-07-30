@@ -5,12 +5,10 @@ export const getNonRetBrrws = createAction(
 	'[Borrow API] Get Non-Returned Borrows',
 	props<{ limit?: number; page?: number }>(),
 );
-
 export const getNonRetBrrwsSuccess = createAction(
 	'[Borrow API] Get Non-Returned Borrows Success',
 	props<{ borrows: Borrow[] }>(),
 );
-
 export const getNonRetBrrwsFailure = createAction(
 	'[Borrow API] Get Non-Returned Borrows Failure',
 	props<{ error: string }>(),

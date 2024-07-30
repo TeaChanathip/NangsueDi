@@ -6,6 +6,7 @@ import { catchError, map, mergeMap, of } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { Borrow } from '../../shared/interfaces/borrow.model';
 import * as AlertsActions from '../alerts/alerts.actions';
+import * as BooksActions from '../books/books.actions';
 
 @Injectable()
 export class BorrowsEffect {
@@ -51,6 +52,9 @@ export class BorrowsEffect {
 							of(
 								BorrowsActions.borrowBookSuccess({
 									borrow: res.body as Borrow,
+								}),
+								BooksActions.getBook({
+									bookId: (res.body as Borrow).book._id,
 								}),
 								AlertsActions.pushAlert({
 									alert: {

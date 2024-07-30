@@ -2,6 +2,7 @@ import { BookService } from '../../apis/book/book.service';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as BooksActions from './books.actions';
+import * as BorrowsActions from '../borrows/borrows.actions';
 import * as AlertsActions from '../alerts/alerts.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
@@ -105,6 +106,53 @@ export class BooksEffect {
 						),
 					);
 			}),
+		);
+	});
+
+	getBook$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(BooksActions.getBook),
+			mergeMap((action) =>
+				this.bookService.getBook(action.bookId).pipe(
+					mergeMap((res: HttpResponse<Book>) =>
+						of(
+							BooksActions.getBookSuccess({
+								book: res.body as Book,
+							}),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'get book info',
+								},
+							}),
+						),
+					),
+					catchError((error) =>
+						of(
+							BooksActions.getBookFailure({ error }),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'cannot get book info',
+									msg: 'Please try again later.',
+								},
+							}),
+						),
+					),
+				),
+			),
+		);
+	});
+
+	getBookAndNonRetBrrws$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(BooksActions.getBookAndNonRetBrrws),
+			mergeMap((action) =>
+				of(
+					BooksActions.getBook({ bookId: action.bookId }),
+					BorrowsActions.getNonRetBrrws({}),
+				),
+			),
 		);
 	});
 }
