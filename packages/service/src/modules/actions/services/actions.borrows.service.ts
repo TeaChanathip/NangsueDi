@@ -148,6 +148,8 @@ export class ActionsBorrowsService {
         };
 
         return transaction(this.connection, async (session) => {
+            await this.booksCollService.borrowed(bookObjId, session);
+
             const savedBorrow = await this.borrowsCollService.saveNew(
                 borrowSaveDto,
                 session,
