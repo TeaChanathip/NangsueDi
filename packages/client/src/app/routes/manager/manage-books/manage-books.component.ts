@@ -10,7 +10,7 @@ import {
 	selectBooks,
 	selectBookStatus,
 } from '../../../stores/books/books.selectors';
-import { RegisterBookModalComponent } from '../components/register-book-modal/register-book-modal.component';
+import { RegisterBookModalComponent } from './components/register-book-modal/register-book-modal.component';
 import { BookStatus } from '../../../stores/books/books.reducer';
 
 @Component({

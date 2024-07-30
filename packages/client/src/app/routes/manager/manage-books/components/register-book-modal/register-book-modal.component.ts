@@ -5,34 +5,34 @@ import {
 	OnInit,
 	Output,
 } from '@angular/core';
-import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
-import { WarningMsgComponent } from '../../../../shared/components/warning-msg/warning-msg.component';
+import { FormInputComponent } from '../../../../../shared/components/form-input/form-input.component';
+import { WarningMsgComponent } from '../../../../../shared/components/warning-msg/warning-msg.component';
 import {
 	FormControl,
 	FormGroup,
 	ReactiveFormsModule,
 	Validators,
 } from '@angular/forms';
-import {
-	MAX_NAME,
-	MAX_TEXT,
-	MAX_TITLE,
-} from '../../../../shared/constants/min-max.constant';
-import { arrayEachValidator } from '../../../../shared/validators/array-each.validator';
+import { arrayEachValidator } from '../../../../../shared/validators/array-each.validator';
+import { Store } from '@ngrx/store';
+import * as BooksActions from '../../../../../stores/books/books.actions';
+import { dtToUnix } from '../../../../../shared/utils/dtToUnix';
+import { FormInputBoxComponent } from '../../../../../shared/components/form-input-box/form-input-box.component';
+import { dtBeforeValidator } from '../../../../../shared/validators/datetime-before.validator';
+import { imageUrlValidator } from '../../../../../shared/validators/image-url.validator';
+import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+import { Subject } from 'rxjs';
+import { getWarning } from '../../../../../shared/utils/getWarning';
 import {
 	genreOptions,
 	MAX_GENRE,
 	MIN_GENRE,
-} from '../../../../shared/constants/genre.constant';
-import { Store } from '@ngrx/store';
-import * as BooksActions from '../../../../stores/books/books.actions';
-import { dtToUnix } from '../../../../shared/utils/dtToUnix';
-import { FormInputBoxComponent } from '../../../../shared/components/form-input-box/form-input-box.component';
-import { dtBeforeValidator } from '../../../../shared/validators/datetime-before.validator';
-import { imageUrlValidator } from '../../../../shared/validators/image-url.validator';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { Subject } from 'rxjs';
-import { getWarning } from '../../../../shared/utils/getWarning';
+} from '../../../../../shared/constants/genre.constant';
+import {
+	MAX_NAME,
+	MAX_TEXT,
+	MAX_TITLE,
+} from '../../../../../shared/constants/min-max.constant';
 
 @Component({
 	selector: 'app-register-book-modal',

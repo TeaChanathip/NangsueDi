@@ -21,6 +21,7 @@ import * as BorrowsActions from '../../../stores/borrows/borrows.actions';
 import { BorrowModalComponent } from './components/borrow-modal/borrow-modal.component';
 import { selectCurrBook } from '../../../stores/books/books.selectors';
 import * as BooksActions from '../../../stores/books/books.actions';
+import { Role } from '../../../shared/enums/role.enum';
 
 @Component({
 	selector: 'app-book',
@@ -135,9 +136,23 @@ export class BookComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.store.dispatch(
-			BooksActions.getBookAndNonRetBrrws({ bookId: this.bookId }),
-		);
+		this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+			if (!user) return;
+
+			if (user.role === Role.USER) {
+				this.store.dispatch(
+					BooksActions.getBookAndNonRetBrrws({ bookId: this.bookId }),
+				);
+				return;
+			}
+
+			if (user.role === Role.ADMIN || user.role === Role.MANAGER) {
+				this.store.dispatch(
+					BooksActions.getBook({ bookId: this.bookId }),
+				);
+				return;
+			}
+		});
 
 		this.book$.pipe(takeUntil(this.destroy$)).subscribe((book) => {
 			if (!book) return;
@@ -173,8 +188,6 @@ export class BookComponent implements OnInit, OnDestroy {
 				);
 				return;
 			}
-
-			this.store.dispatch(BorrowsActions.getNonRetBrrws({}));
 		});
 	}
 
