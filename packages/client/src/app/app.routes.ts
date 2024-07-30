@@ -12,6 +12,7 @@ import { Role } from './shared/enums/role.enum';
 import { SearchUsersComponent } from './routes/admin/manage-users/childrens/search-users/search-users.component';
 import { ManageBooksComponent } from './routes/manager/manage-books/manage-books.component';
 import { BookComponent } from './routes/public/book/book.component';
+import { RequestsComponent } from './routes/manager/requests/requests.component';
 
 export const routes: Routes = [
 	{
@@ -55,7 +56,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'requests',
-		component: SearchBooksComponent,
+		component: RequestsComponent,
 		canActivate: [authGuard(Role.MANAGER, Role.ADMIN)],
 	},
 	{

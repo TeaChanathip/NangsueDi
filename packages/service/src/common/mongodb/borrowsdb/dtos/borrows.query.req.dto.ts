@@ -4,6 +4,7 @@ import {
     IsMongoId,
     IsOptional,
     IsString,
+    Max,
     MaxLength,
     Min,
 } from 'class-validator';
@@ -32,6 +33,13 @@ export class BorrowsQueryReqDto {
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    isApproved?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
     @IsUnix()
     approvedBegin?: number;
 
@@ -49,6 +57,13 @@ export class BorrowsQueryReqDto {
     @IsOptional()
     @IsUnix()
     rejectedEnd?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    isReturned?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()

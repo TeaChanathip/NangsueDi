@@ -9,6 +9,7 @@ import { BorrowFiltered } from './interfaces/borrow.filtered.interface';
 import { BorrowUpdateDto } from './dtos/borrow.update.dto';
 import { BorrowGetNonReturnedDto } from './dtos/borrow.get-non-returned.dto';
 import { unixFilterQuery } from '../../../shared/utils/unixFilterQuery';
+import { numToBool } from 'src/shared/utils/numToBool';
 
 @Injectable()
 export class BorrowsCollService {
@@ -131,40 +132,51 @@ export class BorrowsCollService {
             bookKeyword,
             requestedBegin,
             requestedEnd,
+            isApproved: isApprovedNum,
             approvedBegin,
             approvedEnd,
             rejectedBegin,
             rejectedEnd,
+            isReturned: isReturnedNum,
             returnedBegin,
             returnedEnd,
             limit,
             page,
         } = BorrowsQueryReqDto;
 
+        const isApproved = numToBool(isApprovedNum);
+        const isReturned = numToBool(isReturnedNum);
+
         const pipeline: PipelineStage[] = [
             {
                 $match: {
                     ...(userId && { userId: new Types.ObjectId(userId) }),
-                    ...unixFilterQuery(
-                        'requestedAt',
-                        requestedBegin,
-                        requestedEnd,
-                    ),
-                    ...unixFilterQuery(
-                        'approvedAt',
-                        approvedBegin,
-                        approvedEnd,
-                    ),
-                    ...unixFilterQuery(
-                        'rejectedAt',
-                        rejectedBegin,
-                        rejectedEnd,
-                    ),
-                    ...unixFilterQuery(
-                        'returnedAt',
-                        returnedBegin,
-                        returnedEnd,
-                    ),
+                    // ...unixFilterQuery(
+                    //     'requestedAt',
+                    //     requestedBegin,
+                    //     requestedEnd,
+                    // ),
+                    ...(isApproved !== undefined && {
+                        approvedAt: { $exists: isApproved },
+                    }),
+                    // ...unixFilterQuery(
+                    //     'approvedAt',
+                    //     approvedBegin,
+                    //     approvedEnd,
+                    // ),
+                    // ...unixFilterQuery(
+                    //     'rejectedAt',
+                    //     rejectedBegin,
+                    //     rejectedEnd,
+                    // ),
+                    ...(isReturned !== undefined && {
+                        returnedAt: { $exists: isReturned },
+                    }),
+                    // ...unixFilterQuery(
+                    //     'returnedAt',
+                    //     returnedBegin,
+                    //     returnedEnd,
+                    // ),
                 },
             },
             {

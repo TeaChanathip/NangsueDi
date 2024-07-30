@@ -16,6 +16,7 @@ import { PasswordUpdateDto } from '../dtos/password.update.dto';
 import { AdminsGetUsersReqDto } from '../../../../modules/admins/dtos/admins.get-users.req.dto';
 import { UserAddrsRes } from '../interfaces/user-addresses.res.interface';
 import { Role } from '../../../../shared/enums/role.enum';
+import { numToBool } from 'src/shared/utils/numToBool';
 
 @Injectable()
 export class UsersCollService {
@@ -384,9 +385,4 @@ export class UsersCollService {
             .findByIdAndUpdate(userId, { resetTokenVer: token }, { new: true })
             .session(session);
     }
-}
-
-function numToBool(num: number | undefined): boolean | undefined {
-    if (num === undefined) return undefined;
-    return num !== 0;
 }
