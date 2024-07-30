@@ -1,0 +1,28 @@
+<div
+	class="flex flex-wrap justify-between md:gap-y-4 bg-white rounded-2xl py-4 px-6 text-2xl items-center min-w-[400px]"
+>
+	<span class="w-full md:w-[48%]">
+		<h2>Address</h2>
+		<input [value]="addr.address" [readOnly]="true" class="w-full" />
+	</span>
+
+	<span class="w-full md:w-[48%]">
+		<h2>Sub district</h2>
+		<input [value]="addr.subDistrict" [readOnly]="true" class="w-full" />
+	</span>
+
+	<span class="w-full md:w-[48%]">
+		<h2>District</h2>
+		<input [value]="addr.district" [readOnly]="true" class="w-full" />
+	</span>
+
+	<span class="w-full md:w-[48%]">
+		<h2>Province</h2>
+		<input [value]="addr.province" [readOnly]="true" class="w-full" />
+	</span>
+
+	<span class="w-full md:w-[48%]">
+		<h2>Postal code</h2>
+		<input [value]="addr.postalCode" [readOnly]="true" class="w-full" />
+	</span>
+</div>

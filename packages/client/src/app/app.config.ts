@@ -20,6 +20,8 @@ import { userAddrsReducer } from './stores/user-addresses/user-addresses.reducer
 import { alertsReducer } from './stores/alerts/alerts.reducer';
 import { adminUsersReducer } from './stores/admin-users/admin-users.reducer';
 import { AdminUsersEffect } from './stores/admin-users/admin-users.effects';
+import { BorrowsEffect } from './stores/borrows/borrows.effects';
+import { borrowsReducer } from './stores/borrows/borrows.reducer';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -32,11 +34,13 @@ export const appConfig: ApplicationConfig = {
 		provideState({ name: 'userAddrs', reducer: userAddrsReducer }),
 		provideState({ name: 'alerts', reducer: alertsReducer }),
 		provideState({ name: 'adminUsers', reducer: adminUsersReducer }),
+		provideState({ name: 'borrows', reducer: borrowsReducer }),
 		provideEffects(
 			UserEffect,
 			BooksEffect,
 			UserAddrsEffect,
 			AdminUsersEffect,
+			BorrowsEffect,
 		),
 		provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
 		provideAnimationsAsync(),

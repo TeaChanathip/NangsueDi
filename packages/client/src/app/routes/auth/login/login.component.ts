@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 			.subscribe((userStatus) => {
 				switch (userStatus) {
 					case 'logged_in': {
-						this.router.navigateByUrl('/search');
+						this.router.navigateByUrl('/search-books');
 						break;
 					}
 					case 'logged_in_error': {

@@ -15,14 +15,18 @@
 			<p class="text-4xl font-bold text-slate-600">Register Book</p>
 		</button>
 		@for (book of books; track $index) {
-			<button class="w-[calc(50%-20px)] lg:w-[calc(25%-30px)]">
+			<button
+				class="w-[calc(50%-20px)] lg:w-[calc(25%-30px)] flex justify-center items-center relative book-info"
+				(click)="navigateToBook(book._id)"
+			>
 				<img
 					alt="{{ book.title }}"
 					src="{{ book.coverUrl }}"
 					onerror="this.src='/images/default-book.jpg'"
 					draggable="false"
-					class="size-full rounded-2xl shadow-obr-2 hover:brightness-50 hover:blur-[2px]"
+					class="size-full rounded-2xl shadow-obr-2"
 				/>
+				<span class="material-symbols-rounded absolute"> info </span>
 			</button>
 		}
 	</div>

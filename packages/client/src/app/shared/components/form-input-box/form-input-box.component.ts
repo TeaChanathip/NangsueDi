@@ -24,4 +24,5 @@ export class FormInputBoxComponent {
 	@Input() formName: string | null = null;
 	@Input() isInvalid: boolean = false;
 	@Input() height: string = '100%';
+	@Input() readOnly: boolean = false;
 }

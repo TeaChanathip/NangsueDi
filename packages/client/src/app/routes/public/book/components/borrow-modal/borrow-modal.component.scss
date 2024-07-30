@@ -1,0 +1,16 @@
+#container {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+app-borrow-addr-item {
+	box-shadow: theme('boxShadow.obr-1');
+	border-radius: theme('borderRadius.3xl');
+	border: white 8px solid;
+}
+
+app-borrow-addr-item.selected {
+	border-color: theme('colors.primary.300');
+}

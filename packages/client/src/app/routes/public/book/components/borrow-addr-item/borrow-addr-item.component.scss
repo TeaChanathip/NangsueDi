@@ -1,0 +1,15 @@
+h2 {
+	font-weight: theme('fontWeight.medium');
+	color: theme('colors.slate.600');
+	width: 100%;
+}
+
+input {
+	background-color: theme('colors.primary.white');
+	color: theme('colors.slate.500');
+	box-shadow: theme('boxShadow.obr-1');
+	border-radius: 12px;
+	padding: 1px 12px;
+	border: theme('colors.primary.white') 2px solid;
+	margin-bottom: 1rem;
+}

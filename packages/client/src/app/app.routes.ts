@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { SearchBooksComponent } from './routes/public/search/search-books.component';
+import { SearchBooksComponent } from './routes/public/search-books/search-books.component';
 import { ProfileComponent } from './routes/user/profile/profile.component';
 import { LoginComponent } from './routes/auth/login/login.component';
 import { RegisterComponent } from './routes/auth/register/register.component';
@@ -11,6 +11,7 @@ import { authGuard } from './core/guards/auth/auth.guard';
 import { Role } from './shared/enums/role.enum';
 import { SearchUsersComponent } from './routes/admin/manage-users/childrens/search-users/search-users.component';
 import { ManageBooksComponent } from './routes/manager/manage-books/manage-books.component';
+import { BookComponent } from './routes/public/book/book.component';
 
 export const routes: Routes = [
 	{
@@ -42,6 +43,10 @@ export const routes: Routes = [
 	{
 		path: 'search-books',
 		component: SearchBooksComponent,
+	},
+	{
+		path: 'book/:bookId',
+		component: BookComponent,
 	},
 	{
 		path: 'my-shelf',

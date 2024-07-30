@@ -4,7 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as BooksAction from '../../../stores/books/books.actions';
 import { Book } from '../../../shared/interfaces/book.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ScrollNearEndDirective } from '../../../shared/directives/scroll-near-end.directive';
 import { selectBooks } from '../../../stores/books/books.selectors';
 import { BookStatus } from '../../../stores/books/books.reducer';
@@ -43,6 +43,7 @@ export class SearchBooksComponent implements OnInit, OnDestroy {
 	constructor(
 		private store: Store,
 		private route: ActivatedRoute,
+		private router: Router,
 	) {}
 
 	searchMoreBook() {
@@ -56,6 +57,10 @@ export class SearchBooksComponent implements OnInit, OnDestroy {
 
 		clearTimeout(this.timer);
 		this.timer = setTimeout(() => this.searchMoreBook(), 1000);
+	}
+
+	navigateToBook(bookId: string) {
+		this.router.navigate([`book/${bookId}`]);
 	}
 
 	ngOnInit(): void {

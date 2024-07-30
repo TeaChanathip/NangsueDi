@@ -4,7 +4,7 @@ import { BooksSearchBarComponent } from '../../../shared/components/books-search
 import { Book } from '../../../shared/interfaces/book.model';
 import { Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as BooksAction from '../../../stores/books/books.actions';
 import {
 	selectBooks,
@@ -54,6 +54,7 @@ export class ManageBooksComponent implements OnInit, OnDestroy {
 	constructor(
 		private store: Store,
 		private route: ActivatedRoute,
+		private router: Router,
 	) {}
 
 	searchMoreBook() {
@@ -71,6 +72,10 @@ export class ManageBooksComponent implements OnInit, OnDestroy {
 
 	toggleRegModal() {
 		this.isRegModalOpen = !this.isRegModalOpen;
+	}
+
+	navigateToBook(bookId: string) {
+		this.router.navigate([`book/${bookId}`]);
 	}
 
 	ngOnInit(): void {

@@ -1,0 +1,122 @@
+@if (book$ | async; as book) {
+	<div class="ml-5">
+		<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">
+			Book Info
+		</h1>
+
+		<form [formGroup]="updateBookForm" class="mt-14 px-16 flex flex-wrap">
+			<img
+				alt="{{ book.title }}"
+				src="{{ book.coverUrl }}"
+				onerror="this.src='/images/default-book.jpg'"
+				draggable="false"
+				class="size-full rounded-2xl shadow-obr-2 w-full lg:w-1/3"
+			/>
+
+			<div
+				class="w-full lg:w-2/3 flex flex-wrap justify-between p-10 gap-x-5"
+			>
+				<app-form-input
+					label="Title"
+					formName="title"
+					[readOnly]="true"
+					class="w-full lg:w-[45%]"
+				/>
+
+				<app-form-input
+					label="Author"
+					formName="author"
+					[readOnly]="true"
+					class="w-full lg:w-[45%]"
+				/>
+
+				<app-form-input
+					label="Published Date"
+					formName="publishedDate"
+					[readOnly]="true"
+					class="w-full lg:w-[30%]"
+				/>
+
+				<app-form-input
+					label="Total"
+					formName="total"
+					[readOnly]="true"
+					class="w-full lg:w-[30%]"
+				/>
+
+				<app-form-text
+					label="Remaining"
+					[text]="(book.total - book.borrowed).toString()"
+					class="w-full lg:w-[30%]"
+				/>
+
+				<app-form-input-box
+					label="Description"
+					formName="description"
+					height="200px"
+					[readOnly]="true"
+					class="w-full lg:w-[45%]"
+				/>
+
+				<div class="w-full lg:w-[45%]">
+					<label
+						class="text-3xl text-slate-600 font-semibold block"
+						for="genres"
+					>
+						Genre
+					</label>
+					<div class="text-2xl text-slate-500">
+						@for (
+							genre of updateBookForm.controls['genres'].value;
+							track $index
+						) {
+							<span>{{ genreOptions[genre] }}</span>
+							@if (
+								$index <
+								updateBookForm.controls['genres'].value.length -
+									1
+							) {
+								<span>, </span>
+							}
+						}
+					</div>
+				</div>
+
+				<div class="w-full flex justify-end gap-5">
+					@if (user$ | async; as user) {
+						@if (
+							user.role === 'USER' && user.permissions?.canBorrow
+						) {
+							<app-button
+								kind="solid"
+								text="Borrow"
+								[isDisabled]="
+									isDisableBorrow ||
+									book.total <= book.borrowed
+								"
+								(click)="toggleBrrwModal()"
+							/>
+						}
+
+						@if (user.role === 'MANAGER' || user.role === 'ADMIN') {
+							<app-button
+								kind="outline"
+								text="Delete"
+								color="red"
+								[isDisabled]="book.borrowed !== 0"
+								(click)="deleteBook()"
+							/>
+						}
+					}
+				</div>
+			</div>
+		</form>
+	</div>
+
+	@if (isBorrowModalOpen) {
+		<app-borrow-modal
+			(toggleModal)="toggleBrrwModal()"
+			(submitBorrow)="borrowBook($event)"
+		/>
+	}
+}

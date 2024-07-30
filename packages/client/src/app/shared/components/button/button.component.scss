@@ -1,3 +1,68 @@
 button {
 	transition: 100ms ease-in-out;
+	border-width: 4px;
+	border-style: solid;
+	--tw-border-opacity: 1;
+	padding: theme('padding.2');
+	font-weight: theme('fontWeight.bold');
+	border-radius: theme('borderRadius.xl');
+	box-shadow: theme('boxShadow.obr-1');
+	cursor: pointer;
+}
+
+button.solid.green:disabled,
+button.outline.green:disabled,
+button.solid.red:disabled,
+button.outline.red:disabled {
+	background-color: theme('colors.slate.300') !important;
+	border-color: theme('colors.slate.300') !important;
+	color: white !important;
+}
+
+// Green Button
+button.solid.green {
+	border-color: rgb(181 206 60 / var(--tw-border-opacity));
+	color: white;
+	background-color: theme('colors.primary.100');
+}
+
+button.solid.green:hover {
+	background-color: theme('colors.primary.300');
+	border-color: theme('colors.primary.300');
+}
+
+button.outline.green {
+	border-color: rgb(181 206 60 / var(--tw-border-opacity));
+	background-color: white;
+	color: theme('colors.primary.200');
+}
+
+button.outline.green:hover {
+	border-color: rgb(89 102 26 / var(--tw-border-opacity));
+	color: white;
+	background-color: theme('colors.primary.300');
+}
+
+// Red Button
+button.solid.red {
+	border-color: rgb(255 105 97 / var(--tw-border-opacity));
+	color: white;
+	background-color: theme('colors.primary.red');
+}
+
+button.solid.red:hover {
+	background-color: theme('colors.red.800');
+	border-color: theme('colors.red.800');
+}
+
+button.outline.red {
+	border-color: rgb(255 105 97 / var(--tw-border-opacity));
+	background-color: white;
+	color: theme('colors.primary.red');
+}
+
+button.outline.red:hover {
+	border-color: rgb(153 27 27 / var(--tw-border-opacity));
+	color: white;
+	background-color: theme('colors.red.800');
 }

@@ -13,6 +13,7 @@ export class ButtonComponent {
 	@Input() kind: 'solid' | 'outline' = 'solid';
 	@Input() text: string = 'empty';
 	@Input() width: string = '130px';
+	@Input() color: 'green' | 'red' = 'green';
 	@Input() isDisabled: boolean = false;
 	@Input() action = () => {};
 }

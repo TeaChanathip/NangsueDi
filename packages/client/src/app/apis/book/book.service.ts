@@ -64,4 +64,16 @@ export class BookService {
 	}): Observable<HttpResponse<Book>> {
 		return this.apiService.post<typeof props, Book>(this.url, props);
 	}
+
+	getBook(bookId: string): Observable<HttpResponse<Book>> {
+		return this.httpClient.get<Book>(`${this.url}/${bookId}`, {
+			observe: 'response',
+		});
+	}
+
+	deleteBook(bookId: string): Observable<HttpResponse<Book>> {
+		return this.apiService.delete<Book>(`${this.url}/${bookId}`);
+	}
+
+	// borrowBook();
 }

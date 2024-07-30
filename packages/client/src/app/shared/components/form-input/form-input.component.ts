@@ -24,4 +24,5 @@ export class FormInputComponent {
 	@Input() formName: string = '';
 	@Input() isRequired: boolean = false;
 	@Input() isInvalid: boolean = false;
+	@Input() readOnly: boolean = false;
 }
