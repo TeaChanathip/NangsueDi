@@ -17,6 +17,8 @@ import { MyShelfComponent } from './routes/user/my-shelf/my-shelf.component';
 import { NonReturnedComponent } from './routes/user/my-shelf/childrens/non-returned/non-returned.component';
 import { RejectedComponent } from './routes/user/my-shelf/childrens/rejected/rejected.component';
 import { PendingComponent } from './routes/user/my-shelf/childrens/pending/pending.component';
+import { ManagerBorrowsRequestsComponent } from './routes/manager/requests/childrens/manager-borrows-requests/manager-borrows-requests.component';
+import { ManagerReturnsRequestsComponent } from './routes/manager/requests/childrens/manager-returns-requests/manager-returns-requests.component';
 
 export const routes: Routes = [
 	{
@@ -81,6 +83,21 @@ export const routes: Routes = [
 		path: 'requests',
 		component: RequestsComponent,
 		canActivate: [authGuard(Role.MANAGER, Role.ADMIN)],
+		children: [
+			{
+				path: 'borrows',
+				component: ManagerBorrowsRequestsComponent,
+			},
+			{
+				path: 'returns',
+				component: ManagerReturnsRequestsComponent,
+			},
+			{
+				path: '**',
+				redirectTo: 'borrows',
+				pathMatch: 'full',
+			},
+		],
 	},
 	{
 		path: 'manage-books',

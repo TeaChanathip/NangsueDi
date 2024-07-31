@@ -1,0 +1,9 @@
+<div>
+	<h1 class="text-5xl text-slate-600 font-bold mt-8 text-center">Requests</h1>
+
+	<div class="mt-14 flex flex-col items-center gap-10 w-full px-10">
+		@for (request of userBrrwsReqs$ | async; track $index) {
+			<app-request-item [request]="request" class="w-full lg:w-3/5" />
+		}
+	</div>
+</div>

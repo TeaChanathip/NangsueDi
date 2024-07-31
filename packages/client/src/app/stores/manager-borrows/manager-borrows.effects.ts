@@ -22,6 +22,7 @@ export class MgrBrrwsEffect {
 					.getBorrows({
 						bookKeyword: action.bookKeyword,
 						isApproved: action.isApproved,
+						isRejected: action.isRejected,
 						isReturned: action.isReturned,
 						limit: action.limit,
 						page: action.page,

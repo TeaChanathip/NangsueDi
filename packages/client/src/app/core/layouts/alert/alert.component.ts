@@ -53,7 +53,7 @@ export class AlertComponent implements OnInit, OnDestroy {
 			if (!this.shouldProceed) return;
 			this.fadeOldestAlert(false);
 			this.store.dispatch(AlertsActions.removeAlert({ index: 0 }));
-		}, 3000);
+		}, 2000);
 	}
 
 	ngOnInit(): void {

@@ -7,6 +7,7 @@ export const getUserBrrwsReqs = createAction(
 	props<{
 		bookKeyword?: string;
 		isApproved?: number;
+		isRejected?: number;
 		isReturned?: number;
 		limit?: number;
 		page?: number;
