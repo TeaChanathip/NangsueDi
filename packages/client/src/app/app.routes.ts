@@ -14,6 +14,9 @@ import { ManageBooksComponent } from './routes/manager/manage-books/manage-books
 import { BookComponent } from './routes/public/book/book.component';
 import { RequestsComponent } from './routes/manager/requests/requests.component';
 import { MyShelfComponent } from './routes/user/my-shelf/my-shelf.component';
+import { NonReturnedComponent } from './routes/user/my-shelf/childrens/non-returned/non-returned.component';
+import { RejectedComponent } from './routes/user/my-shelf/childrens/rejected/rejected.component';
+import { PendingComponent } from './routes/user/my-shelf/childrens/pending/pending.component';
 
 export const routes: Routes = [
 	{
@@ -54,6 +57,25 @@ export const routes: Routes = [
 		path: 'my-shelf',
 		component: MyShelfComponent,
 		canActivate: [authGuard(Role.USER)],
+		children: [
+			{
+				path: 'non-returned',
+				component: NonReturnedComponent,
+			},
+			{
+				path: 'rejected',
+				component: RejectedComponent,
+			},
+			{
+				path: 'pending',
+				component: PendingComponent,
+			},
+			{
+				path: '**',
+				redirectTo: 'non-returned',
+				pathMatch: 'full',
+			},
+		],
 	},
 	{
 		path: 'requests',

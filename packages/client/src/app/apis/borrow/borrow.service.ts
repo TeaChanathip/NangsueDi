@@ -43,4 +43,33 @@ export class BorrowService {
 			body,
 		);
 	}
+
+	getBorrows(props: {
+		bookKeyword?: string;
+		isApproved?: number;
+		isRejected?: number;
+		isReturned?: number;
+		limit?: number;
+		page?: number;
+	}): Observable<HttpResponse<Borrow[]>> {
+		const { bookKeyword, isApproved, isRejected, isReturned, limit, page } =
+			props;
+
+		const params = new HttpParams({
+			fromObject: {
+				...(bookKeyword && { bookKeyword }),
+				...(isApproved !== undefined && { isApproved }),
+				...(isRejected !== undefined && { isRejected }),
+				...(isReturned !== undefined && { isReturned }),
+				...(limit !== undefined && { limit }),
+				...(page !== undefined && { page }),
+			},
+		});
+
+		return this.apiService.get<Borrow[]>(this.url, params);
+	}
+
+	cancelBorrow(borrowId: string): Observable<HttpResponse<Borrow>> {
+		return this.apiService.delete<Borrow>(`${this.url}/${borrowId}`);
+	}
 }

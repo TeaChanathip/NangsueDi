@@ -135,6 +135,7 @@ export class BorrowsCollService {
             isApproved: isApprovedNum,
             approvedBegin,
             approvedEnd,
+            isRejected: isRejectedNum,
             rejectedBegin,
             rejectedEnd,
             isReturned: isReturnedNum,
@@ -145,6 +146,7 @@ export class BorrowsCollService {
         } = BorrowsQueryReqDto;
 
         const isApproved = numToBool(isApprovedNum);
+        const isRejected = numToBool(isRejectedNum);
         const isReturned = numToBool(isReturnedNum);
 
         const pipeline: PipelineStage[] = [
@@ -164,6 +166,9 @@ export class BorrowsCollService {
                     //     approvedBegin,
                     //     approvedEnd,
                     // ),
+                    ...(isRejected !== undefined && {
+                        rejectedAt: { $exists: isRejected },
+                    }),
                     // ...unixFilterQuery(
                     //     'rejectedAt',
                     //     rejectedBegin,

@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyShelfComponent } from './my-shelf.component';
+import { RejectedComponent } from './rejected.component';
 
-describe('MyShelfComponent', () => {
-	let component: MyShelfComponent;
-	let fixture: ComponentFixture<MyShelfComponent>;
+describe('RejectedComponent', () => {
+	let component: RejectedComponent;
+	let fixture: ComponentFixture<RejectedComponent>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [MyShelfComponent],
+			imports: [RejectedComponent],
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(MyShelfComponent);
+		fixture = TestBed.createComponent(RejectedComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

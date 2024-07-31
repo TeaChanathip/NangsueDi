@@ -4,6 +4,7 @@ import {
     IsMongoId,
     IsOptional,
     IsString,
+    Max,
     MaxLength,
     Min,
 } from 'class-validator';
@@ -19,6 +20,11 @@ export class ReturnsQueryReqDto {
     @Trim()
     @MaxLength(MAX_TITLE)
     bookKeyword?: string;
+
+    @ApiProperty({ type: String, required: false })
+    @IsOptional()
+    @IsMongoId()
+    borrowIdQuery?: string;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
@@ -42,6 +48,13 @@ export class ReturnsQueryReqDto {
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    isApproved?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
     @IsUnix()
     approvedBegin?: number;
 
@@ -49,6 +62,13 @@ export class ReturnsQueryReqDto {
     @IsOptional()
     @IsUnix()
     approvedEnd?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    isRejected?: number;
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()

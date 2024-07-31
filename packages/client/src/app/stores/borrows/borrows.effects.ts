@@ -7,6 +7,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Borrow } from '../../shared/interfaces/borrow.model';
 import * as AlertsActions from '../alerts/alerts.actions';
 import * as BooksActions from '../books/books.actions';
+import * as ReturnsActions from '../returns/returns.actions';
 
 @Injectable()
 export class BorrowsEffect {
@@ -77,6 +78,96 @@ export class BorrowsEffect {
 							),
 						),
 					),
+			),
+		);
+	});
+
+	getBrrws$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(BorrowsActions.getBrrws),
+			mergeMap((action) =>
+				this.borrowService
+					.getBorrows({
+						bookKeyword: action.bookKeyword,
+						isApproved: action.isApproved,
+						isRejected: action.isRejected,
+						isReturned: action.isReturned,
+						limit: action.limit,
+						page: action.page,
+					})
+					.pipe(
+						mergeMap((res: HttpResponse<Borrow[]>) =>
+							of(
+								BorrowsActions.getBrrwsSuccess({
+									borrows: res.body as Borrow[],
+								}),
+								AlertsActions.pushAlert({
+									alert: {
+										kind: 'success',
+										header: 'get borrows',
+									},
+								}),
+							),
+						),
+						catchError((error) =>
+							of(
+								BorrowsActions.getBrrwsFailure({ error }),
+								AlertsActions.pushAlert({
+									alert: {
+										kind: 'fail',
+										header: 'get borrows',
+									},
+								}),
+							),
+						),
+					),
+			),
+		);
+	});
+
+	getBrrwsAndReturn$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(BorrowsActions.getBrrwsAndReturn),
+			mergeMap((action) =>
+				of(
+					BorrowsActions.getBrrws(action.bProps),
+					ReturnsActions.getReturns(action.rProps),
+				),
+			),
+		);
+	});
+
+	cancelBrrw$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(BorrowsActions.cancelBorrow),
+			mergeMap((action) =>
+				this.borrowService.cancelBorrow(action.borrowId).pipe(
+					mergeMap((res: HttpResponse<Borrow>) =>
+						of(
+							BorrowsActions.cancelBorrowSuccess({
+								borrow: res.body as Borrow,
+							}),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'borrow cancelled',
+								},
+							}),
+						),
+					),
+					catchError((error) =>
+						of(
+							BorrowsActions.cancelBorrowFailure({ error }),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'cannot cancel borrow',
+									msg: 'Please try again later.',
+								},
+							}),
+						),
+					),
+				),
 			),
 		);
 	});

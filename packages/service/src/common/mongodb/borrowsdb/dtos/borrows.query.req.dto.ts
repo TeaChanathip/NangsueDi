@@ -50,6 +50,13 @@ export class BorrowsQueryReqDto {
 
     @ApiProperty({ type: Number, required: false })
     @IsOptional()
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    isRejected?: number;
+
+    @ApiProperty({ type: Number, required: false })
+    @IsOptional()
     @IsUnix()
     rejectedBegin?: number;
 

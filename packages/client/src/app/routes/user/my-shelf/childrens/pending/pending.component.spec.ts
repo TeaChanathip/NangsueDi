@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyShelfComponent } from './my-shelf.component';
+import { PendingComponent } from './pending.component';
 
-describe('MyShelfComponent', () => {
-	let component: MyShelfComponent;
-	let fixture: ComponentFixture<MyShelfComponent>;
+describe('PendingComponent', () => {
+	let component: PendingComponent;
+	let fixture: ComponentFixture<PendingComponent>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [MyShelfComponent],
+			imports: [PendingComponent],
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(MyShelfComponent);
+		fixture = TestBed.createComponent(PendingComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

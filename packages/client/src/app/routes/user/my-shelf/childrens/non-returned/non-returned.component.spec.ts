@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyShelfComponent } from './my-shelf.component';
+import { NonReturnedComponent } from './non-returned.component';
 
-describe('MyShelfComponent', () => {
-	let component: MyShelfComponent;
-	let fixture: ComponentFixture<MyShelfComponent>;
+describe('NonReturnedComponent', () => {
+	let component: NonReturnedComponent;
+	let fixture: ComponentFixture<NonReturnedComponent>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [MyShelfComponent],
+			imports: [NonReturnedComponent],
 		}).compileComponents();
 
-		fixture = TestBed.createComponent(MyShelfComponent);
+		fixture = TestBed.createComponent(NonReturnedComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

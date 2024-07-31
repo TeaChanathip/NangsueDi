@@ -3,9 +3,13 @@ import { BorrowsState } from './borrows.reducer';
 
 export const borrowsKey = 'borrows';
 
-export const selectAllBorrows = createFeatureSelector<BorrowsState>(borrowsKey);
+export const selectBorrows = createFeatureSelector<BorrowsState>(borrowsKey);
 
+export const selectAllBorrows = createSelector(
+	selectBorrows,
+	(state) => state.borrows,
+);
 export const selectNonRetBrrws = createSelector(
-	selectAllBorrows,
+	selectBorrows,
 	(state) => state.nonRetBrrws,
 );

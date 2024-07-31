@@ -8,6 +8,7 @@ import { ReturnsQueryReqDto } from './dtos/returns.query.req.dto';
 import { ReturnFiltered } from './interfaces/return.filtered.interface';
 import { ReturnUpdateDto } from './dtos/return.update.dto';
 import { unixFilterQuery } from '../../../shared/utils/unixFilterQuery';
+import { numToBool } from 'src/shared/utils/numToBool';
 
 @Injectable()
 export class ReturnsCollService {
@@ -97,43 +98,58 @@ export class ReturnsCollService {
     ): Promise<ReturnFiltered[]> {
         const {
             bookKeyword,
+            borrowIdQuery,
             borrowedBegin,
             borrowedEnd,
-            rejectedBegin,
-            requestedEnd,
-            approvedBegin,
-            approvedEnd,
             requestedBegin,
+            requestedEnd,
+            isRejected: isRejectedNum,
+            // rejectedBegin,
             rejectedEnd,
+            isApproved: isApprovedNum,
+            // approvedBegin,
+            // approvedEnd,
             limit,
             page,
         } = ReturnsQueryReqDto;
+
+        const isApproved = numToBool(isApprovedNum);
+        const isRejected = numToBool(isRejectedNum);
 
         const pipeline: PipelineStage[] = [
             {
                 $match: {
                     ...(userId && { userId: new Types.ObjectId(userId) }),
                     ...(borrowId && { borrowId: new Types.ObjectId(borrowId) }),
-                    ...unixFilterQuery(
-                        'borrowedAt',
-                        borrowedBegin,
-                        borrowedEnd,
-                    ),
-                    ...unixFilterQuery(
-                        'requestedAt',
-                        requestedBegin,
-                        requestedEnd,
-                    ),
-                    ...unixFilterQuery(
-                        'approvedAt',
-                        approvedBegin,
-                        approvedEnd,
-                    ),
-                    ...unixFilterQuery(
-                        'rejectedAt',
-                        rejectedBegin,
-                        rejectedEnd,
-                    ),
+                    ...(borrowIdQuery && {
+                        borrowId: new Types.ObjectId(borrowIdQuery),
+                    }),
+                    // ...unixFilterQuery(
+                    //     'borrowedAt',
+                    //     borrowedBegin,
+                    //     borrowedEnd,
+                    // ),
+                    // ...unixFilterQuery(
+                    //     'requestedAt',
+                    //     requestedBegin,
+                    //     requestedEnd,
+                    // ),
+                    ...(isApproved !== undefined && {
+                        approvedAt: { $exists: isApproved },
+                    }),
+                    ...(isRejected !== undefined && {
+                        rejectedAt: { $exists: isRejected },
+                    }),
+                    // ...unixFilterQuery(
+                    //     'approvedAt',
+                    //     approvedBegin,
+                    //     approvedEnd,
+                    // ),
+                    // ...unixFilterQuery(
+                    //     'rejectedAt',
+                    //     rejectedBegin,
+                    //     rejectedEnd,
+                    // ),
                 },
             },
             {

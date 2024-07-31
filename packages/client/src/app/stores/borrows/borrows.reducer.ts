@@ -84,7 +84,77 @@ export const borrowsReducer = createReducer(
 		(state): BorrowsState => ({
 			...state,
 			error: null,
+			status: 'error',
+		}),
+	),
+
+	// Get Borrow by Query Params
+	on(
+		BorrowsActions.getBrrws,
+		(state): BorrowsState => ({
+			...state,
+			error: null,
 			status: 'pending',
 		}),
 	),
+	on(
+		BorrowsActions.getBrrwsSuccess,
+		(state, { borrows }): BorrowsState => ({
+			...state,
+			borrows,
+			status: 'success',
+		}),
+	),
+	on(
+		BorrowsActions.getBrrwsFailure,
+		(state, { error }): BorrowsState => ({
+			...state,
+			error,
+			status: 'error',
+		}),
+	),
+
+	on(
+		BorrowsActions.cancelBorrow,
+		(state): BorrowsState => ({
+			...state,
+			error: null,
+			status: 'pending',
+		}),
+	),
+	on(
+		BorrowsActions.cancelBorrowSuccess,
+		(state, { borrow }): BorrowsState => ({
+			...state,
+			borrows: state.borrows?.filter((b) => b._id !== borrow._id) ?? null,
+			nonRetBrrws:
+				state.nonRetBrrws?.filter((b) => b._id !== borrow._id) ?? null,
+			status: 'success',
+		}),
+	),
+	on(
+		BorrowsActions.cancelBorrowFailure,
+		(state, { error }): BorrowsState => ({
+			...state,
+			error,
+			status: 'error',
+		}),
+	),
+
+	// Borrow was Return
+	// on(
+	// 	BorrowsActions.borrowWasReturn,
+	// 	(state, { returnObj }): BorrowsState => ({
+	// 		...state,
+	// 		borrows:
+	// 			state.borrows?.map((brrw) => {
+	// 				if(brrw._id === returnObj.borrowId) {
+	// 					return {
+	// 						...brrw,
+	// 						returnedAt: returnObj.
+	// 					}
+	// 				}
+	// 			}) ?? null,
+	// 	}),
+	// ),
 );
