@@ -14,6 +14,7 @@ import { ReturnsQueryReqDto } from '../../../common/mongodb/returnsdb/dtos/retur
 import { ReturnFiltered } from '../../../common/mongodb/returnsdb/interfaces/return.filtered.interface';
 import { transaction } from '../../../shared/utils/mongo.transaction';
 import { InjectConnection } from '@nestjs/mongoose';
+import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
 
 @Injectable()
 export class ActionsReturnsService {
@@ -21,6 +22,7 @@ export class ActionsReturnsService {
         @InjectConnection() private readonly connection: Connection,
         private readonly returnsCollService: ReturnsCollService,
         private readonly borrowsCollService: BorrowsCollService,
+        private readonly booksCollService: BooksCollService,
     ) {}
 
     async getReturns(
@@ -71,6 +73,8 @@ export class ActionsReturnsService {
         }
 
         return transaction(this.connection, async (session) => {
+            await this.booksCollService.returned(borrow.bookId._id, session);
+
             const returnSaveDto: ReturnSaveDto = {
                 userId,
                 bookId: borrow.bookId._id,
@@ -79,8 +83,10 @@ export class ActionsReturnsService {
                 requestedAt: getCurrentUnix(),
             };
 
-            const savedReturn =
-                await this.returnsCollService.saveNew(returnSaveDto);
+            const savedReturn = await this.returnsCollService.saveNew(
+                returnSaveDto,
+                session,
+            );
             if (!savedReturn) {
                 throw new InternalServerErrorException();
             }
@@ -88,6 +94,8 @@ export class ActionsReturnsService {
             const filteredReturn =
                 await this.returnsCollService.getReturnFiltered(
                     savedReturn._id,
+                    undefined,
+                    session,
                 );
             if (!filteredReturn) {
                 throw new InternalServerErrorException();

@@ -19,6 +19,7 @@ import { RejectedComponent } from './routes/user/my-shelf/childrens/rejected/rej
 import { PendingComponent } from './routes/user/my-shelf/childrens/pending/pending.component';
 import { ManagerBorrowsRequestsComponent } from './routes/manager/requests/childrens/manager-borrows-requests/manager-borrows-requests.component';
 import { ManagerReturnsRequestsComponent } from './routes/manager/requests/childrens/manager-returns-requests/manager-returns-requests.component';
+import { DashboardComponent } from './routes/admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
 	{
@@ -122,7 +123,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'dashboard',
-		component: SearchBooksComponent,
+		component: DashboardComponent,
 		canActivate: [authGuard(Role.ADMIN)],
 	},
 	{ path: '**', redirectTo: '/login', pathMatch: 'full' },

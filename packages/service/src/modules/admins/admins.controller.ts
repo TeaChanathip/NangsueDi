@@ -85,4 +85,24 @@ export class AdminsController {
     async revokeMgrRole(@Param('userId') userId: string) {
         return await this.adminsService.revokeMgrRole(userId);
     }
+
+    @Get('get-number-of-users')
+    async getNumOfUsers() {
+        return await this.adminsService.getNumOfUsers();
+    }
+
+    @Get('get-number-of-books')
+    async getNumOfBooks() {
+        return await this.adminsService.getNumOfBooks();
+    }
+
+    @Get('get-number-of-borrows')
+    async getNumOfBorrows() {
+        return await this.adminsService.getNumOfBorrows();
+    }
+
+    @Get('get-number-of-returns')
+    async getNumOfReturns() {
+        return await this.adminsService.getNumOfReturns();
+    }
 }

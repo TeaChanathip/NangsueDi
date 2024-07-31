@@ -381,4 +381,8 @@ export class BorrowsCollService {
             pipeline.push({ $limit: limit });
         }
     }
+
+    async getTotalNumber(): Promise<number> {
+        return await this.borrowsModel.countDocuments();
+    }
 }

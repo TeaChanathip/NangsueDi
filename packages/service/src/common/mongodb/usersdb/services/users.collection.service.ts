@@ -385,4 +385,8 @@ export class UsersCollService {
             .findByIdAndUpdate(userId, { resetTokenVer: token }, { new: true })
             .session(session);
     }
+
+    async getTotalNumber(): Promise<number> {
+        return await this.usersModel.countDocuments();
+    }
 }

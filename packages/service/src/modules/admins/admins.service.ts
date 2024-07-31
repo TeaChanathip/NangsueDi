@@ -22,6 +22,9 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { transaction } from '../../shared/utils/mongo.transaction';
 import { UserRes } from '../../common/mongodb/usersdb/interfaces/user.res.interface';
 import { UsersAddrsCollService } from '../../common/mongodb/usersdb/services/users-addresses.collection.service';
+import { BooksCollService } from 'src/common/mongodb/booksdb/books.collection.service';
+import { BorrowsCollService } from 'src/common/mongodb/borrowsdb/borrows.collection.service';
+import { ReturnsCollService } from 'src/common/mongodb/returnsdb/returns.collection.service';
 
 @Injectable()
 export class AdminsService {
@@ -30,6 +33,9 @@ export class AdminsService {
         private readonly usersCollService: UsersCollService,
         private readonly usersPermsCollService: UsersPermsCollService,
         private readonly usersAddrsCollService: UsersAddrsCollService,
+        private readonly booksCollService: BooksCollService,
+        private readonly borrowsCollService: BorrowsCollService,
+        private readonly returnsCollService: ReturnsCollService,
     ) {}
 
     async verifyUser(userId: string): Promise<UserFiltered> {
@@ -269,5 +275,21 @@ export class AdminsService {
         }
 
         return user;
+    }
+
+    async getNumOfUsers(): Promise<number> {
+        return await this.usersCollService.getTotalNumber();
+    }
+
+    async getNumOfBooks(): Promise<number> {
+        return await this.booksCollService.getTotalNumber();
+    }
+
+    async getNumOfBorrows(): Promise<number> {
+        return await this.borrowsCollService.getTotalNumber();
+    }
+
+    async getNumOfReturns(): Promise<number> {
+        return await this.returnsCollService.getTotalNumber();
     }
 }

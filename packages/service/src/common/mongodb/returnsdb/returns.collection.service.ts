@@ -276,4 +276,8 @@ export class ReturnsCollService {
             pipeline.push({ $limit: limit });
         }
     }
+
+    async getTotalNumber(): Promise<number> {
+        return this.returnsModel.countDocuments();
+    }
 }

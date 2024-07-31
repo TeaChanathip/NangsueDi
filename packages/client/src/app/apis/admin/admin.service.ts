@@ -80,4 +80,20 @@ export class AdminService {
 			`${this.url}/unsuspend-user/${userId}`,
 		);
 	}
+
+	getNumberOfUsers(): Observable<HttpResponse<number>> {
+		return this.apiService.get<number>(`${this.url}/get-number-of-users`);
+	}
+
+	getNumberOfBooks(): Observable<HttpResponse<number>> {
+		return this.apiService.get<number>(`${this.url}/get-number-of-books`);
+	}
+
+	getNumberOfBorrows(): Observable<HttpResponse<number>> {
+		return this.apiService.get<number>(`${this.url}/get-number-of-borrows`);
+	}
+
+	getNumberOfReturns(): Observable<HttpResponse<number>> {
+		return this.apiService.get<number>(`${this.url}/get-number-of-returns`);
+	}
 }

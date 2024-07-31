@@ -172,4 +172,8 @@ export class BooksCollService {
             )
             .session(session);
     }
+
+    async getTotalNumber(): Promise<number> {
+        return await this.booksModel.countDocuments();
+    }
 }
