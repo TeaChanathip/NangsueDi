@@ -127,4 +127,13 @@ export const userReducer = createReducer(
 			status: 'updated_error',
 		}),
 	),
+
+	on(
+		UserActions.deleteProfileSuccess,
+		(state): UserState => ({
+			...state,
+			user: null,
+			status: 'logged_out',
+		}),
+	),
 );

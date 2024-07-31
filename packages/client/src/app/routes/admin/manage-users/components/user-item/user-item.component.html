@@ -45,12 +45,14 @@
 	>
 		@switch (status) {
 			@case ('Non-verified') {
-				<button
-					(click)="verify()"
-					class="bg-primary-100 hover:bg-primary-300"
-				>
-					Verify
-				</button>
+				@if (user.role !== 'MANAGER') {
+					<button
+						(click)="verify()"
+						class="bg-primary-100 hover:bg-primary-300"
+					>
+						Verify
+					</button>
+				}
 				<button
 					(click)="deleteUser()"
 					class="bg-primary-red hover:bg-red-700"

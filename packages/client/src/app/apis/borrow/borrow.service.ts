@@ -70,6 +70,8 @@ export class BorrowService {
 	}
 
 	cancelBorrow(borrowId: string): Observable<HttpResponse<Borrow>> {
-		return this.apiService.delete<Borrow>(`${this.url}/${borrowId}`);
+		return this.apiService.delete<unknown, Borrow>(
+			`${this.url}/${borrowId}`,
+		);
 	}
 }

@@ -75,6 +75,19 @@ export class UserService {
 	}
 
 	deleteUserAddr(_id: string): Observable<HttpResponse<UserAddr>> {
-		return this.apiService.delete<UserAddr>(`${this.url}/address/${_id}`);
+		return this.apiService.delete<unknown, UserAddr>(
+			`${this.url}/address/${_id}`,
+		);
+	}
+
+	deleteProfile(password: string): Observable<HttpResponse<User>> {
+		const body = {
+			password,
+		};
+
+		return this.apiService.delete<typeof body, User>(
+			`${this.url}/profile`,
+			body,
+		);
 	}
 }

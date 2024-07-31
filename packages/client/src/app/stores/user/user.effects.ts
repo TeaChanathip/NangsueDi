@@ -11,6 +11,7 @@ import {
 } from '@angular/common/http';
 import { UserService } from '../../apis/user/user.service';
 import { User } from '../../shared/interfaces/user.model';
+import * as AlertsActions from '../alerts/alerts.actions';
 
 @Injectable()
 export class UserEffect {
@@ -104,6 +105,38 @@ export class UserEffect {
 							of(UserActions.updateProfileFailure(error)),
 						),
 					),
+			),
+		);
+	});
+
+	deleteProfile$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(UserActions.deleteProfile),
+			mergeMap((action) =>
+				this.userService.deleteProfile(action.password).pipe(
+					mergeMap(() =>
+						of(
+							UserActions.deleteProfileSuccess(),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'profile deleted',
+								},
+							}),
+						),
+					),
+					mergeMap(() =>
+						of(
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'cannot delete profile',
+									msg: 'Please try again later.',
+								},
+							}),
+						),
+					),
+				),
 			),
 		);
 	});

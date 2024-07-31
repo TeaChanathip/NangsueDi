@@ -72,7 +72,7 @@ export class BookService {
 	}
 
 	deleteBook(bookId: string): Observable<HttpResponse<Book>> {
-		return this.apiService.delete<Book>(`${this.url}/${bookId}`);
+		return this.apiService.delete<unknown, Book>(`${this.url}/${bookId}`);
 	}
 
 	// borrowBook();

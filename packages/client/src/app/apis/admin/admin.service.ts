@@ -64,7 +64,7 @@ export class AdminService {
 	}
 
 	deleteUser(userId: string): Observable<HttpResponse<User>> {
-		return this.apiService.delete<User>(
+		return this.apiService.delete<unknown, User>(
 			`${this.url}/delete-user/${userId}`,
 		);
 	}

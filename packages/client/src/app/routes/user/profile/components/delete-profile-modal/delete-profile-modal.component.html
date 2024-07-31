@@ -1,0 +1,23 @@
+<div
+	class="fixed top-0 left-0 w-screen h-screen bg-[rgb(0,0,0,0.7)]"
+	tabindex="1"
+	(click)="emitToggleModal()"
+	(keydown.escape)="emitToggleModal()"
+></div>
+
+<div id="container">
+	<form [formGroup]="passwordForm" class="bg-white p-10 rounded-2xl">
+		<app-form-input
+			label="Password"
+			formName="password"
+			[isInvalid]="!passwordForm.valid"
+		/>
+		<app-warning-msg
+			[isShowing]="!passwordForm.valid"
+			[msg]="pwdErrMsg"
+			class="mt-2 text-2xl text-center"
+		/>
+
+		<!-- <app-button kind="solic" /> -->
+	</form>
+</div>

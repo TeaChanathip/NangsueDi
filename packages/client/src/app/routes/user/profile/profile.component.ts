@@ -28,6 +28,7 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { dtToUnix } from '../../../shared/utils/dtToUnix';
 import { UserStatus } from '../../../stores/user/user.reducer';
 import { AlertMsg } from '../../../core/layouts/alert/alert.component';
+import { DeleteProfileModalComponent } from './components/delete-profile-modal/delete-profile-modal.component';
 
 @Component({
 	selector: 'app-profile',
@@ -39,6 +40,7 @@ import { AlertMsg } from '../../../core/layouts/alert/alert.component';
 		LeftPanelComponent,
 		RightPanelComponent,
 		ButtonComponent,
+		DeleteProfileModalComponent,
 	],
 	templateUrl: './profile.component.html',
 	styleUrl: './profile.component.scss',
@@ -83,6 +85,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	isFormEdited: boolean = false;
 
+	isDeleteModalOpen: boolean = false;
+
 	private destroy$ = new Subject<void>();
 
 	constructor(private store: Store) {
@@ -110,6 +114,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		};
 		// console.log(payload);
 		this.store.dispatch(UserActions.updateProfile(payload));
+	}
+
+	toggleDeleteModal() {
+		this.isDeleteModalOpen = !this.isDeleteModalOpen;
 	}
 
 	ngOnInit(): void {

@@ -56,3 +56,12 @@ export const updateProfileFailure = createAction(
 	'[User API] Update Profile Failure',
 	props<{ error: string }>(),
 );
+
+// Delete Profile
+export const deleteProfile = createAction(
+	'[Profile Page] Delete Profile',
+	props<{ password: string }>(),
+);
+export const deleteProfileSuccess = createAction(
+	'[User API] Delete Profile Success',
+);
