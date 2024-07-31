@@ -34,4 +34,23 @@ export class ManagerService {
 
 		return this.apiService.get<Borrow[]>(`${this.url}/get-borrows`, params);
 	}
+
+	approveBorrow(borrowId: string): Observable<HttpResponse<Borrow>> {
+		return this.apiService.patch<unknown, Borrow>(
+			`${this.url}/approve-borrow/${borrowId}`,
+		);
+	}
+
+	rejectBorrow(
+		borrowId: string,
+		rejectReason: string,
+	): Observable<HttpResponse<Borrow>> {
+		const body = {
+			rejectReason,
+		};
+		return this.apiService.patch<typeof body, Borrow>(
+			`${this.url}/reject-borrow/${borrowId}`,
+			body,
+		);
+	}
 }

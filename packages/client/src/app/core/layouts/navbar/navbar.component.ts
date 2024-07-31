@@ -42,14 +42,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
 			if (!user) {
-				this.navbarRoutes = [['search', 'navbar-icons/search.svg']];
+				this.navbarRoutes = [
+					['search-books', 'navbar-icons/search.svg'],
+				];
 				return;
 			}
 
 			switch (user.role) {
 				case 'USER': {
 					this.navbarRoutes = [
-						['search', 'navbar-icons/search.svg'],
+						['search-books', 'navbar-icons/search.svg'],
 						['my-shelf', 'navbar-icons/my-shelf.svg'],
 					];
 					break;
@@ -71,7 +73,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 					break;
 				}
 				default: {
-					this.navbarRoutes = [['search', 'navbar-icons/search.svg']];
+					this.navbarRoutes = [
+						['search-books', 'navbar-icons/search.svg'],
+					];
 				}
 			}
 		});

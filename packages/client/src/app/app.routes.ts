@@ -13,6 +13,7 @@ import { SearchUsersComponent } from './routes/admin/manage-users/childrens/sear
 import { ManageBooksComponent } from './routes/manager/manage-books/manage-books.component';
 import { BookComponent } from './routes/public/book/book.component';
 import { RequestsComponent } from './routes/manager/requests/requests.component';
+import { MyShelfComponent } from './routes/user/my-shelf/my-shelf.component';
 
 export const routes: Routes = [
 	{
@@ -51,7 +52,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'my-shelf',
-		component: SearchBooksComponent,
+		component: MyShelfComponent,
 		canActivate: [authGuard(Role.USER)],
 	},
 	{

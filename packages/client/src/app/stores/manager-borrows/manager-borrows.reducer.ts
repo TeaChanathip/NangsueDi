@@ -19,6 +19,7 @@ export const initialState: MgrBrrwsState = {
 export const mgrBrrwsReducer = createReducer(
 	initialState,
 
+	// Get Borrows Requests
 	on(
 		MgrBrrwsActions.getUserBrrwsReqs,
 		(state): MgrBrrwsState => ({
@@ -37,6 +38,68 @@ export const mgrBrrwsReducer = createReducer(
 	),
 	on(
 		MgrBrrwsActions.getUserBrrwsReqsFailure,
+		(state, { error }): MgrBrrwsState => ({
+			...state,
+			error,
+			status: 'error',
+		}),
+	),
+
+	//Approve Borrow Request
+	on(
+		MgrBrrwsActions.approveBrrw,
+		(state): MgrBrrwsState => ({
+			...state,
+			error: null,
+			status: 'pending',
+		}),
+	),
+	on(
+		MgrBrrwsActions.approveBrrwSuccess,
+		(state, { borrow }): MgrBrrwsState => ({
+			...state,
+			borrows: state.borrows!.map((b) => {
+				if (b._id === borrow._id) {
+					return borrow;
+				}
+				return b;
+			}),
+			status: 'success',
+		}),
+	),
+	on(
+		MgrBrrwsActions.approveBrrwFailure,
+		(state, { error }): MgrBrrwsState => ({
+			...state,
+			error,
+			status: 'error',
+		}),
+	),
+
+	// Reject Borrow Request
+	on(
+		MgrBrrwsActions.rejectBrrw,
+		(state): MgrBrrwsState => ({
+			...state,
+			error: null,
+			status: 'pending',
+		}),
+	),
+	on(
+		MgrBrrwsActions.rejectBrrwSuccess,
+		(state, { borrow }): MgrBrrwsState => ({
+			...state,
+			borrows: state.borrows!.map((b) => {
+				if (b._id === borrow._id) {
+					return borrow;
+				}
+				return b;
+			}),
+			status: 'success',
+		}),
+	),
+	on(
+		MgrBrrwsActions.rejectBrrwFailure,
 		(state, { error }): MgrBrrwsState => ({
 			...state,
 			error,

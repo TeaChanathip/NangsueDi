@@ -5,11 +5,12 @@ import { Store } from '@ngrx/store';
 import { selectAllMgrBrrws } from '../../../stores/manager-borrows/manager-borrows.selectors';
 import * as MgrBrrwsActions from '../../../stores/manager-borrows/manager-borrows.actions';
 import { AsyncPipe } from '@angular/common';
+import { RequestItemComponent } from './components/request-item/request-item.component';
 
 @Component({
 	selector: 'app-requests',
 	standalone: true,
-	imports: [AsyncPipe],
+	imports: [AsyncPipe, RequestItemComponent],
 	templateUrl: './requests.component.html',
 	styleUrl: './requests.component.scss',
 })

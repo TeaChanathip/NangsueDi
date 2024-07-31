@@ -58,4 +58,76 @@ export class MgrBrrwsEffect {
 			),
 		);
 	});
+
+	approveBrrw$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(MgrBrrwsActions.approveBrrw),
+			mergeMap((action) =>
+				this.managerService.approveBorrow(action.borrowId).pipe(
+					mergeMap((res: HttpResponse<Borrow>) =>
+						of(
+							MgrBrrwsActions.approveBrrwSuccess({
+								borrow: res.body as Borrow,
+							}),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'success',
+									header: 'approve borrow request',
+								},
+							}),
+						),
+					),
+					catchError((error) =>
+						of(
+							MgrBrrwsActions.approveBrrwFailure({ error }),
+							AlertsActions.pushAlert({
+								alert: {
+									kind: 'fail',
+									header: 'approve borrow request',
+									msg: 'Please try again later.',
+								},
+							}),
+						),
+					),
+				),
+			),
+		);
+	});
+
+	rejectBrrw$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(MgrBrrwsActions.rejectBrrw),
+			mergeMap((action) =>
+				this.managerService
+					.rejectBorrow(action.borrowId, action.rejectReason)
+					.pipe(
+						mergeMap((res: HttpResponse<Borrow>) =>
+							of(
+								MgrBrrwsActions.rejectBrrwSuccess({
+									borrow: res.body as Borrow,
+								}),
+								AlertsActions.pushAlert({
+									alert: {
+										kind: 'success',
+										header: 'reject borrow request',
+									},
+								}),
+							),
+						),
+						catchError((error) =>
+							of(
+								MgrBrrwsActions.rejectBrrwFailure({ error }),
+								AlertsActions.pushAlert({
+									alert: {
+										kind: 'fail',
+										header: 'reject borrow request',
+										msg: 'Please try again later.',
+									},
+								}),
+							),
+						),
+					),
+			),
+		);
+	});
 }

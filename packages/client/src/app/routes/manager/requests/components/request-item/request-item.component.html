@@ -1,0 +1,49 @@
+<div
+	class="bg-primary-white flex flex-wrap justify-between items-center rounded-2xl shadow-obr-2 p-5"
+>
+	<img
+		[src]="request.book.coverUrl ?? '/images/default-book.jpg'"
+		alt="book"
+		onerror="this.src='/images/default-book.jpg'"
+		class="h-[300px] rounded-lg shadow-obr-1"
+	/>
+	<img
+		[src]="request.user?.avartarUrl ?? '/images/default-profile.svg'"
+		alt="profile"
+		onerror="this.src='/images/default-profile.svg'"
+		class="size-[200px]"
+	/>
+	<div class="flex flex-col gap-2">
+		<app-form-text label="Book" [text]="request.book.title" />
+		<app-form-text
+			label="Borrower"
+			[text]="request.user!.firstName + ' ' + request.user!.lastName"
+		/>
+		<app-form-text
+			label="Address"
+			[text]="
+				request.address.address +
+				', ' +
+				request.address.subDistrict +
+				', ' +
+				request.address.district +
+				', ' +
+				request.address.province +
+				', ' +
+				request.address.postalCode
+			"
+		/>
+	</div>
+
+	@if (!request.approvedAt && !request.rejectedAt) {
+		<div class="w-full mt-5 flex flex-wrap justify-center gap-10">
+			<app-button kind="solid" text="Approve" (click)="approve()" />
+			<app-button
+				kind="solid"
+				color="red"
+				text="Reject"
+				(click)="reject()"
+			/>
+		</div>
+	}
+</div>
