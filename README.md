@@ -48,7 +48,7 @@ yarn
 Ensure your MongoDB is configured to support transactions. You can refer to [this guide on DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-transactions-in-mongodb) for instructions.
 
 ### 4. Configure Environment Variables for the Backend
-Create a `.env` file in the `service` package. Refer to the provided [.env.example](./package/service/.env.example) file for guidance. The following variables are required:
+Create a `.env` file in the `service` package. Refer to the provided [.env.example](./packages/service/.env.example) file for guidance. The following variables are required:
 - **Email Provider**: For sending password reset emails.
 - **MongoDB URI**: Connection string to your MongoDB database.
 - **JWT Secret Key**: Used for signing JWTs (can be any string).
